@@ -33,3 +33,7 @@
 0,sprites/_3x3_0.png
 0,sprites/_3x3_1.png
 3,animations/board_3x3.csv
+0,sprites/c3_0.png
+0,sprites/c3_1.png
+3,animations/cat_c3.csv
+0,sprites/d3_0.png

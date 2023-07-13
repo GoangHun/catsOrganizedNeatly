@@ -6,7 +6,9 @@ void Board::Init()
 {
 	animation.AddClip(*RESOURCE_MGR.GetAnimationClip("animations/board_3x3.csv"));
 	animation.SetTarget(&sprite);
-	SetOrigin(Origins::BC);
+	SetOrigin(Origins::MC);
+	sortLayer = 0;
+
 }
 
 void Board::Reset()

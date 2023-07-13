@@ -7,6 +7,7 @@
 #include "Framework.h"
 #include "GameBackground.h"
 #include "Board.h"
+#include "Cat.h"
 
 SceneGame::SceneGame() : Scene(SceneId::Game)
 {
@@ -27,6 +28,12 @@ void SceneGame::Init()
 
 	AddGo(new GameBackground());
 	AddGo(new Board());
+
+	Cat* cat = (Cat*)AddGo(new Cat());
+	//cat->SetOrigin(Origins::TR);
+	cat->SetPosition(size.x, 0.f);
+	
+	
 
 	/*Player1* player = (Player1*)AddGo(new Player1());
 	UIButton * testButton = (UIButton*)AddGo(new UIButton("graphics/button.png"));
