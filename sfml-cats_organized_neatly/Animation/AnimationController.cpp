@@ -10,6 +10,7 @@ void AnimationController::AddClip(const AnimationClip& newClip)
 	}
 }
 
+
 void AnimationController::Update(float dt)
 {
 	if (!isPlaying)
@@ -101,7 +102,6 @@ void AnimationController::SetFrame(const AnimationFrame& frame)
 
 	//여기서 target의 texture와 Rect를 정함!
 	target->setTexture(*tex);
-	target->setTextureRect(frame.texCoord);
 }
 
 sf::FloatRect AnimationController::GetCurrentRect()

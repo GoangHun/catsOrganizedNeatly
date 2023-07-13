@@ -4,8 +4,6 @@
 
 class Player : public SpriteGo
 {
-public:
-
 protected:
 	AnimationController animation;
 	sf::Vector2f velocity;

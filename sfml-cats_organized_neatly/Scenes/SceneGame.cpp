@@ -5,10 +5,11 @@
 #include "ResourceMgr.h"
 #include "GameObject.h"
 #include "Framework.h"
+#include "GameBackground.h"
+#include "Board.h"
 
 SceneGame::SceneGame() : Scene(SceneId::Game)
 {
-
 
 	//resourceListPath = "scripts/SceneGameResourceList.csv";
 	/*resources.push_back(std::make_tuple(ResourceTypes::Texture, "graphics/RubySheet.png"));
@@ -22,8 +23,10 @@ void SceneGame::Init()
 {
 	Release();
 
-
 	auto size = FRAMEWORK.GetWindowSize();
+
+	AddGo(new GameBackground());
+	AddGo(new Board());
 
 	/*Player1* player = (Player1*)AddGo(new Player1());
 	UIButton * testButton = (UIButton*)AddGo(new UIButton("graphics/button.png"));

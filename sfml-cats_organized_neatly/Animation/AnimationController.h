@@ -19,6 +19,7 @@ protected:
 
 public:
 	void AddClip(const AnimationClip& newClip);
+
 	void SetTarget(sf::Sprite* sprite) { target = sprite; }
 	sf::Sprite* GetTarget() const { return target; }
 	bool IsPlaying() { return isPlaying; }

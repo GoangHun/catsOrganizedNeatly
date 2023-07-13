@@ -28,7 +28,7 @@ ResourceMgr::~ResourceMgr()
 
 void ResourceMgr::Init()
 {
-	LoadFromCSV("scripts/csv_resource_list.csv", true);
+	LoadFromCSV("scripts/total_resource_list.csv", true);
 }
 
 void ResourceMgr::UnLoadAll()
@@ -115,11 +115,11 @@ void ResourceMgr::Load(ResourceTypes t, const std::string path, bool isDefault)
 	{
 	case ResourceTypes::Texture:
 	{
-		if (path[path.find('.') + 1] != 'c')
+		/*if (path.find(".csv") != std::string::npos)
 		{
 			LoadFromCSV(path, isDefault);
 			return;
-		}
+		}*/
 		auto it = mapTexture.find(path);
 		if (mapTexture.end() == it)
 		{
@@ -131,11 +131,11 @@ void ResourceMgr::Load(ResourceTypes t, const std::string path, bool isDefault)
 	break;
 	case ResourceTypes::Font:
 	{
-		if (path[path.find('.') + 1] != 'c')
+		/*if (path.find(".csv") != std::string::npos)
 		{
 			LoadFromCSV(path, isDefault);
 			return;
-		}
+		}*/
 		auto it = mapFont.find(path);
 		if (mapFont.end() == it)
 		{
@@ -147,11 +147,11 @@ void ResourceMgr::Load(ResourceTypes t, const std::string path, bool isDefault)
 	break;
 	case ResourceTypes::SoundBuffer:
 	{
-		if (path[path.find('.') + 1] != 'c')
+		/*if (path.find(".csv") != std::string::npos)
 		{
 			LoadFromCSV(path, isDefault);
 			return;
-		}
+		}*/
 		auto it = mapSoundBuffer.find(path);
 		if (mapSoundBuffer.end() == it)
 		{
