@@ -66,6 +66,29 @@ void Cat::Update(float dt)
 			isCatch = false;
 		}
 	}
+
+	//È¸Àü
+	{
+		if (isHover && INPUT_MGR.GetMouseButtonUp(sf::Mouse::Right))
+		{
+			isRotation = true;
+			startAngle = sprite.getRotation();
+			targetRotation = startAngle + 90.f;
+			rotationAngle = startAngle;
+		}
+		if (isRotation)
+		{ 
+			rotationAngle += rotationSpeed * dt;
+			if (rotationAngle > targetRotation)
+			{
+				rotationAngle = targetRotation;
+				isRotation = false;
+			}
+			sprite.setRotation(rotationAngle);
+		}
+	}
+	
+	
 	
 
 }

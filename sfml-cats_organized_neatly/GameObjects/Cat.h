@@ -21,6 +21,12 @@ protected:
 
 	bool isHover = false;
 	bool isCatch = false;
+	bool isRotation = false;
+
+	float startAngle = 0.f;
+	float targetRotation = 0.f;
+	float rotationSpeed = 400.f;
+	float rotationAngle = 0;
 
 public:
 	Cat(const std::string& textureId = "", const std::string& n = "")
