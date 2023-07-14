@@ -93,7 +93,7 @@ sf::Vector2f Scene::UiPosPosToScreen(sf::Vector2f uiPos)
 void Scene::Enter()
 {
 	//scripts/[SCENEId]ResourceList.csv
-	RESOURCE_MGR.LoadFromCSV(resourceListPath);
+	//RESOURCE_MGR.LoadFromCSV(resourceListPath);
 
 	for (auto go : gameObjects)
 	{

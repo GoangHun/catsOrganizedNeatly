@@ -4,15 +4,20 @@
 #include "InputMgr.h"
 #include "SceneMgr.h"
 #include "Scene.h"
-
 /*
 stageId		boardType
 */
-
 void Board::Init()
 {
 	SetBoard(boardInfo.type);
 	animation.SetTarget(&sprite);
+
+	tilePool.Init();
+}
+
+void Board::Release()
+{
+	tilePool.Release();
 }
 
 void Board::Reset()
@@ -33,33 +38,35 @@ void Board::Update(float dt)
 		sf::Vector2f mousePos = INPUT_MGR.GetMousePos();
 		sf::Vector2f worldMousePos = SCENE_MGR.GetCurrScene()->ScreenToWorldPos(mousePos);
 
-		bool prevHover = isHover;
-		isHover = sprite.getGlobalBounds().contains(worldMousePos);
-
-		if (!prevHover && isHover)
+		for (auto sRoom : rooms)
 		{
-			OnEnter();
+			bool prevHover = sRoom.isHover;
+			sRoom.isHover = sRoom.room.getGlobalBounds().contains(worldMousePos);
+			if (!prevHover && sRoom.isHover)
+			{
+				OnEnter(sRoom);
+			}
+
+			if (prevHover && !sRoom.isHover)
+			{
+				OnExit(sRoom);
+			}
+			if (sRoom.isHover && INPUT_MGR.GetMouseButtonUp(sf::Mouse::Left))
+			{
+				OnClick(sRoom);
+			}
 		}
 
-		if (prevHover && !isHover)
-		{
-			OnExit();
-		}
-
-		if (isHover && INPUT_MGR.GetMouseButtonUp(sf::Mouse::Left))
-		{
-			OnClick();
-		}
-
+		return;
 	}
 }
 
 void Board::Draw(sf::RenderWindow& window)
 {
 	SpriteGo::Draw(window);
-	for (auto room : rooms)
+	for (auto structRoom : rooms)
 	{
-		window.draw(room);
+		window.draw(structRoom.room);
 	}
 }
 
@@ -114,15 +121,16 @@ void Board::SetRoomPos(BoardType type)
 
 	for (int i = 0; i < roomNumber; i++)
 	{
-		sf::RectangleShape room;
-		room.setSize( sf::Vector2f(roomSize, roomSize));
-		Utils::SetOrigin(room, Origins::MC);
+		Room structRoom;
+		structRoom.room.setSize( sf::Vector2f(roomSize, roomSize));
+		Utils::SetOrigin(structRoom.room, Origins::MC);
 		//개발자 모드
 		{
-			room.setOutlineThickness(5.f);
-			room.setOutlineColor(sf::Color::Blue);
+			//structRoom.room.setOutlineThickness(5.f);
+			//structRoom.room.setOutlineColor(sf::Color::Blue);
 		}
-		rooms.push_back(room);
+		structRoom.room.setFillColor({ 255, 255, 255, 0 });
+		rooms.push_back(structRoom);
 	}
 
 	for (int i = 0; i < (int)type; i++)
@@ -130,20 +138,33 @@ void Board::SetRoomPos(BoardType type)
 		for (int j = 0; j < (int)type; j++)
 		{
 			int index = i * (int)type + j;
-			rooms[index].setPosition({pos.x + roomSize * j, pos.y + roomSize * i});
+			rooms[index].room.setPosition({pos.x + roomSize * j, pos.y + roomSize * i});
 		}
 	}
 }
 
-void Board::OnClick()
+void Board::OnClick(Room sRoom)
 {
-
+	if (!sRoom.isFull)
+	{
+		sRoom.tile = tilePool.Get();
+		sRoom.tile->SetPosition(sRoom.room.getPosition());
+		SCENE_MGR.GetCurrScene()->AddGo(sRoom.tile);
+		sRoom.isFull = true;
+	}
+	else
+	{
+		tilePool.Return(sRoom.tile);
+		SCENE_MGR.GetCurrScene()->RemoveGo(sRoom.tile);
+		sRoom.isFull = false;
+		std::cout << sRoom.tile->GetActive() << std::endl;
+	}
 }
 
-void Board::OnEnter()
+void Board::OnEnter(Room sRoom)
 {
 }
 
-void Board::OnExit()
+void Board::OnExit(Room sRoom)
 {
 }
