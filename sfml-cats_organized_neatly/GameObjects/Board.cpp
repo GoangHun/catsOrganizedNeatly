@@ -1,31 +1,57 @@
 #include "stdafx.h"
 #include "Board.h"
 #include "ResourceMgr.h"
+#include "InputMgr.h"
+#include "SceneMgr.h"
+#include "Scene.h"
 
 /*
 stageId		boardType
-
 */
 
 void Board::Init()
 {
-	//animation.AddClip(*RESOURCE_MGR.GetAnimationClip("animations/board_3x3.csv"));
-	SetBoard(BoardType::_4X4);
+	SetBoard(boardInfo.type);
 	animation.SetTarget(&sprite);
 }
 
 void Board::Reset()
 {
-	animation.Play("board_4x4");
+	animation.Play(boardInfo.animationId);
 	SetOrigin(Origins::MC);
 	SetPosition({ 0, 0 });
-	center = GetPosition();
 	sortLayer = 0;
 }
 
 void Board::Update(float dt)
 {
 	animation.Update(dt);
+
+	//개발자 모드 
+	if (isDeveloperMode)
+	{
+		sf::Vector2f mousePos = INPUT_MGR.GetMousePos();
+		sf::Vector2f worldMousePos = SCENE_MGR.GetCurrScene()->ScreenToWorldPos(mousePos);
+
+		bool prevHover = isHover;
+		isHover = sprite.getGlobalBounds().contains(worldMousePos);
+
+		if (!prevHover && isHover)
+		{
+			OnEnter();
+		}
+
+		if (prevHover && !isHover)
+		{
+			OnExit();
+		}
+
+		if (isHover && INPUT_MGR.GetMouseButtonUp(sf::Mouse::Left))
+		{
+			OnClick();
+		}
+
+	}
 }
 
 void Board::Draw(sf::RenderWindow& window)
@@ -91,7 +117,11 @@ void Board::SetRoomPos(BoardType type)
 		sf::RectangleShape room;
 		room.setSize( sf::Vector2f(roomSize, roomSize));
 		Utils::SetOrigin(room, Origins::MC);
-		room.setFillColor(sf::Color::Blue);
+		//개발자 모드
+		{
+			room.setOutlineThickness(5.f);
+			room.setOutlineColor(sf::Color::Blue);
+		}
 		rooms.push_back(room);
 	}
 
@@ -103,4 +133,17 @@ void Board::SetRoomPos(BoardType type)
 			rooms[index].setPosition({pos.x + roomSize * j, pos.y + roomSize * i});
 		}
 	}
+}
+
+void Board::OnClick()
+{
+
+}
+
+void Board::OnEnter()
+{
+}
+
+void Board::OnExit()
+{
 }

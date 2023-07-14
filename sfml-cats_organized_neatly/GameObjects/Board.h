@@ -1,6 +1,8 @@
 #pragma once
 #include "SpriteGo.h"
 #include "AnimationController.h"
+//#include "ObjectPool.h"
+#include "Tile.h"
 
 enum class BoardType
 {
@@ -12,16 +14,24 @@ enum class BoardType
 	_8X8,
 };
 
+struct BoardInfo
+{
+	BoardType type;
+	std::string animationId;
+};
+
 
 class Board :
     public SpriteGo
 {
 protected:
-	BoardType type;
+	BoardInfo boardInfo = { BoardType::_3X3, "board_3x3" };
 	AnimationController animation;
 	std::vector<sf::RectangleShape> rooms;
+	ObjectPool<Tile> tilePool;
 
-	sf::Vector2f center;
+	bool isDeveloperMode = true;
+	bool isHover = false;
 
 public:
 	Board(const std::string& textureId = "", const std::string& n = "")
@@ -35,5 +45,9 @@ public:
 
 	void SetBoard(BoardType type);
 	void SetRoomPos(BoardType type);
+
+	void OnClick();
+	void OnEnter();
+	void OnExit();
 };
 

@@ -2,15 +2,15 @@
 #include "SpriteGo.h"
 #include "ObjectPool.h"
 
-class Room :
+class Tile :
     public SpriteGo
 {
 protected:
-	ObjectPool<Room>* pool = nullptr;
+	ObjectPool<Tile>* pool = nullptr;
 
 public:
-	Room(const std::string& textureId = "", const std::string& n = "");
-	virtual ~Room() override;
+	Tile(const std::string& textureId = "", const std::string& n = "");
+	virtual ~Tile() override;
 
 	virtual void Init() override;
 	virtual void Release() override;
