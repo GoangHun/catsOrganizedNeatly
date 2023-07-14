@@ -10,13 +10,13 @@ stageId		boardType
 void Board::Init()
 {
 	//animation.AddClip(*RESOURCE_MGR.GetAnimationClip("animations/board_3x3.csv"));
-	SetBoard(BoardType::_3X3);
+	SetBoard(BoardType::_4X4);
 	animation.SetTarget(&sprite);
 }
 
 void Board::Reset()
 {
-	animation.Play("board_3x3");
+	animation.Play("board_4x4");
 	SetOrigin(Origins::MC);
 	SetPosition({ 0, 0 });
 	center = GetPosition();
@@ -73,12 +73,23 @@ void Board::SetRoomPos(BoardType type)
 	//room size 64x64
 	int roomSize = 64;
 	int roomNumber = pow((int)type, 2);
-	float coord = roomSize * floor(((int)type * 0.5f));
+	float coord;
+
+	if ((int)type % 2 == 0)
+	{
+		coord = roomSize * ((int)type - 1) / 2.0;
+	}
+	else
+	{
+		coord = roomSize * floor((int)type * 0.5f);
+	}
 	sf::Vector2f pos = { -coord, -coord };
+	std::cout << coord << std::endl;
 
 	for (int i = 0; i < roomNumber; i++)
 	{
-		sf::RectangleShape room(sf::Vector2f(roomSize, roomSize));
+		sf::RectangleShape room;
+		room.setSize( sf::Vector2f(roomSize, roomSize));
 		Utils::SetOrigin(room, Origins::MC);
 		room.setFillColor(sf::Color::Blue);
 		rooms.push_back(room);
@@ -88,7 +99,7 @@ void Board::SetRoomPos(BoardType type)
 	{
 		for (int j = 0; j < (int)type; j++)
 		{
-			int index = i * 3 + j;
+			int index = i * (int)type + j;
 			rooms[index].setPosition({pos.x + roomSize * j, pos.y + roomSize * i});
 		}
 	}
