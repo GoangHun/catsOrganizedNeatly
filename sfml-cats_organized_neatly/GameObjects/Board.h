@@ -25,7 +25,7 @@ class Board :
     public SpriteGo
 {
 protected:
-	BoardInfo boardInfo = { BoardType::_3X3, "board_3x3" };
+	BoardInfo boardInfo = { BoardType::_8X8, "board_8x8" };
 	AnimationController animation;
 	std::vector<sf::RectangleShape> rooms;
 	ObjectPool<Tile> tilePool;
