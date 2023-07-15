@@ -24,6 +24,7 @@ struct Room
 	sf::RectangleShape room;
 	Tile* tile = nullptr;
 	bool isHover = false;
+	bool prevHover = false;
 	bool isFull = false;
 };
 
@@ -53,8 +54,8 @@ public:
 	void SetBoard(BoardType type);
 	void SetRoomPos(BoardType type);
 
-	void OnClick(Room sRoom);
-	void OnEnter(Room sRoom);
-	void OnExit(Room sRoom);
+	void OnClick(Room& sRoom);
+	void OnEnter(Room& sRoom);
+	void OnExit(Room& sRoom);
 };
 

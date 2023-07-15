@@ -38,16 +38,16 @@ void Board::Update(float dt)
 		sf::Vector2f mousePos = INPUT_MGR.GetMousePos();
 		sf::Vector2f worldMousePos = SCENE_MGR.GetCurrScene()->ScreenToWorldPos(mousePos);
 
-		for (auto sRoom : rooms)
+		for (auto& sRoom : rooms)
 		{
-			bool prevHover = sRoom.isHover;
+			sRoom.prevHover = sRoom.isHover;
 			sRoom.isHover = sRoom.room.getGlobalBounds().contains(worldMousePos);
-			if (!prevHover && sRoom.isHover)
+			if (!sRoom.prevHover && sRoom.isHover)
 			{
 				OnEnter(sRoom);
 			}
 
-			if (prevHover && !sRoom.isHover)
+			if (sRoom.prevHover && !sRoom.isHover)
 			{
 				OnExit(sRoom);
 			}
@@ -143,8 +143,10 @@ void Board::SetRoomPos(BoardType type)
 	}
 }
 
-void Board::OnClick(Room sRoom)
+void Board::OnClick(Room& sRoom)
 {
+	std::cout << sRoom.room.getPosition().x << "/" << sRoom.room.getPosition().y << std::endl;
+	std::cout << sRoom.isFull << std::endl;
 	if (!sRoom.isFull)
 	{
 		sRoom.tile = tilePool.Get();
@@ -157,14 +159,17 @@ void Board::OnClick(Room sRoom)
 		tilePool.Return(sRoom.tile);
 		SCENE_MGR.GetCurrScene()->RemoveGo(sRoom.tile);
 		sRoom.isFull = false;
-		std::cout << sRoom.tile->GetActive() << std::endl;
+		
 	}
 }
 
-void Board::OnEnter(Room sRoom)
+void Board::OnEnter(Room& sRoom)
 {
+	sRoom.room.setOutlineThickness(3.f);
+	sRoom.room.setOutlineColor(sf::Color::White);
 }
 
-void Board::OnExit(Room sRoom)
+void Board::OnExit(Room& sRoom)
 {
+	sRoom.room.setOutlineThickness(0.f);
 }
