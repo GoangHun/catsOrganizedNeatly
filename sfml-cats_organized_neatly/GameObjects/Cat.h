@@ -8,7 +8,7 @@ enum class CatTypes
 struct RectInfo
 {
 	CatTypes type;
-	std::vector<sf::Vector2i> coord;
+	
 };
 
 class Cat :
@@ -16,8 +16,9 @@ class Cat :
 {
 protected:
 	AnimationController animation;
-	std::vector<sf::IntRect> rooms;
+	std::vector<sf::RectangleShape> boxs;
 	RectInfo rectInfo;
+	
 
 	bool isHover = false;
 	bool isCatch = false;

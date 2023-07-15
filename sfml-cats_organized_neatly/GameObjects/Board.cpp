@@ -125,10 +125,10 @@ void Board::SetRoomPos(BoardType type)
 		structRoom.room.setSize( sf::Vector2f(roomSize, roomSize));
 		Utils::SetOrigin(structRoom.room, Origins::MC);
 		//개발자 모드
-		{
-			//structRoom.room.setOutlineThickness(5.f);
-			//structRoom.room.setOutlineColor(sf::Color::Blue);
-		}
+		/*{
+			structRoom.room.setOutlineThickness(5.f);
+			structRoom.room.setOutlineColor(sf::Color::Blue);
+		}*/
 		structRoom.room.setFillColor({ 255, 255, 255, 0 });
 		rooms.push_back(structRoom);
 	}
