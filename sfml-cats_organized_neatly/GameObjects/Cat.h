@@ -3,12 +3,24 @@
 #include "AnimationController.h"
 enum class CatTypes
 {
-	KEETO,
+	c1,
+	c2,
+	c3,
+	c4,
+	c5,
+	c6,
+	c7,
+	c8,
+	c9,
+	c10,
+	c11,
+	c12,
 };
-struct RectInfo
+struct CatInfo
 {
 	CatTypes type;
-	
+	std::string animationClipPath;
+	std::string holdTexturePath;
 };
 
 class Cat :
@@ -17,7 +29,7 @@ class Cat :
 protected:
 	AnimationController animation;
 	std::vector<sf::RectangleShape> boxs;
-	RectInfo rectInfo;
+	CatInfo catInfo;
 	
 
 	bool isHover = false;
@@ -30,8 +42,8 @@ protected:
 	float rotationAngle = 0;
 
 public:
-	Cat(const std::string& textureId = "", const std::string& n = "")
-		: SpriteGo(textureId, n) {}
+	Cat(const CatTypes type, const std::string& textureId = "", const std::string& n = "")
+		: SpriteGo(textureId, n) { catInfo.type = type; }
 	virtual ~Cat() override { Release(); }
 
 	virtual void Init() override;
@@ -42,5 +54,7 @@ public:
 	void OnEnter();
 	void OnExit();
 	void OnClickHold(sf::Vector2f worldMousePos);
+
+	void Makeboxs();
 };
 

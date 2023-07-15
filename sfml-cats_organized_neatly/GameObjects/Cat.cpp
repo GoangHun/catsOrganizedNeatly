@@ -11,6 +11,8 @@ void Cat::Init()
 	animation.SetTarget(&sprite);
 	SetOrigin(Origins::MC);
 	sortLayer = 50;
+
+	Makeboxs();
 }
 
 void Cat::Reset()
@@ -27,6 +29,8 @@ void Cat::Update(float dt)
 	{
 		animation.Update(dt);
 	}
+
+	
 				
 	sf::Vector2f mousePos = INPUT_MGR.GetMousePos();
 	sf::Vector2f worldMousePos = SCENE_MGR.GetCurrScene()->ScreenToWorldPos(mousePos);
@@ -113,6 +117,27 @@ void Cat::OnClickHold(sf::Vector2f worldMousePos)
 	sf::Texture* tex = RESOURCE_MGR.GetTexture("sprites/d3_0.png");
 	sprite.setTexture(*tex);
 	SetPosition(worldMousePos);
+}
+
+void Cat::Makeboxs()
+{
+	float height = sprite.getTextureRect().height;
+	float width = sprite.getTextureRect().width;
+	int h = floor(height / 62);
+	int w = floor(width / 62);
+	int boxNum = h * w;
+	sf::Vector2f boxSize;
+	boxSize.y = height / h;
+	boxSize.x = width / w;
+
+	sf::Vector2f pos = GetPosition() + sf::Vector2f(sprite.getLocalBounds().top, sprite.getLocalBounds().left);
+	
+	for (int i = 0; i < boxNum; i++)
+	{
+		sf::RectangleShape box;
+		box.setSize(boxSize);;
+		boxs.push_back(box);
+	}
 }
 
 
