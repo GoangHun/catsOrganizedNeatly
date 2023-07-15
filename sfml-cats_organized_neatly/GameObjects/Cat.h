@@ -16,12 +16,7 @@ enum class CatTypes
 	c11,
 	c12,
 };
-struct CatInfo
-{
-	CatTypes type;
-	std::string animationClipPath;
-	std::string holdTexturePath;
-};
+
 
 class Cat :
     public SpriteGo
@@ -29,9 +24,11 @@ class Cat :
 protected:
 	AnimationController animation;
 	std::vector<sf::RectangleShape> boxs;
-	CatInfo catInfo;
-	
 
+	CatTypes type;
+	sf::Vector2i boxNumber;
+	sf::Vector2f boxSize;
+	
 	bool isHover = false;
 	bool isCatch = false;
 	bool isRotation = false;
@@ -43,12 +40,13 @@ protected:
 
 public:
 	Cat(const CatTypes type, const std::string& textureId = "", const std::string& n = "")
-		: SpriteGo(textureId, n) { catInfo.type = type; }
+		: SpriteGo(textureId, n) { this->type = type; }
 	virtual ~Cat() override { Release(); }
 
 	virtual void Init() override;
 	virtual void Reset() override;
 	virtual void Update(float dt) override;
+	virtual void Draw(sf::RenderWindow& window) override;
 
 	void OnClick();
 	void OnEnter();

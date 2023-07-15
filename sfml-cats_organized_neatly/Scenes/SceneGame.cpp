@@ -29,7 +29,7 @@ void SceneGame::Init()
 	AddGo(new GameBackground());
 	AddGo(new Board());
 
-	Cat* cat = (Cat*)AddGo(new Cat());
+	Cat* cat = (Cat*)AddGo(new Cat(CatTypes::c1));
 	//cat->SetOrigin(Origins::TR);
 	cat->SetPosition(size.x, 0.f);
 	

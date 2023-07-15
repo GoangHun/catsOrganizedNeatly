@@ -12,7 +12,7 @@ void Cat::Init()
 	SetOrigin(Origins::MC);
 	sortLayer = 50;
 
-	Makeboxs();
+	
 }
 
 void Cat::Reset()
@@ -21,6 +21,7 @@ void Cat::Reset()
 	SetOrigin(Origins::MC);
 	SetPosition({ 0, 0 });
 	isHover = false;
+	Makeboxs();
 }
 
 void Cat::Update(float dt)
@@ -30,6 +31,21 @@ void Cat::Update(float dt)
 		animation.Update(dt);
 	}
 
+	//RectangleShape Position Update
+	{
+		/*if (!isRotation)
+		{
+			sf::FloatRect spriteBounds = sprite.getGlobalBounds();
+			for (int i = 0; i < boxNumber.x; i++)
+			{
+				for (int j = 0; j < boxNumber.y; j++)
+				{
+					int index = i * boxNumber.x + j;
+					boxs[index].setPosition(spriteBounds.left + i * boxSize.x, spriteBounds.top + j * boxSize.y);
+				}
+			}
+		}*/
+	}
 	
 				
 	sf::Vector2f mousePos = INPUT_MGR.GetMousePos();
@@ -71,7 +87,7 @@ void Cat::Update(float dt)
 		}
 	}
 
-	//È¸Àü
+	//Rotation
 	{
 		if (isHover && INPUT_MGR.GetMouseButtonUp(sf::Mouse::Right))
 		{
@@ -89,12 +105,50 @@ void Cat::Update(float dt)
 				isRotation = false;
 			}
 			sprite.setRotation(rotationAngle);
+
+			sf::FloatRect spriteBounds = sprite.getGlobalBounds();
+			
+
+			for (int i = 0; i < boxNumber.x; i++)
+			{
+				for (int j = 0; j < boxNumber.y; j++)
+				{
+					int index = i * boxNumber.x + j;
+					Utils::SetOrigin(boxs[index], Origins::MC);
+					boxs[index].setRotation(rotationAngle);
+
+					sf::Vector2f boxOffset(i * boxSize.x, j * boxSize.y);
+					sf::Transform transform;
+					transform.rotate(rotationAngle, sprite.getPosition());
+					sf::Vector2f transformedOffset = transform.transformPoint(boxOffset);
+
+					boxs[index].setPosition(transformedOffset);
+
+
+					/*sf::Vector2f direction = Utils::Direction(90.f);
+					float radians = rotationAngle * (M_PI / 180.f);
+					float distance = abs(sin(radians));
+					boxs[index].setPosition(boxs[index].getPosition() + direction * distance);*/
+
+					//boxs[index].setPosition(spriteBounds.left + i * boxSize.x, spriteBounds.top + j * boxSize.y);
+				}
+			}
 		}
 	}
 	
 	
 	
 
+}
+
+void Cat::Draw(sf::RenderWindow& window)
+{
+	SpriteGo::Draw(window);
+
+	for (auto box : boxs)
+	{
+		window.draw(box);
+	}
 }
 
 void Cat::OnClick()
@@ -121,22 +175,31 @@ void Cat::OnClickHold(sf::Vector2f worldMousePos)
 
 void Cat::Makeboxs()
 {
-	float height = sprite.getTextureRect().height;
 	float width = sprite.getTextureRect().width;
-	int h = floor(height / 62);
-	int w = floor(width / 62);
-	int boxNum = h * w;
-	sf::Vector2f boxSize;
-	boxSize.y = height / h;
-	boxSize.x = width / w;
-
-	sf::Vector2f pos = GetPosition() + sf::Vector2f(sprite.getLocalBounds().top, sprite.getLocalBounds().left);
+	float height = sprite.getTextureRect().height;
+	int w = boxNumber.x = floor(width / 62);
+	int h = boxNumber.y = floor(height / 62);
 	
-	for (int i = 0; i < boxNum; i++)
+	boxSize.x = width / w;
+	boxSize.y = height / h;
+
+	sf::FloatRect spriteBounds = sprite.getGlobalBounds();
+
+	for (int i = 0; i < w; i++)
 	{
-		sf::RectangleShape box;
-		box.setSize(boxSize);;
-		boxs.push_back(box);
+		for (int j = 0; j < h; j++)
+		{
+			sf::RectangleShape box;	
+			box.setSize(boxSize);
+			box.setFillColor(sf::Color::Transparent);
+			//develop
+			{
+				box.setOutlineThickness(1.f);
+				box.setOutlineColor(sf::Color::White);
+			}
+			box.setPosition(spriteBounds.left + i * boxSize.x, spriteBounds.top + j * boxSize.y);
+			boxs.push_back(box);
+		}
 	}
 }
 
