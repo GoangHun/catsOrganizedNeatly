@@ -11,8 +11,6 @@ void Cat::Init()
 	animation.SetTarget(&sprite);
 	SetOrigin(Origins::MC);
 	sortLayer = 50;
-
-	
 }
 
 void Cat::Reset()
@@ -33,20 +31,34 @@ void Cat::Update(float dt)
 
 	//RectangleShape Position Update
 	{
-		/*if (!isRotation)
-		{
-			sf::FloatRect spriteBounds = sprite.getGlobalBounds();
-			for (int i = 0; i < boxNumber.x; i++)
-			{
-				for (int j = 0; j < boxNumber.y; j++)
-				{
-					int index = i * boxNumber.x + j;
-					boxs[index].setPosition(spriteBounds.left + i * boxSize.x, spriteBounds.top + j * boxSize.y);
-				}
-			}
-		}*/
+		//if (!isRotation)
+		//{
+		//	// Sprite의 로컬 변환 행렬
+		//	for (int i = 0; i < boxNumber.x; i++)
+		//	{
+		//		for (int j = 0; j < boxNumber.y; j++)
+		//		{
+		//			int index = i * boxNumber.x + j;	
+		//			sf::Transform spriteTransform = sprite.getTransform();
+		//			sf::Vector2f boxGlobalPos = boxs[index].getPosition();
+		//			sf::Vector2f localPos = spriteTransform.getInverse().transformPoint(boxGlobalPos);
+
+		//			boxs[index].setPosition(localPos);
+
+		//			std::cout << "sprite pos: " << sprite.getPosition().x << std::endl;
+		//			std::cout << "local pos" << localPos.x<<localPos.y << std::endl;
+
+		//			//boxs[index].setPosition(spriteBounds.left + i * boxSize.x, spriteBounds.top + j * boxSize.y);
+		//			// box의 전역 위치
+		//			//sf::Vector2f globalposition = boxs[index].getPosition();
+
+		//			// box의 전역 위치를 sprite의 로컬 위치로 변환
+		//			//sf::Vector2f localposition = spriteTransform.getInverse().transformPoint(globalposition);
+		//			//boxs[index].setPosition(localposition);
+		//		}
+		//	}
+		//}
 	}
-	
 				
 	sf::Vector2f mousePos = INPUT_MGR.GetMousePos();
 	sf::Vector2f worldMousePos = SCENE_MGR.GetCurrScene()->ScreenToWorldPos(mousePos);
@@ -89,7 +101,7 @@ void Cat::Update(float dt)
 
 	//Rotation
 	{
-		if (isHover && INPUT_MGR.GetMouseButtonUp(sf::Mouse::Right))
+		if (!isRotation && isHover && INPUT_MGR.GetMouseButtonUp(sf::Mouse::Right))
 		{
 			isRotation = true;
 			startAngle = sprite.getRotation();
@@ -106,38 +118,52 @@ void Cat::Update(float dt)
 			}
 			sprite.setRotation(rotationAngle);
 
-			sf::FloatRect spriteBounds = sprite.getGlobalBounds();
-			
 
-			for (int i = 0; i < boxNumber.x; i++)
+			int x = boxSize.x;
+			int y = boxSize.y;
+			for (int i = 0; i < boxNumber.x; i++) 
 			{
-				for (int j = 0; j < boxNumber.y; j++)
+				for (int j = 0; j < boxNumber.y; j++) 
 				{
 					int index = i * boxNumber.x + j;
-					Utils::SetOrigin(boxs[index], Origins::MC);
 					boxs[index].setRotation(rotationAngle);
 
-					sf::Vector2f boxOffset(i * boxSize.x, j * boxSize.y);
+					sf::Vector2f boxOffset;
+					
+					if (boxNumber.x % 2 == 0)
+					{
+						boxOffset.x = i * boxSize.x + -(boxSize.x * (boxNumber.x / 2 - 0.5f));
+					}
+					else
+					{
+						if (boxNumber.x == 1)
+							boxOffset.x = 0.f;
+						else
+							boxOffset.x = i * boxSize.x + -(boxSize.x * floor(boxNumber.x / 2.f));
+					}
+
+					if (boxNumber.y % 2 == 0)
+					{
+						boxOffset.y = j * boxSize.y + -(boxSize.y * (boxNumber.y / 2 - 0.5f));
+					}
+					else
+					{
+						if (boxNumber.y == 1)
+							boxOffset.y = 0.f;
+						else
+							boxOffset.y = j * boxSize.y + -(boxSize.y * floor(boxNumber.y / 2.f));
+					}	
+
 					sf::Transform transform;
 					transform.rotate(rotationAngle, sprite.getPosition());
 					sf::Vector2f transformedOffset = transform.transformPoint(boxOffset);
-
-					boxs[index].setPosition(transformedOffset);
-
-
-					/*sf::Vector2f direction = Utils::Direction(90.f);
-					float radians = rotationAngle * (M_PI / 180.f);
-					float distance = abs(sin(radians));
-					boxs[index].setPosition(boxs[index].getPosition() + direction * distance);*/
-
-					//boxs[index].setPosition(spriteBounds.left + i * boxSize.x, spriteBounds.top + j * boxSize.y);
+					boxs[index].setPosition(sprite.getPosition() + transformedOffset);
 				}
 			}
 		}
+
+		
 	}
-	
-	
-	
 
 }
 
@@ -183,6 +209,8 @@ void Cat::Makeboxs()
 	boxSize.x = width / w;
 	boxSize.y = height / h;
 
+	std::cout << "boxSize(" << boxSize.x << ", " << boxSize.y << std::endl;
+
 	sf::FloatRect spriteBounds = sprite.getGlobalBounds();
 
 	for (int i = 0; i < w; i++)
@@ -198,6 +226,7 @@ void Cat::Makeboxs()
 				box.setOutlineColor(sf::Color::White);
 			}
 			box.setPosition(spriteBounds.left + i * boxSize.x, spriteBounds.top + j * boxSize.y);
+			Utils::SetOrigin(box, Origins::MC);
 			boxs.push_back(box);
 		}
 	}

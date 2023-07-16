@@ -110,11 +110,14 @@ const sf::Vector2f Utils::Normalize(const sf::Vector2f& vector)
 
 float Utils::Magnitude(const sf::Vector2f& vector)
 {
+	//sqrt(제곱근 함수) x^2 + y^2의 제곱근 == vector의 길이
 	return sqrt(vector.x * vector.x + vector.y * vector.y);
 }
 
 float Utils::SqrMagnitude(const sf::Vector2f& vector)
 {
+	//vector의 길이^2
+	//vector끼리 비교할 때 sqrt() 연산 비용을 아끼기 위해 사용
 	return vector.x * vector.x + vector.y * vector.y;
 }
 

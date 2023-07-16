@@ -23,11 +23,12 @@ class Cat :
 {
 protected:
 	AnimationController animation;
-	std::vector<sf::RectangleShape> boxs;
-
 	CatTypes type;
+
+	//boxs
+	std::vector<sf::RectangleShape> boxs;
 	sf::Vector2i boxNumber;
-	sf::Vector2f boxSize;
+	sf::Vector2f boxSize;	//lengths of box
 	
 	bool isHover = false;
 	bool isCatch = false;
