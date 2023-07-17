@@ -27,6 +27,8 @@ protected:
 
 	//boxs
 	std::vector<sf::RectangleShape> boxs;
+	std::vector<sf::Vector2f> localPoss;
+	float rotation;
 	sf::Vector2i boxNumber;
 	sf::Vector2f boxSize;	//lengths of box
 	
