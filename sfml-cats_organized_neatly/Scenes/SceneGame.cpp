@@ -27,34 +27,11 @@ void SceneGame::Init()
 	auto size = FRAMEWORK.GetWindowSize();
 
 	AddGo(new GameBackground());
-	AddGo(new Board());
+	AddGo(new Board("", "Board"));
 
 	Cat* cat = (Cat*)AddGo(new Cat(CatTypes::c1));
-	//cat->SetOrigin(Origins::TR);
 	cat->SetPosition(size.x, 0.f);
 	
-	
-
-	/*Player1* player = (Player1*)AddGo(new Player1());
-	UIButton * testButton = (UIButton*)AddGo(new UIButton("graphics/button.png"));
-	testButton->SetOrigin(Origins::TR);
-	testButton->sortLayer = 100;
-	testButton->SetPosition(size.x, 0.f);
-	testButton->OnEnter = [testButton]() {
-		sf::Texture* tex = RESOURCE_MGR.GetTexture("graphics/button2.png");
-		testButton->sprite.setTexture(*tex);
-	};
-	testButton->OnExit = [testButton]() {
-		sf::Texture* tex = RESOURCE_MGR.GetTexture(testButton->textureId);
-		testButton->sprite.setTexture(*tex);
-	};
-	testButton->OnClick = [testButton]() {
-		
-	};*/
-	
-	//Ground* ground = (Ground*)AddGo(new Ground());
-	//ground->SetPlayer(player);
-
 	for (auto go : gameObjects)
 	{
 		go->Init();
@@ -90,9 +67,59 @@ void SceneGame::Exit()
 void SceneGame::Update(float dt)
 {
 	Scene::Update(dt);
+
+	if (INPUT_MGR.GetKey(sf::Keyboard::LShift) && INPUT_MGR.GetKeyDown(sf::Keyboard::D))
+	{
+		ToggleIsDeveloperMode();
+	}
+
+	if (isDeveloperMode)
+	{
+		sf::Vector2f mousePos = INPUT_MGR.GetMousePos();
+		sf::Vector2f worldMousePos = SCENE_MGR.GetCurrScene()->ScreenToWorldPos(mousePos);
+		int index = 2;
+		if (INPUT_MGR.GetKeyDown(sf::Keyboard::Space) && !isCatch)
+		{
+			sf::Texture* tex = RESOURCE_MGR.GetTexture("sprites/b1_0.png");
+			sprite.setTexture(*tex);
+			Utils::SetOrigin(sprite, Origins::MC);
+			isCatch = true;
+		}
+		else if (INPUT_MGR.GetKeyDown(sf::Keyboard::Space) && isCatch)
+		{
+			sf::Texture* tex = RESOURCE_MGR.GetTexture("sprites/b" + std::to_string(index) + "_0.png");
+			sprite.setTexture(*tex);
+			Utils::SetOrigin(sprite, Origins::MC);
+			index = index == 20 ? 1 : ++index;
+		}
+
+		if (isCatch)
+		{
+			sprite.setPosition(worldMousePos);
+			std::cout << worldMousePos.x << " / " << worldMousePos.y << std::endl;
+
+			if (INPUT_MGR.GetMouseButtonDown(sf::Mouse::Left))
+			{
+				SpriteGo* go = new SpriteGo();
+				go->sprite.setTexture(*sprite.getTexture());
+				go->SetOrigin(Origins::MC);
+				go->SetPosition(worldMousePos);
+				ornaments.push_back(*go);
+
+				AddGo(go);
+			}
+		}
+		
+	}
 }
 
 void SceneGame::Draw(sf::RenderWindow& window)
 {
 	Scene::Draw(window);
+	
+	if (isCatch)
+	{
+		window.setView(worldView);
+		window.draw(sprite);
+	}
 }

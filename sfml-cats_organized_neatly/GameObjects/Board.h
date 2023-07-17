@@ -38,8 +38,6 @@ protected:
 	std::vector<Room> rooms;
 	ObjectPool<Tile> tilePool;
 
-	bool isDeveloperMode = true;
-
 public:
 	Board(const std::string& textureId = "", const std::string& n = "")
 		: SpriteGo(textureId, n) {}

@@ -81,14 +81,14 @@
     <ClCompile Include="GameObjects\Cat.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="GameObjects\Room.cpp">
+    <ClCompile Include="GameObjects\Tile.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObjects\UIButton.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="GameObjects\stdafx.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
     <ClInclude Include="Global\Singleton.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
@@ -164,7 +164,13 @@
     <ClInclude Include="GameObjects\Cat.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="GameObjects\Room.h">
+    <ClInclude Include="GameObjects\Tile.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Global\stdafx.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObjects\UIButton.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>

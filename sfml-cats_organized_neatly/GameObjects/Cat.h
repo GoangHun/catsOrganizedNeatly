@@ -1,9 +1,22 @@
 #pragma once
 #include "SpriteGo.h"
 #include "AnimationController.h"
+#include "ObjectPool.h"
+#include "Tile.h";
+
+//struct BoxCollider
+//{
+//	int num1;
+//	int num2;
+//	int num3;
+//	int num4;
+//	int num5;
+//	int num6;
+//};
+
 enum class CatTypes
 {
-	c1,
+	c1 = 1,
 	c2,
 	c3,
 	c4,
@@ -27,14 +40,16 @@ protected:
 
 	//boxs
 	std::vector<sf::RectangleShape> boxs;
-	std::vector<sf::Vector2f> localPoss;
-	float rotation;
-	sf::Vector2i boxNumber;
+	sf::Vector2i boxNumber;	//number of box
 	sf::Vector2f boxSize;	//lengths of box
+	std::vector<int> activeBoxInfo;
+
+	ObjectPool<Tile>* tilePool = nullptr;
 	
 	bool isHover = false;
 	bool isCatch = false;
 	bool isRotation = false;
+	bool isFixation = false;
 
 	float startAngle = 0.f;
 	float targetRotation = 0.f;
@@ -57,5 +72,8 @@ public:
 	void OnClickHold(sf::Vector2f worldMousePos);
 
 	void Makeboxs();
+
+	void SetPool(ObjectPool<Tile>* pool) { tilePool = pool; }
+	void SetActiveBox();
 };
 

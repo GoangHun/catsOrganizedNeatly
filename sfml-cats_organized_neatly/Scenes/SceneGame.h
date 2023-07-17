@@ -1,9 +1,17 @@
 #pragma once
 #include "Scene.h"
 #include "Ground.h"
+#include "SpriteGo.h"
+
 class SceneGame : public Scene
 {
 protected:
+	bool isDeveloperMode = true;
+	bool isCatch = false;
+
+	std::vector<SpriteGo> ornaments;
+	sf::Sprite sprite;
+
 
 public:
 	SceneGame();
@@ -17,5 +25,8 @@ public:
 
 	virtual void Update(float dt) override;
 	virtual void Draw(sf::RenderWindow& window) override;
+
+	void ToggleIsDeveloperMode() { isDeveloperMode = !isDeveloperMode; }
+	bool GetIsDeveloperMode() { return isDeveloperMode; }
 };
 

@@ -4,6 +4,7 @@
 #include "InputMgr.h"
 #include "SceneMgr.h"
 #include "Scene.h"
+#include "rapidcsv.h"
 
 void Cat::Init()
 {
@@ -20,6 +21,7 @@ void Cat::Reset()
 	SetPosition({ 0, 0 });
 	isHover = false;
 	Makeboxs();
+	//SetCenterBox()
 }
 
 void Cat::Update(float dt)
@@ -29,9 +31,8 @@ void Cat::Update(float dt)
 		animation.Update(dt);
 	}
 
-	//RectangleShape Position Update
+	//RectangleShape Position & Rotation Update
 	{
-		// Sprite의 로컬 변환 행렬
 		for (int i = 0; i < boxNumber.x; i++)
 		{
 			for (int j = 0; j < boxNumber.y; j++)
@@ -42,6 +43,29 @@ void Cat::Update(float dt)
 			}
 		}
 	}
+
+	
+	/*if (!isFixation)
+	{
+		if (!tilePool->GetUseList().empty())
+		{
+			std::list<Tile*> tiles = tilePool->GetUseList();
+			int count = 0;
+			for (auto& box : boxs)
+			{
+				for (auto& tile : tiles)
+				{
+					if (box.getGlobalBounds().intersects(tile->GetBounds()))
+					{
+						count++;
+						break;
+					}
+				}
+			}
+		}
+	}*/
+
+
 				
 	sf::Vector2f mousePos = INPUT_MGR.GetMousePos();
 	sf::Vector2f worldMousePos = SCENE_MGR.GetCurrScene()->ScreenToWorldPos(mousePos);
@@ -158,8 +182,6 @@ void Cat::Draw(sf::RenderWindow& window)
 void Cat::OnClick()
 {
 	//이팩트
-	
-
 }
 
 void Cat::OnEnter()
@@ -207,5 +229,34 @@ void Cat::Makeboxs()
 		}
 	}
 }
+
+//void Cat::SetActiveBox()
+//{
+//	rapidcsv::Document doc("scripts/cat_box_info.csv");
+//	std::vector<int> types = doc.GetColumn<int>(0);
+//	std::vector<std::string> paths = doc.GetColumn<std::string>(1);
+//
+//	auto it = std::find(types.begin(), types.end(), type);
+//	if (it != types.end())
+//	{
+//		std::string str = paths[*it];
+//
+//		std::vector<std::string> tokens;
+//		std::istringstream iss(str);
+//		std::string token;
+//
+//		while (std::getline(iss, token, ',')) 
+//		{
+//			tokens.push_back(token);
+//		}
+//
+//		for (auto info : tokens)
+//		{
+//			activeBoxInfo.push_back(std::stoi(info));
+//		}
+//	}
+//}
+
+
 
 

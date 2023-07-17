@@ -15,5 +15,7 @@ public:
 	virtual void Release() override;
 	virtual void Reset() override;
 
+	sf::FloatRect GetBounds() { return sprite.getGlobalBounds(); }
+
 };
 
