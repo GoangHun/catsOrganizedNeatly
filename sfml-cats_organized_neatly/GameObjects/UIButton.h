@@ -17,8 +17,9 @@ public:
 	virtual void Update(float dt) override;
 	virtual void Draw(sf::RenderWindow& window) override;
 
-
 	sf::Text text;
+
+	void SetText(std::string fontPath, int size, sf::Color color, std::string str, Origins origin, sf::Vector2f pos);
 
 	std::function<void()> OnClick;
 	std::function<void()> OnEnter;

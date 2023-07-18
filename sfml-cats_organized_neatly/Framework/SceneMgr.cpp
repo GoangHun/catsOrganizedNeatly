@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "SceneMgr.h"
-#include "SceneGame.h"
+#include "DeveloperScene.h"
 //#include "DataTableMgr.h"
 #include "StringTable.h"
 
@@ -11,7 +11,7 @@ void SceneMgr::Init()
 		Release();
 	}
 
-	scenes.push_back(new SceneGame());
+	scenes.push_back(new DeveloperScene());
 
 	for (auto scene : scenes)
 	{

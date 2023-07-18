@@ -2,6 +2,7 @@
 #include "UIButton.h"
 #include "InputMgr.h"
 #include "SceneMgr.h"
+#include "ResourceMgr.h"
 
 UIButton::UIButton(const std::string& textureId, const std::string& n) :
 	SpriteGo(textureId, n)
@@ -41,26 +42,34 @@ void UIButton::Update(float dt)
 	if (!prevHover && isHover)
 	{
 		if (OnEnter != nullptr)
-			OnEnter();
-		
+			OnEnter();	
 	}
 
 	if (prevHover && !isHover)
 	{
 		if (OnExit != nullptr)
 			OnExit();
-
 	}
 
 	if (isHover && INPUT_MGR.GetMouseButtonUp(sf::Mouse::Left))
 	{
 		if (OnClick != nullptr)
 			OnClick();
-
 	}
 }
 
 void UIButton::Draw(sf::RenderWindow& window)
 {
 	SpriteGo::Draw(window);
+	window.draw(text);
+}
+
+void UIButton::SetText(std::string fontPath, int size, sf::Color color, std::string str, Origins origin, sf::Vector2f pos)
+{
+	text.setFont(*RESOURCE_MGR.GetFont(fontPath));
+	text.setCharacterSize(size);
+	text.setFillColor(color);
+	text.setString(str);
+	Utils::SetOrigin(text, origin);
+	text.setPosition(pos);
 }

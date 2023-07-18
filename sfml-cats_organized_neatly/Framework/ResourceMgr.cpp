@@ -257,7 +257,6 @@ sf::Texture* ResourceMgr::GetTexture(const std::string& id)
 	auto it = mapTexture.find(id);
 	if (it != mapTexture.end())
 	{
-
 		return std::get<0>(it->second);
 	}
 	return nullptr;

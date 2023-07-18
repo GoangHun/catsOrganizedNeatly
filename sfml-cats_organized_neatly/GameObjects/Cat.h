@@ -40,11 +40,15 @@ protected:
 
 	//boxs
 	std::vector<sf::RectangleShape> boxs;
-	sf::Vector2i boxNumber;	//number of box
-	sf::Vector2f boxSize;	//lengths of box
 	std::vector<int> activeBoxInfo;
 
+	sf::Vector2i boxNumber;	//number of box
+	sf::Vector2f boxSize;	//lengths of box
+
 	ObjectPool<Tile>* tilePool = nullptr;
+
+	std::string animationId;
+	sf::Texture* tex;
 	
 	bool isHover = false;
 	bool isCatch = false;
@@ -57,8 +61,7 @@ protected:
 	float rotationAngle = 0;
 
 public:
-	Cat(const CatTypes type, const std::string& textureId = "", const std::string& n = "")
-		: SpriteGo(textureId, n) { this->type = type; }
+	Cat(const CatTypes type, const std::string& textureId = "", const std::string& n = "");
 	virtual ~Cat() override { Release(); }
 
 	virtual void Init() override;
@@ -75,5 +78,8 @@ public:
 
 	void SetPool(ObjectPool<Tile>* pool) { tilePool = pool; }
 	void SetActiveBox();
+	void SetType(CatTypes type) { this->type = type; }
+
+	int GetType() { return (int)type; }
 };
 

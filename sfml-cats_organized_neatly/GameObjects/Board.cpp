@@ -4,7 +4,7 @@
 #include "InputMgr.h"
 #include "SceneMgr.h"
 #include "Scene.h"
-#include "SceneGame.h"
+#include "DeveloperScene.h"
 
 /*
 stageId		boardType
@@ -35,26 +35,28 @@ void Board::Update(float dt)
 	animation.Update(dt);
 
 	//개발자 모드 
-	SceneGame* scene = (SceneGame*)SCENE_MGR.GetCurrScene();
+	DeveloperScene* scene = (DeveloperScene*)SCENE_MGR.GetCurrScene();
 	if (scene->GetIsDeveloperMode())
 	{
 		sf::Vector2f mousePos = INPUT_MGR.GetMousePos();
 		sf::Vector2f worldMousePos = SCENE_MGR.GetCurrScene()->ScreenToWorldPos(mousePos);
+		DeveloperScene* scene = (DeveloperScene*)SCENE_MGR.GetCurrScene();
+		bool isCatch = scene->GetIsCatch();
 
 		for (auto& sRoom : rooms)
 		{
 			sRoom.prevHover = sRoom.isHover;
 			sRoom.isHover = sRoom.room.getGlobalBounds().contains(worldMousePos);
-			if (!sRoom.prevHover && sRoom.isHover)
+			if (!sRoom.prevHover && sRoom.isHover && !isCatch)
 			{
 				OnEnter(sRoom);
 			}
 
-			if (sRoom.prevHover && !sRoom.isHover)
+			if (sRoom.prevHover && !sRoom.isHover && !isCatch)
 			{
 				OnExit(sRoom);
 			}
-			if (sRoom.isHover && INPUT_MGR.GetMouseButtonUp(sf::Mouse::Left))
+			if (sRoom.isHover && INPUT_MGR.GetMouseButtonUp(sf::Mouse::Left) && !isCatch)
 			{
 				OnClick(sRoom);
 			}
@@ -118,6 +120,7 @@ void Board::SetRoomPos(BoardType type)
 	{
 		coord = roomSize * floor((int)type * 0.5f);
 	}
+
 	sf::Vector2f pos = { -coord, -coord };
 	std::cout << coord << std::endl;
 
@@ -126,11 +129,7 @@ void Board::SetRoomPos(BoardType type)
 		Room structRoom;
 		structRoom.room.setSize( sf::Vector2f(roomSize, roomSize));
 		Utils::SetOrigin(structRoom.room, Origins::MC);
-		//개발자 모드
-		/*{
-			structRoom.room.setOutlineThickness(5.f);
-			structRoom.room.setOutlineColor(sf::Color::Blue);
-		}*/
+
 		structRoom.room.setFillColor({ 255, 255, 255, 0 });
 		rooms.push_back(structRoom);
 	}

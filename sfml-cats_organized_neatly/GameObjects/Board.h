@@ -28,12 +28,11 @@ struct Room
 	bool isFull = false;
 };
 
-
 class Board :
     public SpriteGo
 {
 protected:
-	BoardInfo boardInfo = { BoardType::_8X8, "board_8x8" };
+	BoardInfo boardInfo = { BoardType::_3X3, "board_3x3" };
 	AnimationController animation;
 	std::vector<Room> rooms;
 	ObjectPool<Tile> tilePool;
@@ -51,6 +50,7 @@ public:
 
 	void SetBoard(BoardType type);
 	void SetRoomPos(BoardType type);
+	void SetBoardInfo(BoardType type, std::string aniId) { boardInfo = { type, aniId }; }
 
 	void OnClick(Room& sRoom);
 	void OnEnter(Room& sRoom);
