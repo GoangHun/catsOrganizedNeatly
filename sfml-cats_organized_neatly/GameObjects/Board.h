@@ -52,6 +52,9 @@ public:
 	void SetRoomPos(BoardType type);
 	void SetBoardInfo(BoardType type, std::string aniId) { boardInfo = { type, aniId }; }
 
+	const BoardInfo GetBoardInfo() const { return boardInfo; };
+	std::vector<Room>& GetRooms() { return rooms; }
+
 	ObjectPool<Tile>* GetTilePool() { return &tilePool; }
 
 	void OnClick(Room& sRoom);

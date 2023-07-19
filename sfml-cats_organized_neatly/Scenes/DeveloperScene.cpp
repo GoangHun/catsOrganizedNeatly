@@ -24,7 +24,7 @@ void DeveloperScene::Init()
 	AddGo(new GameBackground("", "Background"));
 	AddGo(new Board("", "Board"));
 
-	//Save
+	//Save Button
 	UIButton* button = (UIButton*)AddGo(new UIButton("sprites/language_speachbubble_1_0.png"));
 	button->SetOrigin(Origins::MC);
 	button->sprite.setScale({ 0.5f, 0.5f });
@@ -44,7 +44,7 @@ void DeveloperScene::Init()
 		OBJECT_MGR.SaveObjects("scene_datas/stage_1.txt", BoardType::_3X3, gameObjects);
 	};
 
-	//Load
+	//Load Button
 	button = (UIButton*)AddGo(new UIButton("sprites/language_speachbubble_1_0.png"));
 	button->SetOrigin(Origins::MC);
 	button->sprite.setScale({ 0.5f, 0.5f });
@@ -61,8 +61,55 @@ void DeveloperScene::Init()
 		button->sprite.setTexture(*tex);
 	};
 	button->OnClick = [button, this]() {
-		//로드
 		isLoad = true;
+	};
+
+	//Next Button
+	button = (UIButton*)AddGo(new UIButton("sprites/button_next_0.png"));
+	button->SetOrigin(Origins::BC);
+	button->sortLayer = 100;
+	button->SetPosition(size.x / 2 + 100, size.y);
+
+	button->OnEnter = [button]() {
+		sf::Texture* tex = RESOURCE_MGR.GetTexture("sprites/button_next_1.png");
+		button->sprite.setTexture(*tex);
+	};
+	button->OnExit = [button]() {
+		sf::Texture* tex = RESOURCE_MGR.GetTexture(button->GetTexId());
+		button->sprite.setTexture(*tex);
+	};
+	button->OnClick = [button, this]() {
+		Board* board = dynamic_cast<Board*>(FindGo("Board"));
+		board->Release();
+		board->GetRooms().clear();
+		Exit();
+		auto bI = (int)board->GetBoardInfo().type;
+		bI = bI == 8 ? 3 : bI + 1;
+		board->SetBoard((BoardType)bI);
+		board->Reset();
+	};
+
+	//Previous Button
+	button = (UIButton*)AddGo(new UIButton("sprites/button_back_0.png"));
+	button->SetOrigin(Origins::BC);
+	button->sortLayer = 100;
+	button->SetPosition(size.x / 2 - 100, size.y);
+
+	button->OnEnter = [button]() {
+		sf::Texture* tex = RESOURCE_MGR.GetTexture("sprites/button_back_1.png");
+		button->sprite.setTexture(*tex);
+	};
+	button->OnExit = [button]() {
+		sf::Texture* tex = RESOURCE_MGR.GetTexture(button->GetTexId());
+		button->sprite.setTexture(*tex);
+	};
+	button->OnClick = [button, this]() {
+		Board* board = dynamic_cast<Board*>(FindGo("Board"));
+		board->Release();
+		Exit();
+		auto bI = (int)board->GetBoardInfo().type;
+		bI = bI == 3 ? 8 : bI - 1;
+		board->SetBoard((BoardType)bI);
 	};
 
 
@@ -196,25 +243,38 @@ void DeveloperScene::Draw(sf::RenderWindow& window)
 
 void DeveloperScene::LoadScene()
 {
+	//OBJECT_MGR.LoadObjects()에서 pool에 Get()을 한 뒤 저장한 값을 세팅해 주기 때문에 그 전에 한 번 tilePool을 비워줌
+	Board* board = dynamic_cast<Board*>(FindGo("Board"));
+	board->GetTilePool()->Clear();
+
 	std::tuple<int, std::vector<GameObject*>> sceneData = OBJECT_MGR.LoadObjects("scene_datas/stage_1.txt");
 	int boardType = std::get<0>(sceneData);
 	std::vector<GameObject*> vGameObjects = std::get<1>(sceneData);
 
-	Release();
-	Init();
+	//기존에 있던 Cat과 Pot을 지워준 뒤 새로 만듬
+	for (auto go : gameObjects)
+	{
+		std::string name = go->GetName();
+		if (name == "Cat" || name == "Pot" || name == "Tile")
+		{
+			RemoveGo(go);
+			delete go;
+		}	
+	}
 
-	auto size = FRAMEWORK.GetWindowSize();
-	GameBackground* bg = (GameBackground*)AddGo(new GameBackground());
-	Board* board = (Board*)AddGo(new Board());
-	bg->Init();
-	board->Init();
-	std::string strSize = std::to_string(boardType);
-	board->SetBoardInfo((BoardType)boardType, "board_" + strSize + "x" + strSize);
-	bg->Reset();
-	board->Reset();
+	Exit();
 
 	for (auto go : vGameObjects)
 	{
+		if (go->GetName() == "Tile")
+		{
+			std::vector<Room>& rooms = board->GetRooms();
+			for (int i = 0; i < rooms.size(); i++)
+			{
+				if (go->GetPosition() == rooms[i].room.getPosition())
+					rooms[i].tile = dynamic_cast<Tile*>(go);
+			}
+		}
 		AddGo(go);
 	}
 }

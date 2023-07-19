@@ -28,7 +28,7 @@ ResourceMgr::~ResourceMgr()
 
 void ResourceMgr::Init()
 {
-	LoadFromCSV("scripts/total_resource_list.csv", true);
+	LoadFromCSV("scripts/total_resource_list - บนป็บป.csv", true);
 }
 
 void ResourceMgr::UnLoadAll()

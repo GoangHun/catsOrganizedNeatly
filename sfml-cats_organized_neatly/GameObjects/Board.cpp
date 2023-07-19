@@ -25,6 +25,8 @@ void Board::Release()
 void Board::Reset()
 {
 	animation.Play(boardInfo.animationId);
+	
+	sprite.setTextureRect({0, 0, (int)sprite.getTexture()->getSize().x, (int)sprite.getTexture()->getSize().y});
 	SetOrigin(Origins::MC);
 	SetPosition({ 0, 0 });
 	sortLayer = 0;
@@ -76,31 +78,38 @@ void Board::Draw(sf::RenderWindow& window)
 
 void Board::SetBoard(BoardType type)
 {	
+	std::cout << "SetBoard " << (int)type << "x" << (int)type << std::endl;
 	switch(type)
 	{
 	case BoardType::_3X3:
 		animation.AddClip(*RESOURCE_MGR.GetAnimationClip("animations/board_3x3.csv"));
 		SetRoomPos(type);
+		SetBoardInfo(type, "board_3x3");
 		break;
 	case BoardType::_4X4:
 		animation.AddClip(*RESOURCE_MGR.GetAnimationClip("animations/board_4x4.csv"));
 		SetRoomPos(type);
+		SetBoardInfo(type, "board_4x4");
 		break;
 	case BoardType::_5X5:
 		animation.AddClip(*RESOURCE_MGR.GetAnimationClip("animations/board_5x5.csv"));
 		SetRoomPos(type);
+		SetBoardInfo(type, "board_5x5");
 		break;
 	case BoardType::_6X6:
 		animation.AddClip(*RESOURCE_MGR.GetAnimationClip("animations/board_6x6.csv"));
 		SetRoomPos(type);
+		SetBoardInfo(type, "board_6x6");
 		break;
 	case BoardType::_7X7:
 		animation.AddClip(*RESOURCE_MGR.GetAnimationClip("animations/board_7x7.csv"));
 		SetRoomPos(type);
+		SetBoardInfo(type, "board_7x7");
 		break;
 	case BoardType::_8X8:
 		animation.AddClip(*RESOURCE_MGR.GetAnimationClip("animations/board_8x8.csv"));
 		SetRoomPos(type);
+		SetBoardInfo(type, "board_8x8");
 		break;
 	}
 }

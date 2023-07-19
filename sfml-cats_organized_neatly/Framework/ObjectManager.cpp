@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "ObjectManager.h"
 #include "ResourceMgr.h"
+#include "SceneMgr.h"
 #include "Board.h"
 #include "Tile.h"
 #include "Cat.h"
@@ -62,7 +63,8 @@ std::tuple<int, std::vector<GameObject*>> ObjectManager::LoadObjects(std::string
 
         if (name == "Tile")
         {
-            Tile* tile = new Tile();
+            Board* board = (Board*)SCENE_MGR.GetCurrScene()->FindGo("Board");
+            Tile* tile = board->GetTilePool()->Get();
             tile->Init();
             tile->Reset();
             tile->SetTexId(texId);
