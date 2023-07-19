@@ -201,6 +201,7 @@ void DeveloperScene::LoadScene()
 	std::vector<GameObject*> vGameObjects = std::get<1>(sceneData);
 
 	Release();
+	Init();
 
 	auto size = FRAMEWORK.GetWindowSize();
 	GameBackground* bg = (GameBackground*)AddGo(new GameBackground());
