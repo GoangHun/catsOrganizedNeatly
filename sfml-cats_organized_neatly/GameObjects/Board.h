@@ -38,7 +38,7 @@ protected:
 	ObjectPool<Tile> tilePool;
 
 public:
-	Board(const std::string& textureId = "", const std::string& n = "")
+	Board(const std::string& textureId = "", const std::string& n = "Board")
 		: SpriteGo(textureId, n) {}
 	virtual ~Board() override { Release(); }
 
@@ -51,6 +51,8 @@ public:
 	void SetBoard(BoardType type);
 	void SetRoomPos(BoardType type);
 	void SetBoardInfo(BoardType type, std::string aniId) { boardInfo = { type, aniId }; }
+
+	ObjectPool<Tile>* GetTilePool() { return &tilePool; }
 
 	void OnClick(Room& sRoom);
 	void OnEnter(Room& sRoom);

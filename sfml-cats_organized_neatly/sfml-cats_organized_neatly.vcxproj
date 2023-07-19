@@ -177,6 +177,7 @@
     </ClCompile>
     <ClCompile Include="Framework\ResourceMgr.cpp" />
     <ClCompile Include="GameObjects\Tile.cpp" />
+    <ClCompile Include="Framework\ObjectManager.cpp" />
     <ClCompile Include="Scenes\Scene.cpp" />
     <ClCompile Include="Scenes\DeveloperScene.cpp" />
     <ClCompile Include="Framework\SceneMgr.cpp" />
@@ -205,6 +206,7 @@
     <ClInclude Include="Framework\ResourceMgr.h" />
     <ClInclude Include="Global\Utils.h" />
     <ClInclude Include="GameObjects\Tile.h" />
+    <ClInclude Include="Framework\ObjectManager.h" />
     <ClInclude Include="Scenes\Scene.h" />
     <ClInclude Include="Scenes\DeveloperScene.h" />
     <ClInclude Include="Framework\SceneMgr.h" />

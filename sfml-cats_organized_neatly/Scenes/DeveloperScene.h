@@ -10,6 +10,7 @@ protected:
 	bool isCatch = false;
 	bool isRotation = false;
 	bool isCatHover = false;
+	bool isLoad = false;
 
 	float startAngle = 0.f;
 	float targetRotation = 0.f;
@@ -19,11 +20,9 @@ protected:
 	int num = 2;
 	int catType = 1;
 
-	std::vector<SpriteGo> ornaments;
+	std::vector<SpriteGo> pot;
 	SpriteGo* pSpriteGo = nullptr;
 	sf::Texture tex;
-
-	
 
 
 public:
@@ -40,6 +39,7 @@ public:
 	virtual void Draw(sf::RenderWindow& window) override;
 
 	void ToggleIsDeveloperMode() { isDeveloperMode = !isDeveloperMode; }
+	void LoadScene();
 	
 	bool GetIsDeveloperMode() { return isDeveloperMode; }
 	bool GetIsCatch() { return isCatch; }

@@ -4,7 +4,7 @@
 class VertexArrayGo : public GameObject
 {
 protected:
-	std::string textureId;
+	//std::string textureId;
 	sf::Texture* texture;
 	sf::Vector2f originPosition;	// local
 
@@ -19,6 +19,8 @@ public:
 
 	virtual void SetOrigin(Origins origin);
 	virtual void SetOrigin(float x, float y);
+
+	//virtual std::string GetId() override { return textureId; }
 
 	virtual void Init();
 	virtual void Release();

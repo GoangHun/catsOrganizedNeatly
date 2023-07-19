@@ -3,7 +3,7 @@
 #include "ResourceMgr.h"
 
 VertexArrayGo::VertexArrayGo(const std::string& textureId, const std::string& n)
-	: GameObject(n), textureId(textureId), texture(nullptr)
+	: GameObject(n), texture(nullptr)
 {
 }
 

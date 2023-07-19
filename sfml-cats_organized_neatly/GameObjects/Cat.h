@@ -61,7 +61,7 @@ protected:
 	float rotationAngle = 0;
 
 public:
-	Cat(const CatTypes type, const std::string& textureId = "", const std::string& n = "");
+	Cat(const CatTypes type, const std::string& textureId = "", const std::string& n = "Cat");
 	virtual ~Cat() override { Release(); }
 
 	virtual void Init() override;

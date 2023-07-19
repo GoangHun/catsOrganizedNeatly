@@ -8,7 +8,7 @@ class Tile :
 protected:
 
 public:
-	Tile(const std::string& textureId = "", const std::string& n = "");
+	Tile(const std::string& textureId = "", const std::string& n = "Tile");
 	virtual ~Tile() override;
 
 	virtual void Init() override;
@@ -16,6 +16,5 @@ public:
 	virtual void Reset() override;
 
 	sf::FloatRect GetBounds() { return sprite.getGlobalBounds(); }
-
 };
 

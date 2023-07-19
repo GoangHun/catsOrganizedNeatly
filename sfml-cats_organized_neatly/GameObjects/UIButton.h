@@ -7,7 +7,7 @@ protected:
 	bool isHover = false;
 
 public:
-	UIButton(const std::string& textureId = "", const std::string& n = "");
+	UIButton(const std::string& textureId = "", const std::string& n = "Button");
 	virtual ~UIButton() override;
 
 	virtual void Init() override;

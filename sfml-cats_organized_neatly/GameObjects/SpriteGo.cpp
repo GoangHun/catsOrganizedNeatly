@@ -4,7 +4,7 @@
 #include "ResourceMgr.h"
 
 SpriteGo::SpriteGo(const std::string& textureId, const std::string& n)
-	: GameObject(n), textureId(textureId)
+	: GameObject(textureId, n)
 {
 }
 
@@ -39,6 +39,13 @@ void SpriteGo::SetOrigin(float x, float y)
 	GameObject::SetOrigin(x, y);
 	sprite.setOrigin(x, y);
 }
+
+void SpriteGo::SetRotation(float degree)
+{
+	rotation = degree;
+	sprite.setRotation(degree);
+}
+
 
 void SpriteGo::Init()
 {

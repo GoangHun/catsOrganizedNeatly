@@ -107,7 +107,7 @@ void Cat::Update(float dt)
 	if (!isRotation && isHover && INPUT_MGR.GetMouseButtonUp(sf::Mouse::Right))
 	{
 		isRotation = true;
-		startAngle = sprite.getRotation();
+		startAngle = GetRotation();
 		targetRotation = startAngle + 90.f;
 		rotationAngle = startAngle;
 	}
@@ -119,7 +119,7 @@ void Cat::Update(float dt)
 			rotationAngle = targetRotation;
 			isRotation = false;
 		}
-		sprite.setRotation(rotationAngle);
+		SetRotation(rotationAngle);
 		/*int x = boxSize.x;
 		int y = boxSize.y;
 		for (int i = 0; i < boxNumber.x; i++)

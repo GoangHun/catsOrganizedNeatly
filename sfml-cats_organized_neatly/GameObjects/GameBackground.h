@@ -7,7 +7,7 @@ protected:
 	std::vector<std::string> textureIds;
 
 public:
-	GameBackground(const std::string& textureId = "", const std::string& n = "");
+	GameBackground(const std::string& textureId = "", const std::string& n = "GameBackground");
 	virtual ~GameBackground() override;
 
 	virtual void Init() override;

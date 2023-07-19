@@ -1,8 +1,8 @@
 #include "stdafx.h"
 #include "GameObject.h"
 
-GameObject::GameObject(const std::string& n)
-	: name (n)
+GameObject::GameObject(const std::string& textureId, const std::string& n)
+	: name (n), textureId(textureId)
 {
 }
 
@@ -21,7 +21,7 @@ void GameObject::SetActive(bool active)
 	isActive = active;
 }
 
-const std::string& GameObject::GetName()
+const std::string& GameObject::GetName() const
 {
 	return name;
 }
@@ -31,7 +31,7 @@ void GameObject::SetName(const std::string& n)
 	name = n;
 }
 
-const sf::Vector2f& GameObject::GetPosition()
+const sf::Vector2f& GameObject::GetPosition() const
 {
 	return position;
 }

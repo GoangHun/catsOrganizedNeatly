@@ -15,6 +15,8 @@ public:
 
 	virtual void SetOrigin(Origins origin) override;
 
+	//virtual std::string GetId() override { return "shape"; }
+
 	virtual void Init() override;
 	virtual void Release() override;
 
