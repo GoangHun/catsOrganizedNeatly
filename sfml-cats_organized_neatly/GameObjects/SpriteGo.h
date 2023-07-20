@@ -6,7 +6,6 @@ protected:
 
 public:
 	sf::Sprite sprite;
-	//std::string textureId;
 
 	SpriteGo(const std::string& textureId = "", const std::string& n = "");
 	virtual ~SpriteGo() override;
@@ -18,9 +17,6 @@ public:
 	virtual void SetOrigin(float x, float y);
 
 	virtual void SetRotation(float degree) override;
-	//virtual float GetRotation() override;
-
-	//virtual std::string GetId() override { return textureId; }
 
 	virtual void Init() override;
 	virtual void Release() override;
@@ -28,7 +24,5 @@ public:
 
 	virtual void Update(float dt) override;
 	virtual void Draw(sf::RenderWindow& window) override;
-
-
 };
 

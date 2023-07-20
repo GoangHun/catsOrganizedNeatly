@@ -122,7 +122,6 @@
 0,sprites/button_next_1.png
 0,sprites/language_speachbubble_1_0.png
 0,sprites/language_speachbubble_1_1.png
-1,fonts/Roboto-Black.ttf
 0,sprites/button_back_0.png
 0,sprites/button_back_1.png
 0,sprites/button_next_0.png
@@ -166,3 +165,9 @@
 0,sprites/sprTransCatOut_7.png
 0,sprites/sprTransCatOut_8.png
 0,sprites/sprTransCatOut_9.png
+1,fonts/ShadowsIntoLight-Regular.ttf
+0,sprites/soundleiste_0000___0.png
+0,sprites/soundleiste_0000___1.png
+0,sprites/soundleiste_0001___0.png
+0,sprites/soundleiste_0001___1.png
+0,sprites/soundleiste_0004_Abgerundetes_Rechteck_1_Kopie_4_0.png

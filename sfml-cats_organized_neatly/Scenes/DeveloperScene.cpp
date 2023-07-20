@@ -1,15 +1,19 @@
 #include "stdafx.h"
 #include "DeveloperScene.h"
+
+#include "Framework.h"
 #include "SceneMgr.h"
 #include "InputMgr.h"
 #include "ResourceMgr.h"
+#include "ObjectManager.h"
+
 #include "GameObject.h"
-#include "Framework.h"
+#include "TextGo.h"
+
 #include "GameBackground.h"
 #include "Board.h"
 #include "Cat.h"
 #include "UIButton.h"
-#include "ObjectManager.h"
 
 DeveloperScene::DeveloperScene() : Scene(SceneId::Game)
 {
@@ -21,16 +25,21 @@ void DeveloperScene::Init()
 
 	auto size = FRAMEWORK.GetWindowSize();
 
+	stageInfos.insert({ 1, "scene_datas/stage_1.txt" });
+	stageInfos.insert({ 2, "scene_datas/stage_2.txt" });
+	stageInfos.insert({ 3, "scene_datas/stage_3.txt" });
+
 	AddGo(new GameBackground("", "Background"));
 	AddGo(new Board("", "Board"));
 
 	//Save Button
 	UIButton* button = (UIButton*)AddGo(new UIButton("sprites/language_speachbubble_1_0.png"));
-	button->SetOrigin(Origins::MC);
-	button->sprite.setScale({ 0.5f, 0.5f });
+	button->SetOrigin(Origins::TR);
 	button->sortLayer = 100;
-	button->SetPosition(size.x - 100, 50);
-	button->SetText("fonts/Roboto-Black.ttf", 35, sf::Color::Black, "SAVE", Origins::BC, button->GetPosition());
+	button->SetPosition(size.x - 100, 100);
+	sf::Vector2f textPos = button->GetPosition();
+	textPos.x -= 100;
+	button->SetText("fonts/ShadowsIntoLight-Regular.ttf", 100, sf::Color::Black, "SAVE", Origins::TR, textPos);
 
 	button->OnEnter = [button]() {
 		sf::Texture* tex = RESOURCE_MGR.GetTexture("sprites/language_speachbubble_1_1.png");
@@ -41,16 +50,18 @@ void DeveloperScene::Init()
 		button->sprite.setTexture(*tex);
 	};
 	button->OnClick = [button, this]() {
-		OBJECT_MGR.SaveObjects("scene_datas/stage_1.txt", BoardType::_3X3, gameObjects);
+		Board* board = dynamic_cast<Board*>(FindGo("Board"));
+		OBJECT_MGR.SaveObjects(stageInfos.find(stageNum)->second, board->GetBoardInfo().type, gameObjects);
 	};
 
 	//Load Button
 	button = (UIButton*)AddGo(new UIButton("sprites/language_speachbubble_1_0.png"));
-	button->SetOrigin(Origins::MC);
-	button->sprite.setScale({ 0.5f, 0.5f });
+	button->SetOrigin(Origins::TR);
 	button->sortLayer = 100;
-	button->SetPosition(size.x - 100, 150);
-	button->SetText("fonts/Roboto-Black.ttf", 35, sf::Color::Black, "LOAD", Origins::BC, button->GetPosition());
+	button->SetPosition(size.x - 100, 300);
+	textPos = button->GetPosition();
+	textPos.x -= 100;
+	button->SetText("fonts/ShadowsIntoLight-Regular.ttf", 100, sf::Color::Black, "LOAD", Origins::TR, textPos);
 
 	button->OnEnter = [button]() {
 		sf::Texture* tex = RESOURCE_MGR.GetTexture("sprites/language_speachbubble_1_1.png");
@@ -68,7 +79,7 @@ void DeveloperScene::Init()
 	button = (UIButton*)AddGo(new UIButton("sprites/button_next_0.png"));
 	button->SetOrigin(Origins::BC);
 	button->sortLayer = 100;
-	button->SetPosition(size.x / 2 + 100, size.y);
+	button->SetPosition(size.x / 2 + 200, size.y - 50);
 
 	button->OnEnter = [button]() {
 		sf::Texture* tex = RESOURCE_MGR.GetTexture("sprites/button_next_1.png");
@@ -93,7 +104,7 @@ void DeveloperScene::Init()
 	button = (UIButton*)AddGo(new UIButton("sprites/button_back_0.png"));
 	button->SetOrigin(Origins::BC);
 	button->sortLayer = 100;
-	button->SetPosition(size.x / 2 - 100, size.y);
+	button->SetPosition(size.x / 2 - 200, size.y - 50);
 
 	button->OnEnter = [button]() {
 		sf::Texture* tex = RESOURCE_MGR.GetTexture("sprites/button_back_1.png");
@@ -112,8 +123,55 @@ void DeveloperScene::Init()
 		bI = bI == 3 ? 8 : bI - 1;
 		board->SetBoard((BoardType)bI);
 		board->Reset();
-
 	};
+
+	SpriteGo* sgo = (SpriteGo*)AddGo(new SpriteGo("sprites/soundleiste_0004_Abgerundetes_Rechteck_1_Kopie_4_0.png"));
+	sgo->SetOrigin(Origins::TC);
+	sgo->SetPosition(size.x / 2, 50);
+	sgo->sortLayer = 100;
+
+	TextGo* tgo = (TextGo*)AddGo(new TextGo("fonts/ShadowsIntoLight-Regular.ttf", "Stage Number"));
+	tgo->SetText(std::to_string(stageNum), 50, sf::Color::Black, Origins::TC, 101, sgo->GetPosition().x - 10, sgo->GetPosition().y + 5);
+
+	//Stage Up
+	button = (UIButton*)AddGo(new UIButton("sprites/soundleiste_0001___0.png"));
+	button->SetOrigin(Origins::TC);
+	button->sortLayer = 100;
+	button->SetPosition(size.x / 2 + 80, 50);
+
+	button->OnEnter = [button]() {
+		sf::Texture* tex = RESOURCE_MGR.GetTexture("sprites/soundleiste_0001___1.png");
+		button->sprite.setTexture(*tex);
+	};
+	button->OnExit = [button]() {
+		sf::Texture* tex = RESOURCE_MGR.GetTexture(button->GetTexId());
+		button->sprite.setTexture(*tex);
+	};
+	button->OnClick = [this, tgo]() {
+		stageNum = stageNum == 3 ? 1 : stageNum + 1;
+		tgo->SetText(std::to_string(stageNum));
+	};
+
+	//Stage Down
+	button = (UIButton*)AddGo(new UIButton("sprites/soundleiste_0000___0.png"));
+	button->SetOrigin(Origins::TC);
+	button->sortLayer = 100;
+	button->SetPosition(size.x / 2 - 80, 50);
+
+	button->OnEnter = [button]() {
+		sf::Texture* tex = RESOURCE_MGR.GetTexture("sprites/soundleiste_0000___1.png");
+		button->sprite.setTexture(*tex);
+	};
+	button->OnExit = [button]() {
+		sf::Texture* tex = RESOURCE_MGR.GetTexture(button->GetTexId());
+		button->sprite.setTexture(*tex);
+	};
+	button->OnClick = [this, tgo]() {
+		stageNum = stageNum == 1 ? 3 : stageNum - 1;
+		tgo->SetText(std::to_string(stageNum));
+	};
+
+
 
 
 	for (auto go : gameObjects)
@@ -250,7 +308,7 @@ void DeveloperScene::LoadScene()
 	Board* board = dynamic_cast<Board*>(FindGo("Board"));
 	board->GetTilePool()->Clear();
 
-	std::tuple<int, std::vector<GameObject*>> sceneData = OBJECT_MGR.LoadObjects("scene_datas/stage_1.txt");
+	std::tuple<int, std::vector<GameObject*>> sceneData = OBJECT_MGR.LoadObjects(stageInfos.find(stageNum)->second);
 	int boardType = std::get<0>(sceneData);
 	std::vector<GameObject*> vGameObjects = std::get<1>(sceneData);
 

@@ -1,6 +1,5 @@
 #pragma once
 #include "Scene.h"
-#include "Ground.h"
 #include "SpriteGo.h"
 
 class DeveloperScene : public Scene
@@ -19,6 +18,10 @@ protected:
 
 	int num = 2;
 	int catType = 1;
+	int stageNum = 1;
+
+
+	std::map<int, std::string> stageInfos;
 
 	std::vector<SpriteGo> pot;
 	SpriteGo* pSpriteGo = nullptr;
