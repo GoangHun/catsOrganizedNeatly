@@ -21,11 +21,16 @@ void ObjectManager::SaveObjects(std::string fPath, BoardType type,const std::lis
     for (const auto& object : objects) 
     {
         std::string name = object->GetName();
-        if (name == "Tile" || name == "Cat" || name == "Pot")
+        if (name == "Tile" || name == "Pot")
         {
             file << object->GetName() << "," << object->GetTexId() << "," << object->GetPosition().x
                 << "," << object->GetPosition().y << "," << object->GetRotation() << "\n";
         } 
+        else if (name == "Cat")
+        {
+            file << object->GetName() << "," << dynamic_cast<Cat*>(object)->GetType() << "," << object->GetPosition().x
+                << "," << object->GetPosition().y << "," << object->GetRotation() << "\n";
+        }
     }
     file.close();
     std::cout << "Objects saved to " << fPath << std::endl;
@@ -74,10 +79,9 @@ std::tuple<int, std::vector<GameObject*>> ObjectManager::LoadObjects(std::string
         }
         else if (name == "Cat")
         {
-            Cat* cat = new Cat((CatTypes)type);
+            Cat* cat = new Cat((CatTypes)stoi(texId));    //texId가 아니라 CatTypes가 저장되 있음
             cat->Init();
             cat->Reset();
-            cat->SetTexId(texId);
             cat->SetOrigin(Origins::MC);
             cat->SetPosition(posX, posY);
             cat->SetRotation(rotation);

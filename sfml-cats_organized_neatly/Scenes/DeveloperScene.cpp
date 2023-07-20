@@ -106,10 +106,13 @@ void DeveloperScene::Init()
 	button->OnClick = [button, this]() {
 		Board* board = dynamic_cast<Board*>(FindGo("Board"));
 		board->Release();
+		board->GetRooms().clear();
 		Exit();
 		auto bI = (int)board->GetBoardInfo().type;
 		bI = bI == 3 ? 8 : bI - 1;
 		board->SetBoard((BoardType)bI);
+		board->Reset();
+
 	};
 
 

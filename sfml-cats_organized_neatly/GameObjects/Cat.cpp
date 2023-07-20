@@ -200,8 +200,8 @@ void Cat::Makeboxs()
 	int w = boxNumber.x = floor(width / 62);
 	int h = boxNumber.y = floor(height / 62);
 	
-	boxSize.x = width / w;
-	boxSize.y = height / h;
+	boxSize.x = 64;
+	boxSize.y = 64;
 
 	sf::FloatRect spriteBounds = sprite.getGlobalBounds();
 

@@ -4,16 +4,6 @@
 #include "ObjectPool.h"
 #include "Tile.h";
 
-//struct BoxCollider
-//{
-//	int num1;
-//	int num2;
-//	int num3;
-//	int num4;
-//	int num5;
-//	int num6;
-//};
-
 enum class CatTypes
 {
 	c1 = 1,
