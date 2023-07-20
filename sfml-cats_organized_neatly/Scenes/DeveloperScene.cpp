@@ -15,7 +15,7 @@
 #include "Cat.h"
 #include "UIButton.h"
 
-DeveloperScene::DeveloperScene() : Scene(SceneId::Game)
+DeveloperScene::DeveloperScene() : Scene(SceneId::None)
 {
 }
 
@@ -149,7 +149,7 @@ void DeveloperScene::Init()
 	};
 	button->OnClick = [this, tgo]() {
 		stageNum = stageNum == 3 ? 1 : stageNum + 1;
-		tgo->SetText(std::to_string(stageNum));
+		tgo->SetTextString(std::to_string(stageNum));
 	};
 
 	//Stage Down
@@ -168,7 +168,7 @@ void DeveloperScene::Init()
 	};
 	button->OnClick = [this, tgo]() {
 		stageNum = stageNum == 1 ? 3 : stageNum - 1;
-		tgo->SetText(std::to_string(stageNum));
+		tgo->SetTextString(std::to_string(stageNum));
 	};
 
 

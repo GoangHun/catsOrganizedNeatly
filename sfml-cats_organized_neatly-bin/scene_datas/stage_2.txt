@@ -1,9 +1,5 @@
-5
-Tile,sprites/board_tile_0.png,-128,-128,-4.31602e+08
-Tile,sprites/board_tile_0.png,-64,-128,-4.31602e+08
-Tile,sprites/board_tile_0.png,-64,-64,-4.31602e+08
-Tile,sprites/board_tile_0.png,0,-64,-4.31602e+08
+3
+Tile,sprites/board_tile_0.png,-64,0,-4.31602e+08
 Tile,sprites/board_tile_0.png,0,0,-4.31602e+08
 Tile,sprites/board_tile_0.png,64,0,-4.31602e+08
-Tile,sprites/board_tile_0.png,64,64,-4.31602e+08
-Tile,sprites/board_tile_0.png,128,64,-4.31602e+08
+Cat,3,356,-22,0

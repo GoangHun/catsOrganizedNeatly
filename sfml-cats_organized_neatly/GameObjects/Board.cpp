@@ -11,9 +11,13 @@ stageId		boardType
 */
 void Board::Init()
 {
-	SetBoard(boardInfo.type);
-	animation.SetTarget(&sprite);
+	SetOrigin(Origins::MC);
+	SetPosition(0, 0);
+	sortLayer = 0;
 
+	SetBoard(boardInfo.type);	//빼고 다른 곳에서 따로 해주는 게 좋을 거 같기도... 
+
+	animation.SetTarget(&sprite);
 	tilePool.Init();
 }
 
@@ -25,11 +29,10 @@ void Board::Release()
 void Board::Reset()
 {
 	animation.Play(boardInfo.animationId);
-	
-	sprite.setTextureRect({0, 0, (int)sprite.getTexture()->getSize().x, (int)sprite.getTexture()->getSize().y});
+	sf::Vector2i size = (sf::Vector2i)sprite.getTexture()->getSize();
+	sprite.setTextureRect({0, 0, size.x, size.y});
 	SetOrigin(Origins::MC);
 	SetPosition({ 0, 0 });
-	sortLayer = 0;
 }
 
 void Board::Update(float dt)

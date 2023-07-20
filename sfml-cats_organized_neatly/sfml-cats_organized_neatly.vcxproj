@@ -171,6 +171,7 @@
     <ClCompile Include="GameObjects\TextGo.cpp" />
     <ClCompile Include="GameObjects\UIButton.cpp" />
     <ClCompile Include="GameObjects\VertexArrayGo.cpp" />
+    <ClCompile Include="Scenes\GameScene.cpp" />
     <ClCompile Include="Global\Utils.cpp" />
     <ClCompile Include="main.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
@@ -202,6 +203,7 @@
     <ClInclude Include="GameObjects\TextGo.h" />
     <ClInclude Include="GameObjects\UIButton.h" />
     <ClInclude Include="GameObjects\VertexArrayGo.h" />
+    <ClInclude Include="Scenes\GameScene.h" />
     <ClInclude Include="Global\Defines.h" />
     <ClInclude Include="Framework\Framework.h" />
     <ClInclude Include="Framework\InputMgr.h" />

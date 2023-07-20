@@ -4,7 +4,7 @@
 #include <sstream>
 
 TextGo::TextGo(const std::string& rId, const std::string& n)
-	:GameObject(n), resourceId(rId)
+	:GameObject(rId, n)
 {
 }
 
@@ -50,7 +50,7 @@ void TextGo::Release()
 
 void TextGo::Reset()
 {
-	auto font = RESOURCE_MGR.GetFont(resourceId);
+	auto font = RESOURCE_MGR.GetFont(textureId);	//fontId
 	if (font != nullptr)
 	{
 		text.setFont(*font);
@@ -66,12 +66,19 @@ void TextGo::Draw(sf::RenderWindow& window)
 	window.draw(text);
 }
 
-void TextGo::SetText(const std::string& str, const int& size, sf::Color color, Origins origin, int soltLayer, float x, float y)
+void TextGo::SetTextString(std::string str)
 {
-	text.setCharacterSize(size);
 	text.setString(str);
-	text.setFillColor(color);
-	text.setPosition(x, y);
+}
+
+void TextGo::SetText(std::string str, const int size, sf::Color color,
+	Origins origin, int soltLayer, float x, float y)
+{
 	Utils::SetOrigin(text, origin);
+	text.setCharacterSize(size);
+	text.setFillColor(color);
+	text.setString(str);
+	SetPosition(x, y);
+
 	this->sortLayer = soltLayer;
 }

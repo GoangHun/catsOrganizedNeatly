@@ -6,7 +6,6 @@ class TextGo :
 	
 public:
 	sf::Text text;
-	std::string resourceId;
 	TextGo(const std::string& rId = "", const std::string& n = "");
 	virtual ~TextGo() override;
 
@@ -23,8 +22,8 @@ public:
 	virtual void Update(float dt) override;
 	virtual void Draw(sf::RenderWindow& window) override;
 
-	void SetText(std::string str) { text.setString(str); }
-	void SetText(const std::string& str, const int& size, sf::Color color, 
+	void SetTextString(std::string str);
+	void SetText(std::string str, const int size, sf::Color color, 
 		Origins origin, int soltLayer, float x, float y);
 
 };
