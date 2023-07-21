@@ -122,16 +122,19 @@ void Cat::Update(float dt)
 		}
 		if (count == boxs.size())
 		{
-			sf::Vector2f sPos = { sprite.getGlobalBounds().top, sprite.getGlobalBounds().left };
+			sf::Vector2f sPos = { sprite.getGlobalBounds().left, sprite.getGlobalBounds().top };
 			for (auto room : *rooms)
 			{
-				sf::Vector2f gPos = { room.shape.getGlobalBounds().top, room.shape.getGlobalBounds().left };
-				float distance = Utils::Distance(sPos, gPos);
-				if (distance < 31)
+				if (room.isFull)
 				{
-					SetPosition(position + (gPos - sPos));
-					isCatch = false;
-				}
+					sf::Vector2f gPos = { room.shape.getGlobalBounds().left, room.shape.getGlobalBounds().top };
+					float distance = Utils::Distance(sPos, gPos);
+					if (distance < 31)
+					{
+						SetPosition(position + (gPos - sPos));
+						isCatch = false;
+					}
+				}	
 			}
 		}
 		
