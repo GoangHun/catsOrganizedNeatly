@@ -40,7 +40,7 @@ void GameScene::Init()	//한 번만 해주면 되는 것들 위주로
 		button->sprite.setTexture(*tex);
 	};
 	button->OnExit = [button]() {
-		sf::Texture* tex = RESOURCE_MGR.GetTexture(button->GetTexId());
+		sf::Texture* tex = RESOURCE_MGR.GetTexture(button->GetResourcePath());
 		button->sprite.setTexture(*tex);
 	};
 	button->OnClick = [button, this]() {
@@ -56,7 +56,7 @@ void GameScene::Init()	//한 번만 해주면 되는 것들 위주로
 		button->sprite.setTexture(*tex);
 	};
 	button->OnExit = [button]() {
-		sf::Texture* tex = RESOURCE_MGR.GetTexture(button->GetTexId());
+		sf::Texture* tex = RESOURCE_MGR.GetTexture(button->GetResourcePath());
 		button->sprite.setTexture(*tex);
 	};
 	button->OnClick = [button, this]() {
@@ -72,7 +72,7 @@ void GameScene::Init()	//한 번만 해주면 되는 것들 위주로
 		button->sprite.setTexture(*tex);
 	};
 	button->OnExit = [button]() {
-		sf::Texture* tex = RESOURCE_MGR.GetTexture(button->GetTexId());
+		sf::Texture* tex = RESOURCE_MGR.GetTexture(button->GetResourcePath());
 		button->sprite.setTexture(*tex);
 	};
 	button->OnClick = [button, this]() {
@@ -171,12 +171,21 @@ void GameScene::LoadScene(int stageNum)
 	{
 		if (go->GetName() == "Tile")
 		{
-			std::vector<Room>& rooms = board->GetRooms();
-			for (int i = 0; i < rooms.size(); i++)
+			std::vector<Room>* rooms = board->GetRooms();
+			for (int i = 0; i < rooms->size(); i++)
 			{
-				if (go->GetPosition() == rooms[i].room.getPosition())
-					rooms[i].tile = dynamic_cast<Tile*>(go);
+				if (go->GetPosition() == (*rooms)[i].shape.getPosition())
+				{
+					(*rooms)[i].tile = dynamic_cast<Tile*>(go);
+					(*rooms)[i].isFull = true;
+					std::cout << "room["<< i<<"]: "<< (*rooms)[i].isFull << std::endl;
+				}	
 			}
+		}
+		else if (go->GetName() == "Cat")
+		{
+			Cat* cat = dynamic_cast<Cat*>(go);
+			cat->SetBoard(board);
 		}
 		AddGo(go);
 	}

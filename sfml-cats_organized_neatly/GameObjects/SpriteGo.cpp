@@ -58,7 +58,7 @@ void SpriteGo::Release()
 
 void SpriteGo::Reset()
 {
-	sf::Texture* tex = RESOURCE_MGR.GetTexture(textureId);
+	sf::Texture* tex = RESOURCE_MGR.GetTexture(resourcePath);
 	if (tex != nullptr)
 	{
 		sprite.setTexture(*tex);

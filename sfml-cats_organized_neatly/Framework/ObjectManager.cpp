@@ -23,7 +23,7 @@ void ObjectManager::SaveObjects(std::string fPath, BoardType type,const std::lis
         std::string name = object->GetName();
         if (name == "Tile" || name == "Pot")
         {
-            file << object->GetName() << "," << object->GetTexId() << "," << object->GetPosition().x
+            file << object->GetName() << "," << object->GetResourcePath() << "," << object->GetPosition().x
                 << "," << object->GetPosition().y << "," << object->GetRotation() << "\n";
         } 
         else if (name == "Cat")
@@ -72,7 +72,7 @@ std::tuple<int, std::vector<GameObject*>> ObjectManager::LoadObjects(std::string
             Tile* tile = board->GetTilePool()->Get();
             tile->Init();
             tile->Reset();
-            tile->SetTexId(texId);
+            tile->SetResourcePath(texId);
             tile->SetPosition(posX, posY);
             tile->SetRotation(0.f);
             objects.push_back(tile);
@@ -92,7 +92,7 @@ std::tuple<int, std::vector<GameObject*>> ObjectManager::LoadObjects(std::string
             SpriteGo* pot = new SpriteGo();
             pot->Init();
             pot->Reset();
-            pot->SetTexId(texId);
+            pot->SetResourcePath(texId);
             pot->sprite.setTexture(*RESOURCE_MGR.GetTexture(texId));
             pot->SetOrigin(Origins::MC);
             pot->SetPosition(posX, posY);

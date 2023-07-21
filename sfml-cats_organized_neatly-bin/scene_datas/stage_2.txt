@@ -1,5 +1,5 @@
 3
-Tile,sprites/board_tile_0.png,-64,0,-4.31602e+08
+Tile,sprites/board_tile_0.png,-62,0,-4.31602e+08
 Tile,sprites/board_tile_0.png,0,0,-4.31602e+08
-Tile,sprites/board_tile_0.png,64,0,-4.31602e+08
-Cat,3,356,-22,0
+Tile,sprites/board_tile_0.png,62,0,-4.31602e+08
+Cat,3,349,-77,0

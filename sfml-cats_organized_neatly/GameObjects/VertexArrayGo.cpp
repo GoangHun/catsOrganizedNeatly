@@ -72,7 +72,7 @@ void VertexArrayGo::Release()
 
 void VertexArrayGo::Reset()
 {
-	texture = RESOURCE_MGR.GetTexture(textureId);
+	texture = RESOURCE_MGR.GetTexture(resourcePath);
 }
 
 void VertexArrayGo::Update(float dt)

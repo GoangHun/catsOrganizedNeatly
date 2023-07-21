@@ -46,7 +46,7 @@ void DeveloperScene::Init()
 		button->sprite.setTexture(*tex);
 	};
 	button->OnExit = [button]() {
-		sf::Texture* tex = RESOURCE_MGR.GetTexture(button->GetTexId());
+		sf::Texture* tex = RESOURCE_MGR.GetTexture(button->GetResourcePath());
 		button->sprite.setTexture(*tex);
 	};
 	button->OnClick = [button, this]() {
@@ -68,7 +68,7 @@ void DeveloperScene::Init()
 		button->sprite.setTexture(*tex);
 	};
 	button->OnExit = [button]() {
-		sf::Texture* tex = RESOURCE_MGR.GetTexture(button->GetTexId());
+		sf::Texture* tex = RESOURCE_MGR.GetTexture(button->GetResourcePath());
 		button->sprite.setTexture(*tex);
 	};
 	button->OnClick = [button, this]() {
@@ -86,13 +86,13 @@ void DeveloperScene::Init()
 		button->sprite.setTexture(*tex);
 	};
 	button->OnExit = [button]() {
-		sf::Texture* tex = RESOURCE_MGR.GetTexture(button->GetTexId());
+		sf::Texture* tex = RESOURCE_MGR.GetTexture(button->GetResourcePath());
 		button->sprite.setTexture(*tex);
 	};
 	button->OnClick = [button, this]() {
 		Board* board = dynamic_cast<Board*>(FindGo("Board"));
 		board->Release();
-		board->GetRooms().clear();
+		board->GetRooms()->clear();
 		Exit();
 		auto bI = (int)board->GetBoardInfo().type;
 		bI = bI == 8 ? 3 : bI + 1;
@@ -111,13 +111,13 @@ void DeveloperScene::Init()
 		button->sprite.setTexture(*tex);
 	};
 	button->OnExit = [button]() {
-		sf::Texture* tex = RESOURCE_MGR.GetTexture(button->GetTexId());
+		sf::Texture* tex = RESOURCE_MGR.GetTexture(button->GetResourcePath());
 		button->sprite.setTexture(*tex);
 	};
 	button->OnClick = [button, this]() {
 		Board* board = dynamic_cast<Board*>(FindGo("Board"));
 		board->Release();
-		board->GetRooms().clear();
+		board->GetRooms()->clear();
 		Exit();
 		auto bI = (int)board->GetBoardInfo().type;
 		bI = bI == 3 ? 8 : bI - 1;
@@ -144,7 +144,7 @@ void DeveloperScene::Init()
 		button->sprite.setTexture(*tex);
 	};
 	button->OnExit = [button]() {
-		sf::Texture* tex = RESOURCE_MGR.GetTexture(button->GetTexId());
+		sf::Texture* tex = RESOURCE_MGR.GetTexture(button->GetResourcePath());
 		button->sprite.setTexture(*tex);
 	};
 	button->OnClick = [this, tgo]() {
@@ -163,7 +163,7 @@ void DeveloperScene::Init()
 		button->sprite.setTexture(*tex);
 	};
 	button->OnExit = [button]() {
-		sf::Texture* tex = RESOURCE_MGR.GetTexture(button->GetTexId());
+		sf::Texture* tex = RESOURCE_MGR.GetTexture(button->GetResourcePath());
 		button->sprite.setTexture(*tex);
 	};
 	button->OnClick = [this, tgo]() {
@@ -245,6 +245,7 @@ void DeveloperScene::Update(float dt)
 		Cat* cat1 = (Cat*)AddGo(new Cat(CatTypes::c1));
 		cat1->Init();
 		cat1->Reset();
+		cat1->SetBoard(dynamic_cast<Board*>(FindGo("Board")));
 	}
 
 	//²Ù¹Ì±â
@@ -260,7 +261,7 @@ void DeveloperScene::Update(float dt)
 		//pSpriteGo->sprite.setTexture(*RESOURCE_MGR.GetTexture("sprites/b2_0.png"));
 		sf::Texture* t = RESOURCE_MGR.GetTexture("sprites/b" + std::to_string(num) + "_0.png");
 		pSpriteGo->sprite.setTexture(*t);
-		pSpriteGo->SetTexId("sprites/b" + std::to_string(num) + "_0.png");
+		pSpriteGo->SetResourcePath("sprites/b" + std::to_string(num) + "_0.png");
 		sf::Vector2i size = (sf::Vector2i)t->getSize();
 		pSpriteGo->sprite.setTextureRect({ 0, 0, size.x, size.y });
 		pSpriteGo->SetOrigin(Origins::MC);
@@ -329,12 +330,20 @@ void DeveloperScene::LoadScene()
 	{
 		if (go->GetName() == "Tile")
 		{
-			std::vector<Room>& rooms = board->GetRooms();
-			for (int i = 0; i < rooms.size(); i++)
+			std::vector<Room>* rooms = board->GetRooms();
+			for (int i = 0; i < (*rooms).size(); i++)
 			{
-				if (go->GetPosition() == rooms[i].room.getPosition())
-					rooms[i].tile = dynamic_cast<Tile*>(go);
+				if (go->GetPosition() == (*rooms)[i].shape.getPosition())
+				{
+					(*rooms)[i].tile = dynamic_cast<Tile*>(go);
+					(*rooms)[i].isFull = true;
+				}
 			}
+		}
+		else if (go->GetName() == "Cat")
+		{
+			Cat* cat = dynamic_cast<Cat*>(go);
+			cat->SetBoard(board);
 		}
 		AddGo(go);
 	}

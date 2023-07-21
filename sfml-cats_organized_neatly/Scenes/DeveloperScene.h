@@ -5,7 +5,6 @@
 class DeveloperScene : public Scene
 {
 protected:
-	bool isDeveloperMode = true;
 	bool isCatch = false;
 	bool isRotation = false;
 	bool isCatHover = false;
@@ -20,11 +19,11 @@ protected:
 	int catType = 1;
 	int stageNum = 1;
 
+	SpriteGo* pSpriteGo = nullptr;
 
 	std::map<int, std::string> stageInfos;
 
 	std::vector<SpriteGo> pot;
-	SpriteGo* pSpriteGo = nullptr;
 	sf::Texture tex;
 
 
@@ -44,7 +43,6 @@ public:
 	void ToggleIsDeveloperMode() { isDeveloperMode = !isDeveloperMode; }
 	void LoadScene();
 	
-	bool GetIsDeveloperMode() { return isDeveloperMode; }
 	bool GetIsCatch() { return isCatch; }
 };
 

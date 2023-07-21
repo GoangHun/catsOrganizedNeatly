@@ -13,7 +13,7 @@ GameBackground::~GameBackground()
 
 void GameBackground::Init()
 {
-	textureId = "sprites/Background_Ingame_0.png";
+	resourcePath = "sprites/Background_Ingame_0.png";
 	SetOrigin(Origins::MC);
 	SetPosition({0, 0});
 	sortLayer = -1;

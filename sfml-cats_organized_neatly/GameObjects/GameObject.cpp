@@ -2,7 +2,7 @@
 #include "GameObject.h"
 
 GameObject::GameObject(const std::string& textureId, const std::string& n)
-	: name (n), textureId(textureId)
+	: name (n), resourcePath(textureId)
 {
 }
 

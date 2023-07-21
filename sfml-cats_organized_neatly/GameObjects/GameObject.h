@@ -7,7 +7,7 @@ protected:
 	sf::Vector2f position;
 	float rotation;
 	std::string name;
-	std::string textureId;
+	std::string resourcePath;
 	bool isActive = true;
 	Origins origin = Origins::TL;
 
@@ -36,8 +36,8 @@ public:
 	virtual void SetRotation(float degree) { rotation = degree; }
 	virtual float GetRotation() const { return rotation; }
 
-	const virtual std::string GetTexId() const { return textureId; }
-	virtual void SetTexId(std::string id) { textureId = id; }
+	const virtual std::string GetResourcePath() const { return resourcePath; }
+	virtual void SetResourcePath(std::string id) { resourcePath = id; }
 
 	virtual void Init() = 0;	
 	virtual void Release() {};

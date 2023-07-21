@@ -6,7 +6,7 @@ class TextGo :
 	
 public:
 	sf::Text text;
-	TextGo(const std::string& rId = "", const std::string& n = "");
+	TextGo(const std::string& resourceId = "", const std::string& n = "");
 	virtual ~TextGo() override;
 
 	virtual void SetPosition(const sf::Vector2f& p);

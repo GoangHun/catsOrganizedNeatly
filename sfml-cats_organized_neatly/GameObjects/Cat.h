@@ -4,6 +4,9 @@
 #include "ObjectPool.h"
 #include "Tile.h";
 
+class Board;
+struct Room;
+
 enum class CatTypes
 {
 	c1 = 1,
@@ -20,6 +23,13 @@ enum class CatTypes
 	c12,
 };
 
+struct Box
+{
+	sf::RectangleShape shape;
+	bool isActive;
+	bool isCollision;
+};
+
 
 class Cat :
     public SpriteGo
@@ -28,18 +38,21 @@ protected:
 	AnimationController animation;
 	CatTypes type;
 
-	//boxs
-	std::vector<sf::RectangleShape> boxs;
-	std::vector<int> activeBoxInfo;
+	std::vector<Box> boxs;
+	//std::vector<sf::RectangleShape> boxs;
+	//std::vector<bool> boxStates;
 
 	sf::Vector2i boxNumber;	//number of box
 	sf::Vector2f boxSize;	//lengths of box
 
 	ObjectPool<Tile>* tilePool = nullptr;
+	Board* board = nullptr;
+	std::vector<Room>* rooms = nullptr;
+	sf::Texture* tex = nullptr;
 
 	std::string animationId;
-	sf::Texture* tex;
-	
+	std::string boxInfo;
+
 	bool isHover = false;
 	bool isCatch = false;
 	bool isRotation = false;
@@ -65,11 +78,15 @@ public:
 	void OnClickHold(sf::Vector2f worldMousePos);
 
 	void Makeboxs();
+	void SetBoxState();
 
 	void SetPool(ObjectPool<Tile>* pool) { tilePool = pool; }
-	void SetActiveBox();
 	void SetType(CatTypes type) { this->type = type; }
+	void SetBoard(Board* board);
+	void SetRooms(std::vector<Room>* rooms) { this->rooms = rooms; }
 
 	int GetType() { return (int)type; }
+	const std::vector<Box>& GetBoxs() { return boxs; }
+
 };
 

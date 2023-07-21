@@ -22,6 +22,8 @@ protected:
 	sf::RenderWindow& window;
 
 public:
+	bool isDeveloperMode = true;	//юс╫ц
+
 	Scene(SceneId id = SceneId::None);
 	virtual ~Scene();
 

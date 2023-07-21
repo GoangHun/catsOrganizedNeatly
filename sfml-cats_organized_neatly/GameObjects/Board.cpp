@@ -40,8 +40,8 @@ void Board::Update(float dt)
 	animation.Update(dt);
 
 	//개발자 모드 
-	DeveloperScene* scene = (DeveloperScene*)SCENE_MGR.GetCurrScene();
-	if (scene->GetIsDeveloperMode())
+	auto* scene = SCENE_MGR.GetCurrScene();
+	if (scene->isDeveloperMode)
 	{
 		sf::Vector2f mousePos = INPUT_MGR.GetMousePos();
 		sf::Vector2f worldMousePos = SCENE_MGR.GetCurrScene()->ScreenToWorldPos(mousePos);
@@ -51,12 +51,11 @@ void Board::Update(float dt)
 		for (auto& sRoom : rooms)
 		{
 			sRoom.prevHover = sRoom.isHover;
-			sRoom.isHover = sRoom.room.getGlobalBounds().contains(worldMousePos);
+			sRoom.isHover = sRoom.shape.getGlobalBounds().contains(worldMousePos);
 			if (!sRoom.prevHover && sRoom.isHover && !isCatch)
 			{
 				OnEnter(sRoom);
 			}
-
 			if (sRoom.prevHover && !sRoom.isHover && !isCatch)
 			{
 				OnExit(sRoom);
@@ -65,6 +64,24 @@ void Board::Update(float dt)
 			{
 				OnClick(sRoom);
 			}
+
+			//퍼즐 충돌 체크
+			//isCatch 상태인 Cat과 체크
+			if (isCatchCat != nullptr)
+			{
+				std::vector<Box> boxs = isCatchCat->GetBoxs();
+				for (auto box : boxs)
+				{
+					if (sRoom.shape.getGlobalBounds().intersects(box.shape.getGlobalBounds()) && sRoom.isFull
+						&& box.isActive)
+					{
+						//테스트 코드
+						sRoom.shape.setOutlineThickness(3.f);
+						sRoom.shape.setOutlineColor(sf::Color::Red);
+					}	
+				}	
+			}
+
 		}
 		return;
 	}
@@ -75,13 +92,21 @@ void Board::Draw(sf::RenderWindow& window)
 	SpriteGo::Draw(window);
 	for (auto structRoom : rooms)
 	{
-		window.draw(structRoom.room);
+		window.draw(structRoom.shape);
 	}
+}
+
+void Board::ClearRoom()
+{
+	for (auto room : rooms)
+	{
+		room.tile = nullptr;
+	}
+	rooms.clear();
 }
 
 void Board::SetBoard(BoardType type)
 {	
-	std::cout << "SetBoard " << (int)type << "x" << (int)type << std::endl;
 	switch(type)
 	{
 	case BoardType::_3X3:
@@ -119,8 +144,10 @@ void Board::SetBoard(BoardType type)
 
 void Board::SetRoomPos(BoardType type)
 {
-	//room size 64x64
-	int roomSize = 64;
+	ClearRoom();
+
+	//room size 62x62
+	int roomSize = 62;
 	int roomNumber = pow((int)type, 2);
 	float coord;
 
@@ -139,10 +166,10 @@ void Board::SetRoomPos(BoardType type)
 	for (int i = 0; i < roomNumber; i++)
 	{
 		Room structRoom;
-		structRoom.room.setSize( sf::Vector2f(roomSize, roomSize));
-		Utils::SetOrigin(structRoom.room, Origins::MC);
+		structRoom.shape.setSize( sf::Vector2f(roomSize, roomSize));
+		Utils::SetOrigin(structRoom.shape, Origins::MC);
 
-		structRoom.room.setFillColor({ 255, 255, 255, 0 });
+		structRoom.shape.setFillColor({ 255, 255, 255, 0 });
 		rooms.push_back(structRoom);
 	}
 
@@ -151,7 +178,7 @@ void Board::SetRoomPos(BoardType type)
 		for (int j = 0; j < (int)type; j++)
 		{
 			int index = i * (int)type + j;
-			rooms[index].room.setPosition({pos.x + roomSize * j, pos.y + roomSize * i});
+			rooms[index].shape.setPosition({pos.x + roomSize * j, pos.y + roomSize * i});
 		}
 	}
 }
@@ -161,7 +188,7 @@ void Board::OnClick(Room& sRoom)
 	if (!sRoom.isFull)
 	{
 		sRoom.tile = tilePool.Get();
-		sRoom.tile->SetPosition(sRoom.room.getPosition());
+		sRoom.tile->SetPosition(sRoom.shape.getPosition());
 		SCENE_MGR.GetCurrScene()->AddGo(sRoom.tile);
 		sRoom.isFull = true;
 	}
@@ -175,8 +202,8 @@ void Board::OnClick(Room& sRoom)
 
 void Board::OnEnter(Room& sRoom)
 {
-	sRoom.room.setOutlineThickness(3.f);
-	sRoom.room.setOutlineColor(sf::Color::White);
+	sRoom.shape.setOutlineThickness(3.f);
+	sRoom.shape.setOutlineColor(sf::Color::White);
 	if (sRoom.isFull && INPUT_MGR.GetKeyDown(sf::Keyboard::Up))
 	{
 		
@@ -189,5 +216,5 @@ void Board::OnEnter(Room& sRoom)
 
 void Board::OnExit(Room& sRoom)
 {
-	sRoom.room.setOutlineThickness(0.f);
+	sRoom.shape.setOutlineThickness(0.f);
 }

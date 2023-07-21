@@ -2,6 +2,7 @@
 #include "SpriteGo.h"
 #include "AnimationController.h"
 #include "Tile.h"
+#include "Cat.h"
 
 enum class BoardType
 {
@@ -21,7 +22,7 @@ struct BoardInfo
 
 struct Room
 {
-	sf::RectangleShape room;
+	sf::RectangleShape shape;
 	Tile* tile = nullptr;
 	bool isHover = false;
 	bool prevHover = false;
@@ -37,6 +38,8 @@ protected:
 	std::vector<Room> rooms;
 	ObjectPool<Tile> tilePool;
 
+	Cat* isCatchCat = nullptr;
+
 public:
 	Board(const std::string& textureId = "", const std::string& n = "Board")
 		: SpriteGo(textureId, n) {}
@@ -48,12 +51,18 @@ public:
 	virtual void Update(float dt) override;
 	virtual void Draw(sf::RenderWindow& window) override;
 
+	void ClearRoom();
+
 	void SetBoard(BoardType type);
 	void SetRoomPos(BoardType type);
 	void SetBoardInfo(BoardType type, std::string aniId) { boardInfo = { type, aniId }; }
 
+	void SetIsCatchCat(Cat* cat) { isCatchCat = cat; }
+
 	const BoardInfo GetBoardInfo() const { return boardInfo; };
-	std::vector<Room>& GetRooms() { return rooms; }
+	std::vector<Room>* GetRooms() { return &rooms; }
+	
+	const Cat* GetIsCatchCat() { return isCatchCat; }
 
 	ObjectPool<Tile>* GetTilePool() { return &tilePool; }
 

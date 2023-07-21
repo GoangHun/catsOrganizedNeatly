@@ -1,13 +1,13 @@
-Cat Type,Animation Clip,Hold Sprite
-1,animations/cat_c1.csv,sprites/d1_0.png
-2,animations/cat_c2.csv,sprites/d2_0.png
-3,animations/cat_c3.csv,sprites/d3_0.png
-4,animations/cat_c4.csv,sprites/d4_0.png
-5,animations/cat_c5.csv,sprites/d5_0.png
-6,animations/cat_c6.csv,sprites/d6_0.png
-7,animations/cat_c7.csv,sprites/d7_0.png
-8,animations/cat_c8.csv,sprites/d8_0.png
-9,animations/cat_c9.csv,sprites/d9_0.png
-10,animations/cat_c10.csv,sprites/d10_0.png
-11,animations/cat_c11.csv,sprites/d11_0.png
-12,animations/cat_c12.csv,sprites/d12_0.png
+Cat Type,Animation Clip,Hold Sprite,Active Box
+1,animations/cat_c1.csv,sprites/d1_0.png,1
+2,animations/cat_c2.csv,sprites/d2_0.png,"1,1"
+3,animations/cat_c3.csv,sprites/d3_0.png,"1,1,1"
+4,animations/cat_c4.csv,sprites/d4_0.png,"1,1,1,1"
+5,animations/cat_c5.csv,sprites/d5_0.png,"1,0,1,1"
+6,animations/cat_c6.csv,sprites/d6_0.png,"0,1,1,1"
+7,animations/cat_c7.csv,sprites/d7_0.png,"1,1,1,1,1,1"
+8,animations/cat_c8.csv,sprites/d8_0.png,"1,0,1,1,1,1"
+9,animations/cat_c9.csv,sprites/d9_0.png,"0,1,1,1,1,1"
+10,animations/cat_c10.csv,sprites/d10_0.png,"0,1,1,1,0,1"
+11,animations/cat_c11.csv,sprites/d11_0.png,"1,0,1,0,1,1"
+12,animations/cat_c12.csv,sprites/d12_0.png,"0,1,0,1,1,1"

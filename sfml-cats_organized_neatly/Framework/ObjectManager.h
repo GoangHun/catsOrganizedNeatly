@@ -14,9 +14,7 @@ class ObjectManager : public Singleton<ObjectManager>
 private:
     ObjectManager() = default;
     virtual ~ObjectManager() override = default;
-
 public:
-    
     void SaveObjects(std::string fPath, BoardType type, const std::list<GameObject*>& objects);
     std::tuple<int, std::vector<GameObject*>> LoadObjects(std::string fPath);
 };

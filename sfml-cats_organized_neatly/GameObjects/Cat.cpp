@@ -1,11 +1,15 @@
 #include "stdafx.h"
 #include "Cat.h"
+
+#include "rapidcsv.h"
 #include "ResourceMgr.h"
 #include "InputMgr.h"
 #include "SceneMgr.h"
+
 #include "Scene.h"
 #include "DeveloperScene.h"
-#include "rapidcsv.h"
+
+#include "Board.h"
 
 Cat::Cat(const CatTypes type, const std::string& textureId, const std::string& n)
 	: SpriteGo(textureId, n), type(type)
@@ -20,9 +24,11 @@ void Cat::Init()
 	std::vector<int> types = doc.GetColumn<int>(0);
 	std::vector<std::string> aniPaths = doc.GetColumn<std::string>(1);
 	std::vector<std::string> spritePaths = doc.GetColumn<std::string>(2);
+	std::vector<std::string> boxInfos = doc.GetColumn<std::string>(3);
 
 	auto it = std::find(types.begin(), types.end(), (int)type);
 
+	//it로 인덱스 계산되는 거 원리랑 순서 이해 안감.
 	if (it != types.end())
 	{
 		animationId = aniPaths[*it - 1];
@@ -30,6 +36,7 @@ void Cat::Init()
 		animation.SetTarget(&sprite);
 		sortLayer = 50;
 		tex = RESOURCE_MGR.GetTexture(spritePaths[*it - 1]);
+		boxInfo = boxInfos[*it - 1];
 	}
 }
 
@@ -47,6 +54,7 @@ void Cat::Reset()
 		boxs.clear();
 	}
 	Makeboxs();
+	SetBoxState();
 }
 
 void Cat::Update(float dt)
@@ -62,8 +70,8 @@ void Cat::Update(float dt)
 		for (int j = 0; j < boxNumber.y; j++)
 		{
 			int index = i * boxNumber.x + j;
-			boxs[index].setPosition(sprite.getPosition());
-			boxs[index].setRotation(sprite.getRotation());
+			boxs[index].shape.setPosition(sprite.getPosition());
+			boxs[index].shape.setRotation(sprite.getRotation());
 		}
 	}
 				
@@ -89,17 +97,50 @@ void Cat::Update(float dt)
 	}
 
 	//isCatch
-	if (isHover && INPUT_MGR.GetMouseButton(sf::Mouse::Left))
+	if (isHover && INPUT_MGR.GetMouseButtonDown(sf::Mouse::Left))
 	{
 		isCatch = true;
 	}
 
 	if (isCatch)
 	{
-		OnClickHold(worldMousePos);
+		OnClickHold(worldMousePos);		//이렇게 함으로써 마우스 포인터가 빨리 움직여서 퍼즐 밖으로 빠져나가도 isCatch 상태를 유지
+		int count = 0;
+		for (auto box : boxs)
+		{
+			for (auto room : *rooms)
+			{
+				if (box.shape.getGlobalBounds().intersects(room.shape.getGlobalBounds()) && room.isFull && box.isActive)
+				{
+					box.isCollision = true;
+				}
+			}
+			if (box.isCollision)
+			{
+				count++;
+			}
+		}
+		if (count == boxs.size())
+		{
+			sf::Vector2f sPos = { sprite.getGlobalBounds().top, sprite.getGlobalBounds().left };
+			for (auto room : *rooms)
+			{
+				sf::Vector2f gPos = { room.shape.getGlobalBounds().top, room.shape.getGlobalBounds().left };
+				float distance = Utils::Distance(sPos, gPos);
+				if (distance < 31)
+				{
+					SetPosition(position + (gPos - sPos));
+					isCatch = false;
+				}
+			}
+		}
+		
+		
 	}
+
 	if (isCatch && INPUT_MGR.GetMouseButtonUp(sf::Mouse::Left))
 	{
+		board->SetIsCatchCat(nullptr);
 		isCatch = false;
 	}
 
@@ -170,7 +211,7 @@ void Cat::Draw(sf::RenderWindow& window)
 
 	for (auto box : boxs)
 	{
-		window.draw(box);
+		window.draw(box.shape);
 	}
 }
 
@@ -191,6 +232,7 @@ void Cat::OnClickHold(sf::Vector2f worldMousePos)
 {
 	sprite.setTexture(*tex);
 	SetPosition(worldMousePos);
+	board->SetIsCatchCat(this);
 }
 
 void Cat::Makeboxs()
@@ -200,8 +242,7 @@ void Cat::Makeboxs()
 	int w = boxNumber.x = floor(width / 62);
 	int h = boxNumber.y = floor(height / 62);
 	
-	boxSize.x = 64;
-	boxSize.y = 64;
+	boxSize = { 62, 62 };
 
 	sf::FloatRect spriteBounds = sprite.getGlobalBounds();
 
@@ -209,47 +250,45 @@ void Cat::Makeboxs()
 	{
 		for (int j = 0; j < h; j++)
 		{
-			sf::RectangleShape box;	
-			box.setSize(boxSize);
-			box.setFillColor(sf::Color::Transparent);
+			sf::RectangleShape shape;	
+			shape.setSize(boxSize);
+			shape.setFillColor(sf::Color::Transparent);
 			//develop
 			{
-				box.setOutlineThickness(1.f);
-				box.setOutlineColor(sf::Color::White);
+				shape.setOutlineThickness(1.f);
+				shape.setOutlineColor(sf::Color::White);
 			}
 
-			box.setOrigin(-(spriteBounds.left + i * boxSize.x), -(spriteBounds.top + j * boxSize.y));
-			boxs.push_back(box);
+			shape.setOrigin(-(spriteBounds.left + i * boxSize.x), -(spriteBounds.top + j * boxSize.y));
+			boxs.push_back({ shape, false });
 		}
 	}
 }
 
-//void Cat::SetActiveBox()
-//{
-//	rapidcsv::Document doc("scripts/cat_box_info.csv");
-//	std::vector<int> types = doc.GetColumn<int>(0);
-//	std::vector<std::string> paths = doc.GetColumn<std::string>(1);
-//
-//	auto it = std::find(types.begin(), types.end(), type);
-//	if (it != types.end())
-//	{
-//		std::string str = paths[*it];
-//
-//		std::vector<std::string> tokens;
-//		std::istringstream iss(str);
-//		std::string token;
-//
-//		while (std::getline(iss, token, ',')) 
-//		{
-//			tokens.push_back(token);
-//		}
-//
-//		for (auto info : tokens)
-//		{
-//			activeBoxInfo.push_back(std::stoi(info));
-//		}
-//	}
-//}
+void Cat::SetBoxState()
+{
+	std::stringstream ss(boxInfo);
+	std::string token;
+	std::vector<bool> boxStates;
+
+	while (std::getline(ss, token, ',')) {
+		boxStates.push_back(std::stoi(token));
+	}
+
+	bool boxState = boxStates.front();
+	for (int i = 0; i < boxs.size(); i++)
+	{
+		boxs[i].isActive = boxState;
+	}
+
+}
+
+void Cat::SetBoard(Board* board)
+{
+	this->board = board;
+	this->rooms = board->GetRooms();
+}
+
 
 
 

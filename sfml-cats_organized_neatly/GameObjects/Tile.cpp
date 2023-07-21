@@ -12,7 +12,7 @@ Tile::~Tile()
 
 void Tile::Init()
 {
-	textureId = "sprites/board_tile_0.png";
+	resourcePath = "sprites/board_tile_0.png";
 	SetOrigin(Origins::MC);
 	sortLayer = 2;
 }

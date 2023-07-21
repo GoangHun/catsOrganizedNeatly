@@ -3,8 +3,8 @@
 #include "ResourceMgr.h"
 #include <sstream>
 
-TextGo::TextGo(const std::string& rId, const std::string& n)
-	:GameObject(rId, n)
+TextGo::TextGo(const std::string& resourceId, const std::string& n)
+	:GameObject(resourceId, n)
 {
 }
 
@@ -50,7 +50,7 @@ void TextGo::Release()
 
 void TextGo::Reset()
 {
-	auto font = RESOURCE_MGR.GetFont(textureId);	//fontId
+	auto font = RESOURCE_MGR.GetFont(resourcePath);	//fontId
 	if (font != nullptr)
 	{
 		text.setFont(*font);
