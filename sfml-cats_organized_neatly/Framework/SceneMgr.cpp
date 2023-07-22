@@ -37,7 +37,7 @@ void SceneMgr::Release()
 	}
 	scenes.clear();
 
-	currentSceneId = SceneId::None;
+	currentSceneId = SceneId::Game;
 	currentScene = nullptr;
 }
 

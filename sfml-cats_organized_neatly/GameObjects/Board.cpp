@@ -39,7 +39,6 @@ void Board::Update(float dt)
 {
 	animation.Update(dt);
 
-	//개발자 모드 
 	auto* scene = SCENE_MGR.GetCurrScene();
 	if (scene->isDeveloperMode)
 	{
@@ -50,6 +49,8 @@ void Board::Update(float dt)
 
 		for (auto& sRoom : rooms)
 		{
+			sRoom.shape.setOutlineColor(sf::Color::White);
+
 			sRoom.prevHover = sRoom.isHover;
 			sRoom.isHover = sRoom.shape.getGlobalBounds().contains(worldMousePos);
 			if (!sRoom.prevHover && sRoom.isHover && !isCatch)
@@ -70,18 +71,18 @@ void Board::Update(float dt)
 			if (isCatchCat != nullptr)
 			{
 				std::vector<Box> boxs = isCatchCat->GetBoxs();
-				for (auto box : boxs)
+				for (auto& box : boxs)
 				{
 					if (sRoom.shape.getGlobalBounds().intersects(box.shape.getGlobalBounds()) && sRoom.isFull
 						&& box.isActive)
 					{
 						//테스트 코드
+						std::cout << "test" << std::endl;
 						sRoom.shape.setOutlineThickness(3.f);
 						sRoom.shape.setOutlineColor(sf::Color::Red);
 					}	
 				}	
 			}
-
 		}
 		return;
 	}
@@ -96,10 +97,11 @@ void Board::Draw(sf::RenderWindow& window)
 	}
 }
 
-void Board::ClearRoom()
+void Board::ClearRooms()
 {
-	for (auto room : rooms)
+	for (auto& room : rooms)
 	{
+		tilePool.Return(room.tile);
 		room.tile = nullptr;
 	}
 	rooms.clear();
@@ -111,40 +113,40 @@ void Board::SetBoard(BoardType type)
 	{
 	case BoardType::_3X3:
 		animation.AddClip(*RESOURCE_MGR.GetAnimationClip("animations/board_3x3.csv"));
-		SetRoomPos(type);
+		MakeRooms(type);
 		SetBoardInfo(type, "board_3x3");
 		break;
 	case BoardType::_4X4:
 		animation.AddClip(*RESOURCE_MGR.GetAnimationClip("animations/board_4x4.csv"));
-		SetRoomPos(type);
+		MakeRooms(type);
 		SetBoardInfo(type, "board_4x4");
 		break;
 	case BoardType::_5X5:
 		animation.AddClip(*RESOURCE_MGR.GetAnimationClip("animations/board_5x5.csv"));
-		SetRoomPos(type);
+		MakeRooms(type);
 		SetBoardInfo(type, "board_5x5");
 		break;
 	case BoardType::_6X6:
 		animation.AddClip(*RESOURCE_MGR.GetAnimationClip("animations/board_6x6.csv"));
-		SetRoomPos(type);
+		MakeRooms(type);
 		SetBoardInfo(type, "board_6x6");
 		break;
 	case BoardType::_7X7:
 		animation.AddClip(*RESOURCE_MGR.GetAnimationClip("animations/board_7x7.csv"));
-		SetRoomPos(type);
+		MakeRooms(type);
 		SetBoardInfo(type, "board_7x7");
 		break;
 	case BoardType::_8X8:
 		animation.AddClip(*RESOURCE_MGR.GetAnimationClip("animations/board_8x8.csv"));
-		SetRoomPos(type);
+		MakeRooms(type);
 		SetBoardInfo(type, "board_8x8");
 		break;
 	}
 }
 
-void Board::SetRoomPos(BoardType type)
+void Board::MakeRooms(BoardType type)
 {
-	ClearRoom();
+	ClearRooms();
 
 	//room size 62x62
 	int roomSize = 62;
@@ -153,24 +155,23 @@ void Board::SetRoomPos(BoardType type)
 
 	if ((int)type % 2 == 0)
 	{
-		coord = roomSize * ((int)type - 1) / 2.0;
+		coord = roomSize * ((int)type - 1) / 2.0;	//1.5, 2.5, 3.5...* 62
 	}
 	else
 	{
-		coord = roomSize * floor((int)type * 0.5f);
+		coord = roomSize * floor((int)type * 0.5f);	//1, 2, 3...* 62
 	}
-
-	sf::Vector2f pos = { -coord, -coord };
-	std::cout << coord << std::endl;
+	
+	sf::Vector2f pos = { -coord, -coord };	//첫 번째 퍼즐의 좌표(좌상단)
 
 	for (int i = 0; i < roomNumber; i++)
 	{
-		Room structRoom;
-		structRoom.shape.setSize( sf::Vector2f(roomSize, roomSize));
-		Utils::SetOrigin(structRoom.shape, Origins::MC);
+		Room room;
+		room.shape.setSize( sf::Vector2f(roomSize, roomSize));
+		Utils::SetOrigin(room.shape, Origins::MC);
 
-		structRoom.shape.setFillColor({ 255, 255, 255, 0 });
-		rooms.push_back(structRoom);
+		room.shape.setFillColor(sf::Color::Transparent);
+		rooms.push_back(room);
 	}
 
 	for (int i = 0; i < (int)type; i++)
@@ -178,7 +179,7 @@ void Board::SetRoomPos(BoardType type)
 		for (int j = 0; j < (int)type; j++)
 		{
 			int index = i * (int)type + j;
-			rooms[index].shape.setPosition({pos.x + roomSize * j, pos.y + roomSize * i});
+			rooms[index].shape.setPosition({pos.x + roomSize * j, pos.y + roomSize * i});	//행부터 차례대로 셋포지션
 		}
 	}
 }
@@ -202,19 +203,10 @@ void Board::OnClick(Room& sRoom)
 
 void Board::OnEnter(Room& sRoom)
 {
-	sRoom.shape.setOutlineThickness(3.f);
-	sRoom.shape.setOutlineColor(sf::Color::White);
-	if (sRoom.isFull && INPUT_MGR.GetKeyDown(sf::Keyboard::Up))
-	{
-		
-	}
-	if (sRoom.isFull && INPUT_MGR.GetKeyDown(sf::Keyboard::Down))
-	{
-
-	}
+	sRoom.shape.setOutlineThickness(1.f);
+	sRoom.shape.setOutlineColor(sf::Color::Red);
 }
 
 void Board::OnExit(Room& sRoom)
 {
-	sRoom.shape.setOutlineThickness(0.f);
 }

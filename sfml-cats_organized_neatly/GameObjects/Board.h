@@ -35,6 +35,7 @@ class Board :
 protected:
 	BoardInfo boardInfo = { BoardType::_3X3, "board_3x3" };
 	AnimationController animation;
+	
 	std::vector<Room> rooms;
 	ObjectPool<Tile> tilePool;
 
@@ -51,19 +52,16 @@ public:
 	virtual void Update(float dt) override;
 	virtual void Draw(sf::RenderWindow& window) override;
 
-	void ClearRoom();
+	void ClearRooms();
 
 	void SetBoard(BoardType type);
-	void SetRoomPos(BoardType type);
+	void MakeRooms(BoardType type);
 	void SetBoardInfo(BoardType type, std::string aniId) { boardInfo = { type, aniId }; }
-
 	void SetIsCatchCat(Cat* cat) { isCatchCat = cat; }
 
 	const BoardInfo GetBoardInfo() const { return boardInfo; };
 	std::vector<Room>* GetRooms() { return &rooms; }
-	
 	const Cat* GetIsCatchCat() { return isCatchCat; }
-
 	ObjectPool<Tile>* GetTilePool() { return &tilePool; }
 
 	void OnClick(Room& sRoom);

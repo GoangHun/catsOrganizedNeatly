@@ -1,0 +1,17 @@
+4
+Pot,sprites/b2_0.png,-64,-66,-4.31602e+08
+Tile,sprites/board_tile_0.png,-93,93,-4.31602e+08
+Tile,sprites/board_tile_0.png,-31,93,-4.31602e+08
+Tile,sprites/board_tile_0.png,31,93,-4.31602e+08
+Tile,sprites/board_tile_0.png,93,93,-4.31602e+08
+Tile,sprites/board_tile_0.png,93,31,-4.31602e+08
+Tile,sprites/board_tile_0.png,93,-31,-4.31602e+08
+Tile,sprites/board_tile_0.png,93,-93,-4.31602e+08
+Tile,sprites/board_tile_0.png,31,-93,-4.31602e+08
+Tile,sprites/board_tile_0.png,31,-31,-4.31602e+08
+Tile,sprites/board_tile_0.png,31,31,-4.31602e+08
+Tile,sprites/board_tile_0.png,-31,31,-4.31602e+08
+Tile,sprites/board_tile_0.png,-93,31,-4.31602e+08
+Cat,7,318,37,0
+Cat,3,-292,62,0
+Cat,5,-335,-162,270

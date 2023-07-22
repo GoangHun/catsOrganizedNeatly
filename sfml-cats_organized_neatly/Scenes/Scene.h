@@ -47,5 +47,7 @@ public:
 
 	virtual void Update(float dt);
 	virtual void Draw(sf::RenderWindow& window);
+
+	void ToggleIsDeveloperMode() { isDeveloperMode = !isDeveloperMode; }
 };
 

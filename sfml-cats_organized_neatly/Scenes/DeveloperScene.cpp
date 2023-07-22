@@ -22,12 +22,19 @@ DeveloperScene::DeveloperScene() : Scene(SceneId::None)
 void DeveloperScene::Init()
 {
 	Release();
+	isDeveloperMode = true;
 
 	auto size = FRAMEWORK.GetWindowSize();
 
-	stageInfos.insert({ 1, "scene_datas/stage_1.txt" });
+	/*stageInfos.insert({ 1, "scene_datas/stage_1.txt" });
 	stageInfos.insert({ 2, "scene_datas/stage_2.txt" });
-	stageInfos.insert({ 3, "scene_datas/stage_3.txt" });
+	stageInfos.insert({ 3, "scene_datas/stage_3.txt" });*/
+
+
+	for (int i = 1; i < 11; i++)
+	{
+		stageInfos.insert({ i, "scene_datas/stage_" + std::to_string(i) + ".txt" });
+	}
 
 	AddGo(new GameBackground("", "Background"));
 	AddGo(new Board("", "Board"));
@@ -148,7 +155,7 @@ void DeveloperScene::Init()
 		button->sprite.setTexture(*tex);
 	};
 	button->OnClick = [this, tgo]() {
-		stageNum = stageNum == 3 ? 1 : stageNum + 1;
+		stageNum = stageNum == 10 ? 1 : stageNum + 1;
 		tgo->SetTextString(std::to_string(stageNum));
 	};
 
@@ -167,7 +174,7 @@ void DeveloperScene::Init()
 		button->sprite.setTexture(*tex);
 	};
 	button->OnClick = [this, tgo]() {
-		stageNum = stageNum == 1 ? 3 : stageNum - 1;
+		stageNum = stageNum == 1 ? 10 : stageNum - 1;
 		tgo->SetTextString(std::to_string(stageNum));
 	};
 
@@ -258,7 +265,6 @@ void DeveloperScene::Update(float dt)
 	}
 	else if (INPUT_MGR.GetKeyDown(sf::Keyboard::Space) && isCatch)
 	{
-		//pSpriteGo->sprite.setTexture(*RESOURCE_MGR.GetTexture("sprites/b2_0.png"));
 		sf::Texture* t = RESOURCE_MGR.GetTexture("sprites/b" + std::to_string(num) + "_0.png");
 		pSpriteGo->sprite.setTexture(*t);
 		pSpriteGo->SetResourcePath("sprites/b" + std::to_string(num) + "_0.png");

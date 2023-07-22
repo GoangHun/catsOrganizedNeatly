@@ -125,6 +125,11 @@ void GameScene::Update(float dt)
 
 	sf::Vector2f mousePos = INPUT_MGR.GetMousePos();
 	sf::Vector2f worldMousePos = SCENE_MGR.GetCurrScene()->ScreenToWorldPos(mousePos);
+
+	if (INPUT_MGR.GetKey(sf::Keyboard::LShift) && INPUT_MGR.GetKeyDown(sf::Keyboard::D))
+	{
+		ToggleIsDeveloperMode();
+	}
 }
 
 void GameScene::Draw(sf::RenderWindow& window)

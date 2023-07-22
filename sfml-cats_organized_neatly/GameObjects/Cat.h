@@ -39,15 +39,13 @@ protected:
 	CatTypes type;
 
 	std::vector<Box> boxs;
-	//std::vector<sf::RectangleShape> boxs;
-	//std::vector<bool> boxStates;
 
 	sf::Vector2i boxNumber;	//number of box
 	sf::Vector2f boxSize;	//lengths of box
 
+	std::vector<Room>* rooms = nullptr;
 	ObjectPool<Tile>* tilePool = nullptr;
 	Board* board = nullptr;
-	std::vector<Room>* rooms = nullptr;
 	sf::Texture* tex = nullptr;
 
 	std::string animationId;

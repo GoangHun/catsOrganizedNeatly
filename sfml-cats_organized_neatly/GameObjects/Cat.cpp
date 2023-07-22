@@ -28,7 +28,6 @@ void Cat::Init()
 
 	auto it = std::find(types.begin(), types.end(), (int)type);
 
-	//it로 인덱스 계산되는 거 원리랑 순서 이해 안감.
 	if (it != types.end())
 	{
 		animationId = aniPaths[*it - 1];
@@ -69,7 +68,7 @@ void Cat::Update(float dt)
 	{
 		for (int j = 0; j < boxNumber.y; j++)
 		{
-			int index = i * boxNumber.x + j;
+			int index = i * boxNumber.y + j;
 			boxs[index].shape.setPosition(sprite.getPosition());
 			boxs[index].shape.setRotation(sprite.getRotation());
 		}
@@ -104,15 +103,30 @@ void Cat::Update(float dt)
 
 	if (isCatch)
 	{
-		OnClickHold(worldMousePos);		//이렇게 함으로써 마우스 포인터가 빨리 움직여서 퍼즐 밖으로 빠져나가도 isCatch 상태를 유지
+		//마우스 포인터가 빨리 움직여서 퍼즐 밖으로 빠져나가도 isCatch 상태를 유지
+		OnClickHold(worldMousePos);		
+
 		int count = 0;
-		for (auto box : boxs)
+		for (auto& box : boxs)
 		{
-			for (auto room : *rooms)
+			if (SCENE_MGR.GetCurrScene()->isDeveloperMode)
 			{
-				if (box.shape.getGlobalBounds().intersects(room.shape.getGlobalBounds()) && room.isFull && box.isActive)
+				box.shape.setOutlineThickness(1.f);
+				box.shape.setOutlineColor(sf::Color::Green);
+			}
+
+			for (auto& room : *rooms)
+			{
+				//intersects가 아니라 contains를 써서 room의 좌표를 확인하는 게 좋을듯
+				if (box.shape.getGlobalBounds().contains(room.shape.getPosition()))
 				{
+
+				}
+
+				if (box.shape.getGlobalBounds().intersects(room.shape.getGlobalBounds()) && room.isFull && box.isActive)
+				{	
 					box.isCollision = true;
+					box.shape.setOutlineColor(sf::Color::Blue);
 				}
 			}
 			if (box.isCollision)
@@ -123,7 +137,7 @@ void Cat::Update(float dt)
 		if (count == boxs.size())
 		{
 			sf::Vector2f sPos = { sprite.getGlobalBounds().left, sprite.getGlobalBounds().top };
-			for (auto room : *rooms)
+			for (auto& room : *rooms)
 			{
 				if (room.isFull)
 				{
@@ -164,47 +178,6 @@ void Cat::Update(float dt)
 			isRotation = false;
 		}
 		SetRotation(rotationAngle);
-		/*int x = boxSize.x;
-		int y = boxSize.y;
-		for (int i = 0; i < boxNumber.x; i++)
-		{
-			for (int j = 0; j < boxNumber.y; j++)
-			{
-				int index = i * boxNumber.x + j;
-				boxs[index].setRotation(rotationAngle);
-
-				sf::Vector2f boxOffset;
-
-				if (boxNumber.x % 2 == 0)
-				{
-					boxOffset.x = i * boxSize.x + -(boxSize.x * (boxNumber.x / 2 - 0.5f));
-				}
-				else
-				{
-					if (boxNumber.x == 1)
-						boxOffset.x = 0.f;
-					else
-						boxOffset.x = i * boxSize.x + -(boxSize.x * floor(boxNumber.x / 2.f));
-				}
-
-				if (boxNumber.y % 2 == 0)
-				{
-					boxOffset.y = j * boxSize.y + -(boxSize.y * (boxNumber.y / 2 - 0.5f));
-				}
-				else
-				{
-					if (boxNumber.y == 1)
-						boxOffset.y = 0.f;
-					else
-						boxOffset.y = j * boxSize.y + -(boxSize.y * floor(boxNumber.y / 2.f));
-				}
-
-				sf::Transform transform;
-				transform.rotate(rotationAngle, sprite.getPosition());
-				sf::Vector2f transformedOffset = transform.transformPoint(localPoss[index]);
-				boxs[index].setPosition(sprite.getPosition() + transformedOffset);
-			}
-		}*/
 	}
 }
 
@@ -242,26 +215,21 @@ void Cat::Makeboxs()
 {
 	float width = sprite.getTextureRect().width;
 	float height = sprite.getTextureRect().height;
-	int w = boxNumber.x = floor(width / 62);
-	int h = boxNumber.y = floor(height / 62);
+	boxNumber.x = floor(width / 62);
+	boxNumber.y = floor(height / 62);
 	
 	boxSize = { 62, 62 };
 
 	sf::FloatRect spriteBounds = sprite.getGlobalBounds();
 
-	for (int i = 0; i < w; i++)
+	for (int i = 0; i < boxNumber.x; i++)
 	{
-		for (int j = 0; j < h; j++)
+		for (int j = 0; j < boxNumber.y; j++)
 		{
 			sf::RectangleShape shape;	
 			shape.setSize(boxSize);
 			shape.setFillColor(sf::Color::Transparent);
-			//develop
-			{
-				shape.setOutlineThickness(1.f);
-				shape.setOutlineColor(sf::Color::White);
-			}
-
+			//오리진을 부모 객체로 두는 sprite의 오리진과 동일하게 설정함. 부모 객체의 위성처럼 움직이게 됨.
 			shape.setOrigin(-(spriteBounds.left + i * boxSize.x), -(spriteBounds.top + j * boxSize.y));
 			boxs.push_back({ shape, false });
 		}
@@ -283,7 +251,6 @@ void Cat::SetBoxState()
 	{
 		boxs[i].isActive = boxState;
 	}
-
 }
 
 void Cat::SetBoard(Board* board)
