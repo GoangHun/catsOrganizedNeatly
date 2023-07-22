@@ -61,6 +61,8 @@ protected:
 	float rotationSpeed = 400.f;
 	float rotationAngle = 0;
 
+	int activeBoxNum = 0;
+
 public:
 	Cat(const CatTypes type, const std::string& textureId = "", const std::string& n = "Cat");
 	virtual ~Cat() override { Release(); }

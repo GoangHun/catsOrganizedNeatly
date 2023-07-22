@@ -13,7 +13,7 @@ protected:
 	std::vector<Scene*> scenes;
 	SceneId currentSceneId = SceneId::None;
 	Scene* currentScene = nullptr;
-	SceneId startSceneId = SceneId::Count;
+	SceneId startSceneId = SceneId::Game;
 
 public:
 	void Init();

@@ -255,7 +255,7 @@ void DeveloperScene::Update(float dt)
 		cat1->SetBoard(dynamic_cast<Board*>(FindGo("Board")));
 	}
 
-	//꾸미기
+	//Pot 생성 및 교체
 	if (INPUT_MGR.GetKeyDown(sf::Keyboard::Space) && !isCatch)
 	{
 		pSpriteGo = (SpriteGo*)AddGo(new SpriteGo("sprites/b1_0.png", "Pot"));
@@ -275,7 +275,7 @@ void DeveloperScene::Update(float dt)
 		num = num == 20 ? 1 : num + 1;
 	}
 
-	//배치 or 해제
+	//Pot 배치 or 해제
 	if (isCatch)
 	{
 		pSpriteGo->SetPosition(worldMousePos);
@@ -342,7 +342,6 @@ void DeveloperScene::LoadScene()
 				if (go->GetPosition() == (*rooms)[i].shape.getPosition())
 				{
 					(*rooms)[i].tile = dynamic_cast<Tile*>(go);
-					(*rooms)[i].isFull = true;
 				}
 			}
 		}

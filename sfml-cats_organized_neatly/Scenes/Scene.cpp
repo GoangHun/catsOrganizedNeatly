@@ -14,12 +14,6 @@ Scene::~Scene()
 
 GameObject* Scene::FindGo(const std::string& name)
 {
-	//auto compare = [name](GameObject* go) { return go->GetName() == name; };
-	//auto it = std::find_if(gameObjects.begin(), gameObjects.end(), compare);
-	//if (it == gameObjects.end())
-	//	return nullptr;
-	//return *it;
-
 	for (auto go : gameObjects)
 	{
 		if (go->GetName() == name)

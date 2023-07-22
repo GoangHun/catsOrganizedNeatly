@@ -73,12 +73,12 @@ void Board::Update(float dt)
 				std::vector<Box> boxs = isCatchCat->GetBoxs();
 				for (auto& box : boxs)
 				{
-					if (sRoom.shape.getGlobalBounds().intersects(box.shape.getGlobalBounds()) && sRoom.isFull
+					sf::Vector2f center = { box.shape.getGlobalBounds().left + 31, box.shape.getGlobalBounds().top + 31 };
+					if (sRoom.shape.getGlobalBounds().contains(center) && sRoom.tile != nullptr
 						&& box.isActive)
 					{
 						//테스트 코드
-						std::cout << "test" << std::endl;
-						sRoom.shape.setOutlineThickness(3.f);
+						sRoom.shape.setOutlineThickness(2.f);
 						sRoom.shape.setOutlineColor(sf::Color::Red);
 					}	
 				}	
@@ -101,8 +101,12 @@ void Board::ClearRooms()
 {
 	for (auto& room : rooms)
 	{
-		tilePool.Return(room.tile);
-		room.tile = nullptr;
+		if (room.tile != nullptr)
+		{
+			tilePool.Return(room.tile);
+			SCENE_MGR.GetCurrScene()->RemoveGo(room.tile);
+			room.tile = nullptr;
+		}
 	}
 	rooms.clear();
 }
@@ -186,18 +190,17 @@ void Board::MakeRooms(BoardType type)
 
 void Board::OnClick(Room& sRoom)
 {
-	if (!sRoom.isFull)
+	if (sRoom.tile == nullptr)
 	{
 		sRoom.tile = tilePool.Get();
 		sRoom.tile->SetPosition(sRoom.shape.getPosition());
 		SCENE_MGR.GetCurrScene()->AddGo(sRoom.tile);
-		sRoom.isFull = true;
 	}
 	else
 	{
 		tilePool.Return(sRoom.tile);
 		SCENE_MGR.GetCurrScene()->RemoveGo(sRoom.tile);
-		sRoom.isFull = false;	
+		sRoom.tile = nullptr;
 	}
 }
 

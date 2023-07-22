@@ -71,6 +71,17 @@ void Cat::Update(float dt)
 			int index = i * boxNumber.y + j;
 			boxs[index].shape.setPosition(sprite.getPosition());
 			boxs[index].shape.setRotation(sprite.getRotation());
+
+			//test code
+			if (SCENE_MGR.GetCurrScene()->isDeveloperMode)
+			{
+				boxs[index].shape.setOutlineThickness(1.f);
+				boxs[index].shape.setOutlineColor(sf::Color::Green);
+			}
+			else
+			{
+				boxs[index].shape.setOutlineThickness(0.f);
+			}
 		}
 	}
 				
@@ -79,21 +90,6 @@ void Cat::Update(float dt)
 
 	bool prevHover = isHover;
 	isHover = sprite.getGlobalBounds().contains(worldMousePos);
-
-	if (!prevHover && isHover)
-	{
-		OnEnter();
-	}
-
-	if (prevHover && !isHover)
-	{
-		OnExit();
-	}
-
-	if (isHover && INPUT_MGR.GetMouseButtonUp(sf::Mouse::Left))
-	{
-		OnClick();
-	}
 
 	//isCatch
 	if (isHover && INPUT_MGR.GetMouseButtonDown(sf::Mouse::Left))
@@ -106,52 +102,46 @@ void Cat::Update(float dt)
 		//마우스 포인터가 빨리 움직여서 퍼즐 밖으로 빠져나가도 isCatch 상태를 유지
 		OnClickHold(worldMousePos);		
 
-		int count = 0;
+		int collisionCount = 0;
+
 		for (auto& box : boxs)
-		{
-			if (SCENE_MGR.GetCurrScene()->isDeveloperMode)
-			{
-				box.shape.setOutlineThickness(1.f);
-				box.shape.setOutlineColor(sf::Color::Green);
-			}
+		{	
+			if (!box.isActive)
+				continue;
 
 			for (auto& room : *rooms)
 			{
-				//intersects가 아니라 contains를 써서 room의 좌표를 확인하는 게 좋을듯
+				if (room.tile == nullptr)
+					continue;
+
 				if (box.shape.getGlobalBounds().contains(room.shape.getPosition()))
 				{
-
-				}
-
-				if (box.shape.getGlobalBounds().intersects(room.shape.getGlobalBounds()) && room.isFull && box.isActive)
-				{	
+					collisionCount++;
 					box.isCollision = true;
 					box.shape.setOutlineColor(sf::Color::Blue);
+					break;
 				}
 			}
-			if (box.isCollision)
-			{
-				count++;
-			}
 		}
-		if (count == boxs.size())
+
+		if (collisionCount == activeBoxNum)
 		{
-			sf::Vector2f sPos = { sprite.getGlobalBounds().left, sprite.getGlobalBounds().top };
+			sf::Vector2f startPos = { sprite.getGlobalBounds().left, sprite.getGlobalBounds().top };
 			for (auto& room : *rooms)
 			{
-				if (room.isFull)
+				if (room.tile == nullptr)
+					continue;
+
+				sf::Vector2f arrivalPos = { room.shape.getGlobalBounds().left, room.shape.getGlobalBounds().top };
+				float distance = Utils::Distance(startPos, arrivalPos);
+				if (distance < 28)
 				{
-					sf::Vector2f gPos = { room.shape.getGlobalBounds().left, room.shape.getGlobalBounds().top };
-					float distance = Utils::Distance(sPos, gPos);
-					if (distance < 31)
-					{
-						SetPosition(position + (gPos - sPos));
-						isCatch = false;
-					}
-				}	
+					SetPosition(position + (arrivalPos - startPos));
+					isCatch = false;
+					break;
+				}
 			}
 		}
-		
 		
 	}
 
@@ -191,18 +181,6 @@ void Cat::Draw(sf::RenderWindow& window)
 	}
 }
 
-void Cat::OnClick()
-{
-	
-}
-
-void Cat::OnEnter()
-{
-}
-
-void Cat::OnExit()
-{
-}
 
 void Cat::OnClickHold(sf::Vector2f worldMousePos)
 {
@@ -250,6 +228,8 @@ void Cat::SetBoxState()
 	for (int i = 0; i < boxs.size(); i++)
 	{
 		boxs[i].isActive = boxState;
+		if (boxState)
+			activeBoxNum++;
 	}
 }
 

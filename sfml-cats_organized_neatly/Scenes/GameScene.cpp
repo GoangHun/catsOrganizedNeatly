@@ -26,6 +26,13 @@ void GameScene::Init()	//한 번만 해주면 되는 것들 위주로
 	stageInfos.insert({ 1, "scene_datas/stage_1.txt" });
 	stageInfos.insert({ 2, "scene_datas/stage_2.txt" });
 	stageInfos.insert({ 3, "scene_datas/stage_3.txt" });
+	stageInfos.insert({ 4, "scene_datas/stage_4.txt" });
+	stageInfos.insert({ 5, "scene_datas/stage_5.txt" });
+	stageInfos.insert({ 6, "scene_datas/stage_6.txt" });
+	stageInfos.insert({ 7, "scene_datas/stage_7.txt" });
+	stageInfos.insert({ 8, "scene_datas/stage_8.txt" });
+	stageInfos.insert({ 9, "scene_datas/stage_9.txt" });
+	stageInfos.insert({ 10, "scene_datas/stage_10.txt" });
 
 	AddGo(new GameBackground());
 	AddGo(new Board());
@@ -44,7 +51,7 @@ void GameScene::Init()	//한 번만 해주면 되는 것들 위주로
 		button->sprite.setTexture(*tex);
 	};
 	button->OnClick = [button, this]() {
-		LoadScene(1);
+		LoadScene(3);
 	};
 	//뒤로 버튼
 	button = (UIButton*)AddGo(new UIButton("sprites/button_back_0.png"));
@@ -142,8 +149,7 @@ void GameScene::LoadScene(int stageNum)
 {
 	//OBJECT_MGR.LoadObjects()에서 pool에 Get()을 한 뒤 저장한 값을 세팅해 주기 때문에 그 전에 한 번 tilePool을 비워줌
 	Board* board = dynamic_cast<Board*>(FindGo("Board"));
-	board->GetTilePool()->Clear();
-
+	board->ClearRooms();
 
 	std::tuple<int, std::vector<GameObject*>> sceneData = OBJECT_MGR.LoadObjects(stageInfos.find(stageNum)->second);
 	int boardType = std::get<0>(sceneData);
@@ -182,8 +188,6 @@ void GameScene::LoadScene(int stageNum)
 				if (go->GetPosition() == (*rooms)[i].shape.getPosition())
 				{
 					(*rooms)[i].tile = dynamic_cast<Tile*>(go);
-					(*rooms)[i].isFull = true;
-					std::cout << "room["<< i<<"]: "<< (*rooms)[i].isFull << std::endl;
 				}	
 			}
 		}

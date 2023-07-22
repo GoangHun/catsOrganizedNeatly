@@ -26,7 +26,6 @@ struct Room
 	Tile* tile = nullptr;
 	bool isHover = false;
 	bool prevHover = false;
-	bool isFull = false;
 };
 
 class Board :
