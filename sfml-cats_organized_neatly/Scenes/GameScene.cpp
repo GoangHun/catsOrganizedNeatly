@@ -51,7 +51,7 @@ void GameScene::Init()	//한 번만 해주면 되는 것들 위주로
 		button->sprite.setTexture(*tex);
 	};
 	button->OnClick = [button, this]() {
-		LoadScene(3);
+		LoadScene(7);
 	};
 	//뒤로 버튼
 	button = (UIButton*)AddGo(new UIButton("sprites/button_back_0.png"));
