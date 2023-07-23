@@ -45,6 +45,21 @@ void Board::Update(float dt)
 	auto* scene = SCENE_MGR.GetCurrScene();
 
 	//test code
+	for (auto& sRoom : rooms)
+	{
+		if (sRoom.isUse)
+		{
+			sRoom.shape.setOutlineThickness(3.f);
+			sRoom.shape.setOutlineColor(sf::Color::Red);
+		}
+		else
+		{
+			sRoom.shape.setOutlineThickness(0.f);
+		}
+	}
+	
+
+	//test code
 	if (scene->isDeveloperMode)
 	{
 		sf::Vector2f mousePos = INPUT_MGR.GetMousePos();
@@ -162,6 +177,9 @@ bool Board::SetRoomIsUse(Cat* cat)
 	std::vector<Box>* boxs = cat->GetBoxs();
 	for (auto& box : *boxs)
 	{
+		if (!box.isActive)
+			continue;
+
 		sf::FloatRect bounds = box.shape.getGlobalBounds();
 		for (auto& room : rooms)
 		{
