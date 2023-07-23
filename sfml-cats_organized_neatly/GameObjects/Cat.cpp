@@ -129,18 +129,19 @@ void Cat::Update(float dt)
 			sf::Vector2f startPos = { sprite.getGlobalBounds().left, sprite.getGlobalBounds().top };
 			for (auto& room : *rooms)
 			{
-				if (room.tile == nullptr)
-					continue;
-
 				sf::Vector2f arrivalPos = { room.shape.getGlobalBounds().left, room.shape.getGlobalBounds().top };
 				float distance = Utils::Distance(startPos, arrivalPos);
-				if (distance < 28)
+				if (distance < 28)	//room 길이의 절반에 조금 못 미치는 값
 				{
 					SetPosition(position + (arrivalPos - startPos));
-					isCatch = false;
+					isSnap = true;
 					break;
 				}
 			}
+		}
+		else
+		{
+			isSnap = false;
 		}
 		
 	}
@@ -181,12 +182,19 @@ void Cat::Draw(sf::RenderWindow& window)
 	}
 }
 
-
+//수정중
 void Cat::OnClickHold(sf::Vector2f worldMousePos)
 {
-	sprite.setTexture(*tex);
-	SetPosition(worldMousePos);
-	board->SetIsCatchCat(this);
+	if (!isSnap)
+	{
+		sprite.setTexture(*tex);
+		SetPosition(worldMousePos);
+		board->SetIsCatchCat(this);
+		return;
+	}
+
+	if (Utils::Distance(GetPosition(), worldMousePos) > 62)
+		SetPosition(worldMousePos);
 }
 
 void Cat::Makeboxs()
@@ -200,15 +208,15 @@ void Cat::Makeboxs()
 
 	sf::FloatRect spriteBounds = sprite.getGlobalBounds();
 
-	for (int i = 0; i < boxNumber.x; i++)
+	for (int i = 0; i < boxNumber.y; i++)
 	{
-		for (int j = 0; j < boxNumber.y; j++)
+		for (int j = 0; j < boxNumber.x; j++)
 		{
 			sf::RectangleShape shape;	
 			shape.setSize(boxSize);
 			shape.setFillColor(sf::Color::Transparent);
 			//오리진을 부모 객체로 두는 sprite의 오리진과 동일하게 설정함. 부모 객체의 위성처럼 움직이게 됨.
-			shape.setOrigin(-(spriteBounds.left + i * boxSize.x), -(spriteBounds.top + j * boxSize.y));
+			shape.setOrigin(-(spriteBounds.left + j * boxSize.x), -(spriteBounds.top + i * boxSize.y));
 			boxs.push_back({ shape, false });
 		}
 	}
@@ -224,11 +232,10 @@ void Cat::SetBoxState()
 		boxStates.push_back(std::stoi(token));
 	}
 
-	bool boxState = boxStates.front();
 	for (int i = 0; i < boxs.size(); i++)
 	{
-		boxs[i].isActive = boxState;
-		if (boxState)
+		boxs[i].isActive = boxStates[i];
+		if (boxs[i].isActive)
 			activeBoxNum++;
 	}
 }

@@ -53,6 +53,7 @@ protected:
 
 	bool isHover = false;
 	bool isCatch = false;
+	bool isSnap = false;
 	bool isRotation = false;
 	bool isFixation = false;
 

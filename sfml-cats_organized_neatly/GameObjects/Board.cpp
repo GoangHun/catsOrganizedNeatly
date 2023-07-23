@@ -1,9 +1,12 @@
 #include "stdafx.h"
 #include "Board.h"
+
 #include "ResourceMgr.h"
 #include "InputMgr.h"
 #include "SceneMgr.h"
+
 #include "Scene.h"
+#include "GameScene.h"
 #include "DeveloperScene.h"
 
 /*
@@ -43,44 +46,50 @@ void Board::Update(float dt)
 	if (scene->isDeveloperMode)
 	{
 		sf::Vector2f mousePos = INPUT_MGR.GetMousePos();
-		sf::Vector2f worldMousePos = SCENE_MGR.GetCurrScene()->ScreenToWorldPos(mousePos);
-		DeveloperScene* scene = (DeveloperScene*)SCENE_MGR.GetCurrScene();
-		bool isCatch = scene->GetIsCatch();
-
+		sf::Vector2f worldMousePos = scene->ScreenToWorldPos(mousePos);
+		
 		for (auto& sRoom : rooms)
 		{
-			sRoom.shape.setOutlineColor(sf::Color::White);
+			if (sRoom.tile == nullptr)
+				continue;
 
 			sRoom.prevHover = sRoom.isHover;
 			sRoom.isHover = sRoom.shape.getGlobalBounds().contains(worldMousePos);
-			if (!sRoom.prevHover && sRoom.isHover && !isCatch)
+
+			if (!sRoom.prevHover && sRoom.isHover)
 			{
 				OnEnter(sRoom);
 			}
-			if (sRoom.prevHover && !sRoom.isHover && !isCatch)
+			if (sRoom.prevHover && !sRoom.isHover)
 			{
 				OnExit(sRoom);
 			}
-			if (sRoom.isHover && INPUT_MGR.GetMouseButtonUp(sf::Mouse::Left) && !isCatch)
+			if (sRoom.isHover && INPUT_MGR.GetMouseButtonUp(sf::Mouse::Left))
 			{
 				OnClick(sRoom);
-			}
+			}		
 
-			//퍼즐 충돌 체크
-			//isCatch 상태인 Cat과 체크
+			//퍼즐 충돌 체크 + isCatch 상태인 Cat과 체크
 			if (isCatchCat != nullptr)
 			{
-				std::vector<Box> boxs = isCatchCat->GetBoxs();
+				const std::vector<Box>& boxs = isCatchCat->GetBoxs();
 				for (auto& box : boxs)
 				{
+					if (!box.isActive)
+						continue;
+
 					sf::Vector2f center = { box.shape.getGlobalBounds().left + 31, box.shape.getGlobalBounds().top + 31 };
-					if (sRoom.shape.getGlobalBounds().contains(center) && sRoom.tile != nullptr
-						&& box.isActive)
+
+					if (sRoom.shape.getGlobalBounds().contains(center))
 					{
-						//테스트 코드
 						sRoom.shape.setOutlineThickness(2.f);
 						sRoom.shape.setOutlineColor(sf::Color::Red);
+						break;
 					}	
+					else
+					{
+						sRoom.shape.setOutlineThickness(0.f);
+					}
 				}	
 			}
 		}
@@ -206,10 +215,11 @@ void Board::OnClick(Room& sRoom)
 
 void Board::OnEnter(Room& sRoom)
 {
-	sRoom.shape.setOutlineThickness(1.f);
-	sRoom.shape.setOutlineColor(sf::Color::Red);
+	sRoom.shape.setOutlineThickness(2.f);
+	sRoom.shape.setOutlineColor(sf::Color::White);
 }
 
 void Board::OnExit(Room& sRoom)
 {
+	sRoom.shape.setOutlineThickness(0.f);
 }
