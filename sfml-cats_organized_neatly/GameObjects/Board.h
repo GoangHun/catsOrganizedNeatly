@@ -26,7 +26,7 @@ struct Room
 	Tile* tile = nullptr;
 	bool isHover = false;
 	bool prevHover = false;
-	//bool isUse = false;
+	bool isUse = false;
 };
 
 class Board :
@@ -39,7 +39,9 @@ protected:
 	std::vector<Room> rooms;
 	ObjectPool<Tile> tilePool;
 
+	std::list<Cat*> cats;
 	Cat* isCatchCat = nullptr;
+
 
 public:
 	Board(const std::string& textureId = "", const std::string& n = "Board")
@@ -53,6 +55,9 @@ public:
 	virtual void Draw(sf::RenderWindow& window) override;
 
 	void ClearRooms();
+
+	void SetAllRoomIsUse();
+	bool SetRoomIsUse(Cat* cat);
 
 	void SetBoard(BoardType type);
 	void MakeRooms(BoardType type);

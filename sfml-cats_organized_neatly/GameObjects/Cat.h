@@ -23,11 +23,12 @@ enum class CatTypes
 	c12,
 };
 
+//box에 올라가 있는 room의 정보를 담아서 이중 for문을 줄일 수 있음(작업중)
 struct Box
 {
 	sf::RectangleShape shape;
 	bool isActive;
-	bool isCollision;
+	Room* room = nullptr;
 };
 
 
@@ -42,6 +43,7 @@ protected:
 
 	sf::Vector2i boxNumber;	//number of box
 	sf::Vector2f boxSize;	//lengths of box
+	sf::Vector2f startPos;
 
 	std::vector<Room>* rooms = nullptr;
 	ObjectPool<Tile>* tilePool = nullptr;
@@ -81,13 +83,16 @@ public:
 	void Makeboxs();
 	void SetBoxState();
 
+	void ClearBoxs();
+
 	void SetPool(ObjectPool<Tile>* pool) { tilePool = pool; }
 	void SetType(CatTypes type) { this->type = type; }
 	void SetBoard(Board* board);
 	void SetRooms(std::vector<Room>* rooms) { this->rooms = rooms; }
+	void SetStartPos(sf::Vector2f pos) { startPos = pos; }
 
 	int GetType() { return (int)type; }
-	const std::vector<Box>& GetBoxs() { return boxs; }
+	std::vector<Box>* GetBoxs() { return &boxs; }
 
 };
 

@@ -43,6 +43,8 @@ void Board::Update(float dt)
 	animation.Update(dt);
 
 	auto* scene = SCENE_MGR.GetCurrScene();
+
+	//test code
 	if (scene->isDeveloperMode)
 	{
 		sf::Vector2f mousePos = INPUT_MGR.GetMousePos();
@@ -72,8 +74,8 @@ void Board::Update(float dt)
 			//퍼즐 충돌 체크 + isCatch 상태인 Cat과 체크
 			if (isCatchCat != nullptr)
 			{
-				const std::vector<Box>& boxs = isCatchCat->GetBoxs();
-				for (auto& box : boxs)
+				std::vector<Box>* boxs = isCatchCat->GetBoxs();
+				for (auto& box : *boxs)
 				{
 					if (!box.isActive)
 						continue;
@@ -95,6 +97,7 @@ void Board::Update(float dt)
 		}
 		return;
 	}
+
 }
 
 void Board::Draw(sf::RenderWindow& window)
@@ -105,6 +108,40 @@ void Board::Draw(sf::RenderWindow& window)
 		window.draw(structRoom.shape);
 	}
 }
+
+void Board::SetAllRoomIsUse()
+{
+	const std::vector<Cat*>& cats = dynamic_cast<GameScene*>(SCENE_MGR.GetCurrScene())->GetCats();
+	std::vector<Box> allBoxs;
+
+	for (auto& cat : cats)
+	{
+		const std::vector<Box>* boxs = cat->GetBoxs();
+		for (auto& box : *boxs)
+		{
+			allBoxs.push_back(box);
+		}
+	}
+	
+	for (auto& room : rooms)
+	{
+		if (room.tile == nullptr)
+			continue;
+		for (auto& box : allBoxs)
+		{
+			if (!box.isActive)
+				continue;
+
+			if (room.shape.getGlobalBounds().contains(box.shape.getGlobalBounds().left + 31, box.shape.getGlobalBounds().top + 31))
+			{
+				room.isUse = true;
+				break;
+			}
+			room.isUse = false;
+		}
+	}
+}
+
 
 void Board::ClearRooms()
 {
@@ -118,6 +155,33 @@ void Board::ClearRooms()
 		}
 	}
 	rooms.clear();
+}
+
+bool Board::SetRoomIsUse(Cat* cat)
+{
+	std::vector<Box>* boxs = cat->GetBoxs();
+	for (auto& box : *boxs)
+	{
+		sf::FloatRect bounds = box.shape.getGlobalBounds();
+		for (auto& room : rooms)
+		{
+			if (room.isUse || room.tile == nullptr)
+				continue;
+
+			if (room.shape.getGlobalBounds().contains(bounds.left + 31, bounds.top + 31))
+			{
+				box.room = &room;
+				room.isUse = true;
+				break;
+			}
+		}
+		if (box.room == nullptr)
+		{
+			cat->ClearBoxs();
+			return false;
+		}		
+	}
+	return true;
 }
 
 void Board::SetBoard(BoardType type)
@@ -196,6 +260,7 @@ void Board::MakeRooms(BoardType type)
 		}
 	}
 }
+
 
 void Board::OnClick(Room& sRoom)
 {

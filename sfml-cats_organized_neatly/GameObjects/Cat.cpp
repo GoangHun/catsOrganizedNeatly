@@ -99,11 +99,11 @@ void Cat::Update(float dt)
 
 	if (isCatch)
 	{
-		//마우스 포인터가 빨리 움직여서 퍼즐 밖으로 빠져나가도 isCatch 상태를 유지
-		OnClickHold(worldMousePos);		
+		//board->SetAllRoomIsUse();
+		ClearBoxs();
+		OnClickHold(worldMousePos);		//마우스 포인터가 빨리 움직여서 퍼즐 밖으로 빠져나가도 isCatch 상태를 유지
 
 		int collisionCount = 0;
-
 		for (auto& box : boxs)
 		{	
 			if (!box.isActive)
@@ -117,7 +117,6 @@ void Cat::Update(float dt)
 				if (box.shape.getGlobalBounds().contains(room.shape.getPosition()))
 				{
 					collisionCount++;
-					box.isCollision = true;
 					box.shape.setOutlineColor(sf::Color::Blue);
 					break;
 				}
@@ -140,14 +139,19 @@ void Cat::Update(float dt)
 			}
 		}
 		else
-		{
 			isSnap = false;
-		}
-		
 	}
 
 	if (isCatch && INPUT_MGR.GetMouseButtonUp(sf::Mouse::Left))
 	{
+		//사용중인지 체크하고 사용중이면 원래 위치로
+		if (isSnap)
+		{
+			if (!board->SetRoomIsUse(this))
+			{
+				SetPosition(startPos);
+			}
+		}
 		board->SetIsCatchCat(nullptr);
 		isCatch = false;
 	}
@@ -182,7 +186,6 @@ void Cat::Draw(sf::RenderWindow& window)
 	}
 }
 
-//수정중
 void Cat::OnClickHold(sf::Vector2f worldMousePos)
 {
 	if (!isSnap)
@@ -237,6 +240,18 @@ void Cat::SetBoxState()
 		boxs[i].isActive = boxStates[i];
 		if (boxs[i].isActive)
 			activeBoxNum++;
+	}
+}
+
+void Cat::ClearBoxs()
+{
+	for (auto& box : boxs)
+	{
+		if (box.room != nullptr)
+		{
+			box.room->isUse = false;
+			box.room = nullptr;
+		}	
 	}
 }
 

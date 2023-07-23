@@ -1,5 +1,8 @@
 #pragma once
 #include "Scene.h"
+
+class Cat;
+
 class GameScene :
     public Scene
 {
@@ -18,6 +21,7 @@ protected:
 	int stageNum = 0;
 
 	std::map<int, std::string> stageInfos;
+	std::vector<Cat*> cats;
 
 public:
 	GameScene();
@@ -35,5 +39,6 @@ public:
 	void LoadScene(int stageNum);
 
 	bool GetIsCatch() { return isCatch; }
+	const std::vector<Cat*>& GetCats() { return cats; }
 };
 

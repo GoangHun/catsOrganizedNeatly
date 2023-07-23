@@ -169,6 +169,7 @@ void GameScene::LoadScene(int stageNum)
 			delete go;
 		}
 	}
+	cats.clear();
 
 	Exit();
 
@@ -195,6 +196,7 @@ void GameScene::LoadScene(int stageNum)
 		{
 			Cat* cat = dynamic_cast<Cat*>(go);
 			cat->SetBoard(board);
+			cats.push_back(cat);
 		}
 		AddGo(go);
 	}

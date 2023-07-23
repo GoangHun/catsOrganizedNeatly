@@ -84,6 +84,7 @@ std::tuple<int, std::vector<GameObject*>> ObjectManager::LoadObjects(std::string
             cat->Reset();
             cat->SetOrigin(Origins::MC);
             cat->SetPosition(posX, posY);
+            cat->SetStartPos({ posX, posY });
             //cat->SetRotation(rotation);   //box를 만든 뒤에 돌리거나 돌린 다음에 박스 정보도 배열로 만들어서 회전 시킨 값을 적용시킬 필요 있음
             objects.push_back(cat);
         }
