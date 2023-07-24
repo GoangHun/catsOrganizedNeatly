@@ -71,6 +71,7 @@ inline void ObjectPool<T>::Clear()
 {
 	for (auto obj : useList)
 	{
+		std::cout << "Clear(): "<< obj->GetName() << std::endl;
 		obj->SetActive(false);
 		pool.push_back(obj);
 	}
@@ -87,6 +88,8 @@ inline T* ObjectPool<T>::Get()
 
 	T* obj = pool.front();
 	pool.pop_front();
+
+	std::cout << "Get(): " << obj->GetName() << std::endl;
 
 	obj->SetActive(true);
 	obj->Reset();

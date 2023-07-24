@@ -312,14 +312,19 @@ void DeveloperScene::Draw(sf::RenderWindow& window)
 void DeveloperScene::LoadScene()
 {
 	//OBJECT_MGR.LoadObjects()에서 pool에 Get()을 한 뒤 저장한 값을 세팅해 주기 때문에 그 전에 한 번 tilePool을 비워줌
-	Board* board = dynamic_cast<Board*>(FindGo("Board"));
-	board->GetTilePool()->Clear();
+	board->ClearRooms();
 
-	std::tuple<int, std::vector<GameObject*>> sceneData = OBJECT_MGR.LoadObjects(stageInfos.find(stageNum)->second);
+
+	std::tuple<int, std::vector<std::tuple<std::string, std::string, float, float, float>>> sceneData =
+		OBJECT_MGR.LoadObjects(stageInfos.find(stageNum)->second);
 	int boardType = std::get<0>(sceneData);
-	std::vector<GameObject*> vGameObjects = std::get<1>(sceneData);
+	std::vector<std::tuple<std::string, std::string, float, float, float>> infos = std::get<1>(sceneData);
 
-	//기존에 있던 Cat과 Pot을 지워준 뒤 새로 만듬
+	this->stageNum = stageNum;
+	std::string str = "Level " + std::to_string(stageNum);
+	TextGo* textGo = (TextGo*)FindGo("Stage Number");
+	textGo->SetTextString(str);
+
 	for (auto go : gameObjects)
 	{
 		std::string name = go->GetName();
@@ -327,29 +332,63 @@ void DeveloperScene::LoadScene()
 		{
 			RemoveGo(go);
 			delete go;
-		}	
+		}
 	}
+	cats.clear();
 
 	Exit();
 
-	for (auto go : vGameObjects)
+	std::string strBoardType = std::to_string(boardType);
+	std::string boardAniId = "board_" + strBoardType + "x" + strBoardType;
+	board->SetBoardInfo((BoardType)boardType, boardAniId);
+	board->SetBoard((BoardType)boardType);
+	board->Reset();
+
+	for (auto& info : infos)
 	{
-		if (go->GetName() == "Tile")
+		if (std::get<0>(info) == "Tile")
 		{
+			ObjectPool<Tile>* tilePool = board->GetTilePool();
+			Tile* tile = tilePool->Get();
+			tile->Init();
+			tile->Reset();
+			tile->SetResourcePath(std::get<1>(info));
+			tile->SetPosition(std::get<2>(info), std::get<3>(info));
+			tile->SetRotation(0.f);
 			std::vector<Room>* rooms = board->GetRooms();
-			for (int i = 0; i < (*rooms).size(); i++)
+			for (int i = 0; i < rooms->size(); i++)
 			{
-				if (go->GetPosition() == (*rooms)[i].shape.getPosition())
+				if (tile->GetPosition() == (*rooms)[i].shape.getPosition())
 				{
-					(*rooms)[i].tile = dynamic_cast<Tile*>(go);
+					(*rooms)[i].tile = tile;
 				}
 			}
+			AddGo(tile);
 		}
-		else if (go->GetName() == "Cat")
+		else if (std::get<0>(info) == "Cat")
 		{
-			Cat* cat = dynamic_cast<Cat*>(go);
+			Cat* cat = new Cat((CatTypes)stoi(std::get<1>(info)));    //texId가 아니라 CatTypes가 저장되 있음
+			cat->Init();
+			cat->Reset();
+			cat->SetOrigin(Origins::MC);
+			cat->SetPosition(std::get<2>(info), std::get<3>(info));
+			cat->SetStartPos({ std::get<2>(info), std::get<3>(info) });
+			//cat->SetRotation(rotation);   //box를 만든 뒤에 돌리거나 돌린 다음에 박스 정보도 배열로 만들어서 회전 시킨 값을 적용시킬 필요 있음
 			cat->SetBoard(board);
+			cats.push_back(cat);
+			AddGo(cat);
 		}
-		AddGo(go);
+		else if (std::get<0>(info) == "Pot")
+		{
+			SpriteGo* pot = new SpriteGo("", "Pot");
+			pot->Init();
+			pot->Reset();
+			pot->SetResourcePath(std::get<1>(info));
+			pot->sprite.setTexture(*RESOURCE_MGR.GetTexture(std::get<1>(info)));
+			pot->SetOrigin(Origins::MC);
+			pot->SetPosition(std::get<2>(info), std::get<3>(info));
+			pot->SetRotation(0.f);
+			AddGo(pot);
+		}
 	}
 }

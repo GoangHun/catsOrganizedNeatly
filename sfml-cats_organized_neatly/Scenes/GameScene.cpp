@@ -35,7 +35,7 @@ void GameScene::Init()	//한 번만 해주면 되는 것들 위주로
 	stageInfos.insert({ 10, "scene_datas/stage_10.txt" });
 
 	AddGo(new GameBackground());
-	AddGo(new Board());
+	board = dynamic_cast<Board*>(AddGo(new Board()));
 
 	//리셋 버튼
 	UIButton* button = (UIButton*)AddGo(new UIButton("sprites/interface_replay1_0.png"));
@@ -51,7 +51,7 @@ void GameScene::Init()	//한 번만 해주면 되는 것들 위주로
 		button->sprite.setTexture(*tex);
 	};
 	button->OnClick = [button, this]() {
-		LoadScene(7);
+		LoadScene(1);
 	};
 	//뒤로 버튼
 	button = (UIButton*)AddGo(new UIButton("sprites/button_back_0.png"));
@@ -67,10 +67,12 @@ void GameScene::Init()	//한 번만 해주면 되는 것들 위주로
 		button->sprite.setTexture(*tex);
 	};
 	button->OnClick = [button, this]() {
-
+		stageNum = stageNum == 1 ? 0 : stageNum - 1;
+		//스테이지 번호가 1번이면 챕터 화면으로 돌아가기
+		LoadScene(stageNum);
 	};
 	//다음 버튼
-	button = (UIButton*)AddGo(new UIButton("sprites/button_next_0.png"));
+	button = (UIButton*)AddGo(new UIButton("sprites/button_next_0.png", "Next Button"));
 	button->SetOrigin(Origins::BC);
 	button->SetPosition(size.x * 0.5f + 300, size.y - 50);
 	button->sortLayer = 100;
@@ -83,7 +85,9 @@ void GameScene::Init()	//한 번만 해주면 되는 것들 위주로
 		button->sprite.setTexture(*tex);
 	};
 	button->OnClick = [button, this]() {
-
+		stageNum = stageNum == 10 ? 1 : stageNum + 1;
+		LoadScene(stageNum);
+		button->SetActive(false);
 	};
 	button->SetActive(false);
 
@@ -118,6 +122,9 @@ void GameScene::Enter()
 	uiView.setCenter(size * 0.5f);
 
 	Scene::Enter();
+
+	//test
+	LoadScene(stageNum);
 }
 
 void GameScene::Exit()
@@ -137,6 +144,21 @@ void GameScene::Update(float dt)
 	{
 		ToggleIsDeveloperMode();
 	}
+
+	bool prevBoard = isComplete;
+	isComplete = board->CheckBoard();
+	if (isComplete)
+	{
+		//클리어 애니메이션 재생
+		if (!prevBoard)
+		{
+
+		}
+		
+		//Next 버튼 활성화
+		FindGo("Next Button")->SetActive(true);
+
+	}
 }
 
 void GameScene::Draw(sf::RenderWindow& window)
@@ -148,13 +170,13 @@ void GameScene::Draw(sf::RenderWindow& window)
 void GameScene::LoadScene(int stageNum)
 {
 	//OBJECT_MGR.LoadObjects()에서 pool에 Get()을 한 뒤 저장한 값을 세팅해 주기 때문에 그 전에 한 번 tilePool을 비워줌
-	Board* board = dynamic_cast<Board*>(FindGo("Board"));
 	board->ClearRooms();
 
 
-	std::tuple<int, std::vector<GameObject*>> sceneData = OBJECT_MGR.LoadObjects(stageInfos.find(stageNum)->second);
+	std::tuple<int, std::vector<std::tuple<std::string, std::string, float, float, float>>> sceneData = 
+		OBJECT_MGR.LoadObjects(stageInfos.find(stageNum)->second);
 	int boardType = std::get<0>(sceneData);
-	std::vector<GameObject*> vGameObjects = std::get<1>(sceneData);
+	std::vector<std::tuple<std::string, std::string, float, float, float>> infos = std::get<1>(sceneData);
 
 	this->stageNum = stageNum;
 	std::string str = "Level " + std::to_string(stageNum);
@@ -164,7 +186,7 @@ void GameScene::LoadScene(int stageNum)
 	for (auto go : gameObjects)
 	{
 		std::string name = go->GetName();
-		if (name == "Cat" || name == "Pot" || name == "Tile")
+		if (name == "Cat" || name == "Pot")
 		{
 			RemoveGo(go);
 			delete go;
@@ -180,25 +202,51 @@ void GameScene::LoadScene(int stageNum)
 	board->SetBoard((BoardType)boardType);
 	board->Reset();
 
-	for (auto go : vGameObjects)
-	{
-		if (go->GetName() == "Tile")
+	for (auto& info : infos)
+	{	
+		if (std::get<0>(info) == "Tile")
 		{
+		    ObjectPool<Tile>* tilePool = board->GetTilePool();
+		    Tile* tile = tilePool->Get();
+		    tile->Init();
+		    tile->Reset();
+		    tile->SetResourcePath(std::get<1>(info));
+		    tile->SetPosition(std::get<2>(info), std::get<3>(info));
+		    tile->SetRotation(0.f);
 			std::vector<Room>* rooms = board->GetRooms();
 			for (int i = 0; i < rooms->size(); i++)
 			{
-				if (go->GetPosition() == (*rooms)[i].shape.getPosition())
+				if (tile->GetPosition() == (*rooms)[i].shape.getPosition())
 				{
-					(*rooms)[i].tile = dynamic_cast<Tile*>(go);
-				}	
+					(*rooms)[i].tile = tile;
+				}
 			}
+			AddGo(tile);
 		}
-		else if (go->GetName() == "Cat")
+		else if (std::get<0>(info) == "Cat")
 		{
-			Cat* cat = dynamic_cast<Cat*>(go);
+		    Cat* cat = new Cat((CatTypes)stoi(std::get<1>(info)));    //texId가 아니라 CatTypes가 저장되 있음
+		    cat->Init();
+		    cat->Reset();
+		    cat->SetOrigin(Origins::MC);
+		    cat->SetPosition(std::get<2>(info), std::get<3>(info));
+		    cat->SetStartPos({ std::get<2>(info), std::get<3>(info) });
+		    //cat->SetRotation(rotation);   //box를 만든 뒤에 돌리거나 돌린 다음에 박스 정보도 배열로 만들어서 회전 시킨 값을 적용시킬 필요 있음
 			cat->SetBoard(board);
 			cats.push_back(cat);
+		    AddGo(cat);
 		}
-		AddGo(go);
+		else if (std::get<0>(info) == "Pot")
+		{
+		    SpriteGo* pot = new SpriteGo("", "Pot");
+		    pot->Init();
+		    pot->Reset();
+		    pot->SetResourcePath(std::get<1>(info));
+		    pot->sprite.setTexture(*RESOURCE_MGR.GetTexture(std::get<1>(info)));
+		    pot->SetOrigin(Origins::MC);
+		    pot->SetPosition(std::get<2>(info), std::get<3>(info));
+		    pot->SetRotation(0.f);
+			AddGo(pot);
+		}
 	}
 }

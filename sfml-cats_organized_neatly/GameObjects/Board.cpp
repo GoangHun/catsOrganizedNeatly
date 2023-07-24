@@ -19,6 +19,12 @@ void Board::Init()
 	sortLayer = 0;
 
 	SetBoard(boardInfo.type);	//빼고 다른 곳에서 따로 해주는 게 좋을 거 같기도... 
+	
+	ObjectPool<Tile>* ptr = &tilePool;
+	tilePool.OnCreate = [ptr](Tile* tile)
+	{
+		tile->resourcePath = "sprites/board_tile_0.png";
+	};
 
 	animation.SetTarget(&sprite);
 	tilePool.Init();
@@ -36,6 +42,8 @@ void Board::Reset()
 	sprite.setTextureRect({0, 0, size.x, size.y});
 	SetOrigin(Origins::MC);
 	SetPosition({ 0, 0 });
+
+	//ClearRooms();
 }
 
 void Board::Update(float dt)
@@ -57,7 +65,6 @@ void Board::Update(float dt)
 			sRoom.shape.setOutlineThickness(0.f);
 		}
 	}
-	
 
 	//test code
 	if (scene->isDeveloperMode)
@@ -164,12 +171,25 @@ void Board::ClearRooms()
 	{
 		if (room.tile != nullptr)
 		{
-			tilePool.Return(room.tile);
 			SCENE_MGR.GetCurrScene()->RemoveGo(room.tile);
+			//tilePool.Return(room.tile);
 			room.tile = nullptr;
 		}
 	}
 	rooms.clear();
+	tilePool.Clear();
+}
+
+bool Board::CheckBoard()
+{
+	for (auto& room : rooms)
+	{
+		if (room.tile == nullptr)
+			continue;
+		if (!room.isUse)
+			return false;
+	}
+	return true;
 }
 
 bool Board::SetRoomIsUse(Cat* cat)

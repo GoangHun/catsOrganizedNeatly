@@ -2,6 +2,9 @@
 #include "Scene.h"
 #include "SpriteGo.h"
 
+class Board;
+class Cat;
+
 class DeveloperScene : public Scene
 {
 protected:
@@ -25,6 +28,9 @@ protected:
 
 	std::vector<SpriteGo> pot;
 	sf::Texture tex;
+
+	std::vector<Cat*> cats;
+	Board* board = nullptr;
 
 
 public:

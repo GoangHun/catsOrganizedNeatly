@@ -30,9 +30,6 @@
     <ClCompile Include="Scenes\Scene.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="Scenes\DeveloperScene.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="Framework\ResourceMgr.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
@@ -96,6 +93,9 @@
     <ClCompile Include="Scenes\GameScene.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="Scenes\DeveloperScene.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Global\Singleton.h">
@@ -114,9 +114,6 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="Global\Defines.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Scenes\DeveloperScene.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="Framework\ResourceMgr.h">
@@ -189,6 +186,9 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="Scenes\GameScene.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Scenes\DeveloperScene.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>

@@ -55,6 +55,7 @@ public:
 	virtual void Draw(sf::RenderWindow& window) override;
 
 	void ClearRooms();
+	bool CheckBoard();
 
 	void SetAllRoomIsUse();
 	bool SetRoomIsUse(Cat* cat);

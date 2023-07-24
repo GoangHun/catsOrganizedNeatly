@@ -7,11 +7,11 @@ protected:
 	sf::Vector2f position;
 	float rotation;
 	std::string name;
-	std::string resourcePath;
 	bool isActive = true;
 	Origins origin = Origins::TL;
 
 public:
+	std::string resourcePath;
 
 	int sortLayer = 0;
 	int sortOrder = 0;
