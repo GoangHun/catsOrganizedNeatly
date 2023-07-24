@@ -1,0 +1,8 @@
+"RESOURCE TYPE (0. Texture, 1. Font, 2. SoundBuffer, 3. AnimationClip)",RESOURCE ID
+3,animations/board_3x3.csv
+3,animations/board_4x4.csv
+3,animations/board_5x5.csv
+3,animations/board_6x6.csv
+3,animations/board_7x7.csv
+3,animations/board_8x8.csv
+1,fonts/ShadowsIntoLight-Regular.ttf

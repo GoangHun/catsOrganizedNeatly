@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "SceneMgr.h"
 #include "DeveloperScene.h"
+#include "TitleScene.h"
 #include "GameScene.h"
 
 void SceneMgr::Init()
@@ -10,6 +11,7 @@ void SceneMgr::Init()
 		Release();
 	}
 
+	scenes.push_back(new TitleScene());
 	scenes.push_back(new GameScene());
 	scenes.push_back(new DeveloperScene());
 
@@ -37,7 +39,7 @@ void SceneMgr::Release()
 	}
 	scenes.clear();
 
-	currentSceneId = SceneId::Game;
+	currentSceneId = SceneId::Title;
 	currentScene = nullptr;
 }
 

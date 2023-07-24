@@ -13,7 +13,7 @@ protected:
 	std::vector<Scene*> scenes;
 	SceneId currentSceneId = SceneId::None;
 	Scene* currentScene = nullptr;
-	SceneId startSceneId = SceneId::Game;
+	SceneId startSceneId = SceneId::Title;
 
 public:
 	void Init();

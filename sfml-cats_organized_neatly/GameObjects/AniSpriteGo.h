@@ -14,7 +14,7 @@ protected:
 	std::string animationId;
 
 public:
-	AniSpriteGo(const std::string& textureId = "", const std::string& n = "");
+	AniSpriteGo(const std::string& animationId, const std::string& resourcePath = "", const std::string& n = "");
 	virtual ~AniSpriteGo() override { Release(); }
 
 	virtual void Init() override;

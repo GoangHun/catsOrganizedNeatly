@@ -8,10 +8,11 @@
 
 #include "SpriteGo.h"
 #include "AniSpriteGo.h"
+#include "UIButton.h"
 
 TitleScene::TitleScene()
 {
-	resourceListPath = "title_resource_list.csv";
+	resourceListPath = "scripts/title_resource_list.csv";
 }
 
 void TitleScene::Init()
@@ -20,9 +21,47 @@ void TitleScene::Init()
 
 	auto size = FRAMEWORK.GetWindowSize();
 
-	AddGo(new SpriteGo("sprites/titel_0.png", "Title Logo"));
-	AddGo(new SpriteGo("sprites/Background1a_0.png", "Main Title Background"));
-	AddGo(new AniSpriteGo());
+	SpriteGo* sgo = dynamic_cast<SpriteGo*>(AddGo(new SpriteGo("sprites/titel_0.png", "Title Logo")));
+	SetInitValue(sgo, Origins::MC, { size.x * 0.5f, size.y * 0.2f }, 0, 102);
+	sgo = dynamic_cast<SpriteGo*>(AddGo(new SpriteGo("sprites/Background1a_0.png", "Main Title Background")));
+	SetInitValue(sgo, Origins::TL, { 0, 0 });
+	sgo = dynamic_cast<SpriteGo*>(AddGo(new SpriteGo("sprites/Background1b_0.png", "Chapter Background")));
+	SetInitValue(sgo, Origins::TL, { 0, size.y });
+	AniSpriteGo* ago = dynamic_cast<AniSpriteGo*>(AddGo(new AniSpriteGo("board_6x6", "animations/board_6x6.csv", "Menu Board")));
+	SetInitValue(ago, Origins::MC, { size * 0.5f }, 0, 101);
+
+	UIButton* button = (UIButton*)AddGo(new UIButton("sprites/buttons_play_0.png"));
+	SetInitValue(button, Origins::MC, { size.x * 0.5f, size.y * 0.4f }, 0, 103);
+	button->OnEnter = [button]() {
+		sf::Texture* tex = RESOURCE_MGR.GetTexture("sprites/buttons_play_1.png");
+		button->sprite.setTexture(*tex);
+	};
+	button->OnExit = [button]() {
+		sf::Texture* tex = RESOURCE_MGR.GetTexture(button->GetResourcePath());
+		button->sprite.setTexture(*tex);
+	};
+	button->OnClick = [button, this]() {
+		uiView.move({ 0, 1080 });
+	};
+
+	button = (UIButton*)AddGo(new UIButton("sprites/buttons_exit2_0.png"));
+	SetInitValue(button, Origins::MC, { size.x * 0.5f, size.y * 0.5f }, 0, 103);
+	button->OnEnter = [button]() {
+		sf::Texture* tex = RESOURCE_MGR.GetTexture("sprites/buttons_exit2_1.png");
+		button->sprite.setTexture(*tex);
+	};
+	button->OnExit = [button]() {
+		sf::Texture* tex = RESOURCE_MGR.GetTexture(button->GetResourcePath());
+		button->sprite.setTexture(*tex);
+	};
+	button->OnClick = [button, this]() {
+
+	};
+
+	for (auto& go : gameObjects)
+	{
+		go->Init();
+	}
 }
 
 void TitleScene::Release()
@@ -46,7 +85,7 @@ void TitleScene::Enter()
 	uiView.setSize(size);
 	uiView.setCenter(size * 0.5f);
 
-	Scene::Enter();
+	Scene::Enter();	//사용할 리소스 Load + gameObjects Reset()
 }
 
 void TitleScene::Exit()
@@ -66,3 +105,12 @@ void TitleScene::Draw(sf::RenderWindow& window)
 {
 	Scene::Draw(window);
 }
+
+void TitleScene::SetInitValue(GameObject* go, Origins origin, sf::Vector2f pos, float angle, int layer)
+{
+	go->SetOrigin(origin);
+	go->SetPosition(pos);
+	go->SetRotation(angle);
+	go->sortLayer = layer;
+}
+

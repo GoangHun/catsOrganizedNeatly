@@ -18,7 +18,7 @@ void Board::Init()
 	SetPosition(0, 0);
 	sortLayer = 0;
 
-	SetBoard(boardInfo.type);	//빼고 다른 곳에서 따로 해주는 게 좋을 거 같기도... 
+	//SetBoard(boardInfo.type);	//빼고 다른 곳에서 따로 해주는 게 좋을 거 같기도... 
 	
 	ObjectPool<Tile>* ptr = &tilePool;
 	tilePool.OnCreate = [ptr](Tile* tile)
@@ -43,6 +43,7 @@ void Board::Reset()
 	SetOrigin(Origins::MC);
 	SetPosition({ 0, 0 });
 
+	SetBoard(boardInfo.type);
 	//ClearRooms();
 }
 
