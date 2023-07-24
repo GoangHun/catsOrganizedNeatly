@@ -156,6 +156,7 @@ void Cat::Update(float dt)
 		isCatch = false;
 	}
 
+	//퍼즐판에 놓여진 상태에서 회전시 퍼즐판의 isUse 상태를 갱신해야함.
 	//Rotation
 	if (!isRotation && isHover && INPUT_MGR.GetMouseButtonUp(sf::Mouse::Right))
 	{

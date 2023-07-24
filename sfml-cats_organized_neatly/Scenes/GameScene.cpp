@@ -151,6 +151,7 @@ void GameScene::LoadScene(int stageNum)
 	Board* board = dynamic_cast<Board*>(FindGo("Board"));
 	board->ClearRooms();
 
+
 	std::tuple<int, std::vector<GameObject*>> sceneData = OBJECT_MGR.LoadObjects(stageInfos.find(stageNum)->second);
 	int boardType = std::get<0>(sceneData);
 	std::vector<GameObject*> vGameObjects = std::get<1>(sceneData);
@@ -176,8 +177,8 @@ void GameScene::LoadScene(int stageNum)
 	std::string strBoardType = std::to_string(boardType);
 	std::string boardAniId = "board_" + strBoardType + "x" + strBoardType;
 	board->SetBoardInfo((BoardType)boardType, boardAniId);
-	board->Reset();
 	board->SetBoard((BoardType)boardType);
+	board->Reset();
 
 	for (auto go : vGameObjects)
 	{
