@@ -15,10 +15,11 @@
 
 GameScene::GameScene() : Scene(SceneId::Game)
 {
+	resourceListPath = "total_resource_list.csv";
 }
 
 void GameScene::Init()	//한 번만 해주면 되는 것들 위주로
-{
+{	
 	Release();
 
 	auto size = FRAMEWORK.GetWindowSize();
@@ -110,6 +111,8 @@ void GameScene::Release()
 		delete go;
 	}
 	gameObjects.clear();
+
+	RESOURCE_MGR.UnLoadAll();
 }
 
 void GameScene::Enter()

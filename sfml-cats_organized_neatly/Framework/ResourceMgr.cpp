@@ -30,7 +30,7 @@ void ResourceMgr::Init()
 {
 	//csv 경로를 직접 써주는 게 아니라 TableMgr을 이용해서 넣어주는 게 좋을 듯. 수정 필요.
 	//디폴트 리소스와 로드/언로드가 필요한 리소스 구분 지어서 하는 법 필요.
-	LoadFromCSV("scripts/total_resource_list.csv", true);
+	
 }
 
 void ResourceMgr::UnLoadAll()
@@ -95,8 +95,6 @@ void ResourceMgr::UnLoadAll()
 			}
 		}
 	}
-
-	
 }
 
 void ResourceMgr::LoadFromCSV(const std::string path, bool isDefault)
