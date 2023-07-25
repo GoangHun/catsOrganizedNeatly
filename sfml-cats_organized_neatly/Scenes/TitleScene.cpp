@@ -58,7 +58,7 @@ void TitleScene::Init()
 		remainingDistance = distance;
 		currentSpeed = 5000;
 		lefp = 1.f;
-		dir = { 0.f, 1.f };
+		dir = _DOWN;
 		isSwipe = true;
 	};
 
@@ -74,6 +74,7 @@ void TitleScene::Init()
 		button->sprite.setTexture(*tex);
 	};
 	button->OnClick = [button, this]() {
+		Exit();
 		window.close();
 	};
 
@@ -94,7 +95,7 @@ void TitleScene::Init()
 		remainingDistance = distance;
 		currentSpeed = 5000;
 		lefp = 1.f;
-		dir = { 0.f, -1.f };
+		dir = _UP;
 		isSwipe = true;
 	};
 

@@ -2,6 +2,7 @@
 #include "AniSpriteGo.h"
 #include "UIButton.h"
 
+class GameScene;
 
 class ChapterBoard :
     public AniSpriteGo
@@ -12,6 +13,9 @@ protected:
 
 	std::vector<UIButton*> uiButtons;
 	std::vector<sf::Vector2f> buttonPoss;
+
+	GameScene* gameScene = nullptr;
+
 public:
 	ChapterBoard(int chapterNum, const std::string& animationId, const std::string& resourcePath = "", const std::string& n = "");
 	virtual ~ChapterBoard() override { Release(); }
@@ -23,6 +27,8 @@ public:
 
 	void SetButtonPositions();
 	void SetInitValue(GameObject* go, Origins origin, sf::Vector2f pos, float angle = 0, int layer = 100);
+
+	void SetGameScene(GameScene* scene) { gameScene = scene; }
 
 };
 

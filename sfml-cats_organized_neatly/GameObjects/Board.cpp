@@ -37,14 +37,12 @@ void Board::Release()
 
 void Board::Reset()
 {
+	SetBoard(boardInfo.type);
 	animation.Play(boardInfo.animationId);
 	sf::Vector2i size = (sf::Vector2i)sprite.getTexture()->getSize();
 	sprite.setTextureRect({0, 0, size.x, size.y});
 	SetOrigin(Origins::MC);
 	SetPosition({ 0, 0 });
-
-	SetBoard(boardInfo.type);
-	//ClearRooms();
 }
 
 void Board::Update(float dt)
@@ -168,6 +166,9 @@ void Board::SetAllRoomIsUse()
 
 void Board::ClearRooms()
 {
+	if (rooms.empty())
+		return;
+
 	for (auto& room : rooms)
 	{
 		if (room.tile != nullptr)

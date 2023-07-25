@@ -53,12 +53,18 @@ void SceneMgr::Draw(sf::RenderWindow& window)
 	currentScene->Draw(window);
 }
 
-void SceneMgr::ChangeScene(SceneId id)
+void SceneMgr::ChangeScene(SceneId id, int stageNum)
 {
 	currentScene->Exit();
 	currentSceneId = id;
 	currentScene = scenes[(int)currentSceneId];
 	currentScene->Enter();
+	
+	GameScene* scene = dynamic_cast<GameScene*>(currentScene);
+	if (scene != nullptr)
+	{
+		scene->LoadScene(stageNum);
+	}
 }
 
 Scene* SceneMgr::GetCurrScene() const

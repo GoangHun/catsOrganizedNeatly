@@ -15,7 +15,7 @@
 
 GameScene::GameScene() : Scene(SceneId::Game)
 {
-	resourceListPath = "total_resource_list.csv";
+	resourceListPath = "scripts/stage_resource_list.csv";
 }
 
 void GameScene::Init()	//한 번만 해주면 되는 것들 위주로
@@ -125,9 +125,6 @@ void GameScene::Enter()
 	uiView.setCenter(size * 0.5f);
 
 	Scene::Enter();
-
-	//test
-	LoadScene(stageNum);
 }
 
 void GameScene::Exit()
@@ -173,6 +170,8 @@ void GameScene::Draw(sf::RenderWindow& window)
 void GameScene::LoadScene(int stageNum)
 {
 	//OBJECT_MGR.LoadObjects()에서 pool에 Get()을 한 뒤 저장한 값을 세팅해 주기 때문에 그 전에 한 번 tilePool을 비워줌
+	if (board == nullptr)
+		board = dynamic_cast<Board*>(FindGo("Board"));
 	board->ClearRooms();
 
 

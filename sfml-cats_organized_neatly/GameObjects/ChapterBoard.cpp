@@ -5,6 +5,8 @@
 #include "ResourceMgr.h"
 #include "SceneMgr.h"
 
+#include "GameScene.h"
+
 ChapterBoard::ChapterBoard(int chapterNum, const std::string& animationId, const std::string& resourcePath, const std::string& n)
 	: AniSpriteGo(animationId, resourcePath, n)
 {
@@ -23,6 +25,8 @@ void ChapterBoard::Init()
 	backgroundPaper.SetName("Background Paper");
 	SetInitValue(&backgroundPaper, Origins::MC, { size.x * 0.5f, size.y * 1.5f });
 
+	gameScene = (GameScene*)&(SCENE_MGR.GetScenes()[(int)SceneId::Game]);
+
 	SetButtonPositions();
 }
 
@@ -33,6 +37,7 @@ void ChapterBoard::Reset()
 	auto* scene = SCENE_MGR.GetCurrScene();
 	scene->AddGo(&chapterPot);
 	scene->AddGo(&backgroundPaper);
+
 
 	bool buttonInfos[16] = {
 	true, true, false, true,
@@ -58,6 +63,7 @@ void ChapterBoard::Reset()
 				button->sprite.setTexture(*tex);
 			};
 			button->OnClick = [button, this]() {
+				SCENE_MGR.ChangeScene(SceneId::Game, 1);
 			};
 			uiButtons.push_back(button);
 			stageNum++;

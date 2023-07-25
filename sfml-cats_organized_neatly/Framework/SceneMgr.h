@@ -22,7 +22,7 @@ public:
 	void UpdateEvent(float dt);
 	void Draw(sf::RenderWindow& window);
 
-	void ChangeScene(SceneId id);
+	void ChangeScene(SceneId id, int stageNum = 1);
 	Scene* GetCurrScene() const;
 	const std::vector<Scene*>* GetScenes() const;
 
