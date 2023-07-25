@@ -24,6 +24,7 @@ public:
 
 	void ChangeScene(SceneId id);
 	Scene* GetCurrScene() const;
+	const std::vector<Scene*>* GetScenes() const;
 
 };
 

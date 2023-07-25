@@ -4,6 +4,16 @@ class TitleScene :
     public Scene
 {
 protected:
+	bool isSwipe = false;
+	
+	float distance = 0.f;
+	float currentSpeed = 0.f;
+	float remainingDistance = 0.f;
+	float lefp = 1.f;
+
+	sf::Vector2f startCenter = { 0,0 };
+	sf::Vector2f dir = { 0, 0 };
+
 public:
 	TitleScene();
 	virtual ~TitleScene() override = default;
@@ -18,5 +28,6 @@ public:
 	virtual void Draw(sf::RenderWindow& window) override;
 
 	void SetInitValue(GameObject* go, Origins origin, sf::Vector2f pos, float angle = 0, int layer = 100);
+	void SwipeAnimation(sf::Vector2f dir, float dis, float speed, float dt);
 };
 

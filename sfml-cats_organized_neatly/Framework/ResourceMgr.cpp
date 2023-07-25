@@ -103,7 +103,6 @@ void ResourceMgr::LoadFromCSV(const std::string path, bool isDefault)
 	for (int i = 0; i < types.size(); i++)
 	{
 		Load((ResourceTypes)types[i], paths[i], isDefault);		
-		//SCENE_MGR.GetCreentScene().resours.push_back(types[i], paths[i]);
 	}
 }
 
@@ -113,27 +112,19 @@ void ResourceMgr::Load(ResourceTypes t, const std::string path, bool isDefault)
 	{
 	case ResourceTypes::Texture:
 	{
-		/*if (path.find(".csv") != std::string::npos)
-		{
-			LoadFromCSV(path, isDefault);
-			return;
-		}*/
 		auto it = mapTexture.find(path);
 		if (mapTexture.end() == it)
 		{
 			auto texture = new sf::Texture();
 			texture->loadFromFile(path);
+			texture->setSmooth(true);	//smooth filte 咆胶贸甫 何靛反霸 贸府
 			mapTexture.insert({ path, {texture, isDefault} });
 		}
 	}
 	break;
 	case ResourceTypes::Font:
 	{
-		/*if (path.find(".csv") != std::string::npos)
-		{
-			LoadFromCSV(path, isDefault);
-			return;
-		}*/
+
 		auto it = mapFont.find(path);
 		if (mapFont.end() == it)
 		{

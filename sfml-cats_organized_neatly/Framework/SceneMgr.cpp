@@ -65,3 +65,8 @@ Scene* SceneMgr::GetCurrScene() const
 {
 	return currentScene;
 }
+
+const std::vector<Scene*>* SceneMgr::GetScenes() const
+{
+	return &scenes;
+}

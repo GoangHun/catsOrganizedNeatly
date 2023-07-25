@@ -55,7 +55,7 @@ void Scene::RemoveGo(GameObject* go)
 	removeGameObjects.push_back(go);
 }
 
-void Scene::SortGos()
+void Scene::SortGos()	//Layer순으로 정렬해서 그려지는 순서를 조정함
 {
 	gameObjects.sort([](GameObject* lhs, GameObject* rhs) {
 		if (lhs->sortLayer != rhs->sortLayer)
