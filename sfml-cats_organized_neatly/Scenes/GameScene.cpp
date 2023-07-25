@@ -152,12 +152,10 @@ void GameScene::Update(float dt)
 		//클리어 애니메이션 재생
 		if (!prevBoard)
 		{
-
 		}
 		
 		//Next 버튼 활성화
 		FindGo("Next Button")->SetActive(true);
-
 	}
 }
 
@@ -169,18 +167,18 @@ void GameScene::Draw(sf::RenderWindow& window)
 
 void GameScene::LoadScene(int stageNum)
 {
+	this->stageNum = stageNum;
+
 	//OBJECT_MGR.LoadObjects()에서 pool에 Get()을 한 뒤 저장한 값을 세팅해 주기 때문에 그 전에 한 번 tilePool을 비워줌
 	if (board == nullptr)
 		board = dynamic_cast<Board*>(FindGo("Board"));
 	board->ClearRooms();
-
 
 	std::tuple<int, std::vector<std::tuple<std::string, std::string, float, float, float>>> sceneData = 
 		OBJECT_MGR.LoadObjects(stageInfos.find(stageNum)->second);
 	int boardType = std::get<0>(sceneData);
 	std::vector<std::tuple<std::string, std::string, float, float, float>> infos = std::get<1>(sceneData);
 
-	this->stageNum = stageNum;
 	std::string str = "Level " + std::to_string(stageNum);
 	TextGo* textGo = (TextGo*)FindGo("Stage Number");
 	textGo->SetTextString(str);
@@ -196,7 +194,11 @@ void GameScene::LoadScene(int stageNum)
 	}
 	cats.clear();
 
-	Exit();
+	for (auto go : removeGameObjects)
+	{
+		gameObjects.remove(go);
+	}
+	removeGameObjects.clear();
 
 	std::string strBoardType = std::to_string(boardType);
 	std::string boardAniId = "board_" + strBoardType + "x" + strBoardType;
@@ -237,6 +239,7 @@ void GameScene::LoadScene(int stageNum)
 			cat->SetBoard(board);
 			cats.push_back(cat);
 		    AddGo(cat);
+			std::cout << "new Cat(), Position: " <<cat->GetPosition().x<<","<<cat->GetPosition().y<< " "<<cat->GetActive() << std::endl;
 		}
 		else if (std::get<0>(info) == "Pot")
 		{

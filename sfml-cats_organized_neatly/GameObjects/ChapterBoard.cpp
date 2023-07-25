@@ -62,8 +62,8 @@ void ChapterBoard::Reset()
 				sf::Texture* tex = RESOURCE_MGR.GetTexture(button->GetResourcePath());
 				button->sprite.setTexture(*tex);
 			};
-			button->OnClick = [button, this]() {
-				SCENE_MGR.ChangeScene(SceneId::Game, 1);
+			button->OnClick = [button, stageNum]() {
+				SCENE_MGR.ChangeScene(SceneId::Game, stageNum);
 			};
 			uiButtons.push_back(button);
 			stageNum++;

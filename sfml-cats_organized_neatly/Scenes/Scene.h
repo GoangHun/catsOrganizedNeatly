@@ -22,7 +22,7 @@ protected:
 	sf::RenderWindow& window;
 
 public:
-	bool isDeveloperMode = true;	//임시
+	bool isDeveloperMode = false;	//임시
 
 	Scene(SceneId id = SceneId::None);
 	virtual ~Scene();
