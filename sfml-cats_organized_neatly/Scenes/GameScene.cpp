@@ -52,7 +52,7 @@ void GameScene::Init()	//한 번만 해주면 되는 것들 위주로
 		button->sprite.setTexture(*tex);
 	};
 	button->OnClick = [button, this]() {
-		LoadScene(1);
+		LoadScene(stageNum);
 	};
 	//뒤로 버튼
 	button = (UIButton*)AddGo(new UIButton("sprites/button_back_0.png"));
@@ -68,9 +68,7 @@ void GameScene::Init()	//한 번만 해주면 되는 것들 위주로
 		button->sprite.setTexture(*tex);
 	};
 	button->OnClick = [button, this]() {
-		stageNum = stageNum == 1 ? 0 : stageNum - 1;
-		//스테이지 번호가 1번이면 챕터 화면으로 돌아가기
-		LoadScene(stageNum);
+		SCENE_MGR.ChangeScene(SceneId::Title);
 	};
 	//다음 버튼
 	button = (UIButton*)AddGo(new UIButton("sprites/button_next_0.png", "Next Button"));
