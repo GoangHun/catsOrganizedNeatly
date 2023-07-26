@@ -152,3 +152,11 @@ void Scene::Draw(sf::RenderWindow& window)
 		}
 	}
 }
+
+void Scene::SetInitValue(GameObject* go, Origins origin, sf::Vector2f pos, float angle, int layer)
+{
+	go->SetOrigin(origin);
+	go->SetPosition(pos);
+	go->SetRotation(angle);
+	go->sortLayer = layer;
+}

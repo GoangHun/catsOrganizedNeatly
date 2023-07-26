@@ -3,28 +3,30 @@
 
 class Board;
 class Cat;
+class AniSpriteGo;
 
 class GameScene :
     public Scene
 {
 protected:
-	bool isClick = false;
+	//bool isClick = false;
 	bool isCatch = false;
-	bool isRotation = false;
-	bool isCatHover = false;
-	bool isLoad = false;
+	//bool isRotation = false;
+	//bool isCatHover = false;
+	//bool isLoad = false;
 	bool isComplete = false;	//현재 스테이지를 클리어 하면 다음 버튼 활성화
 
-	float startAngle = 0.f;
-	float targetRotation = 0.f;
-	float rotationSpeed = 400.f;
-	float rotationAngle = 0;
+	//float startAngle = 0.f;
+	//float targetRotation = 0.f;
+	//float rotationSpeed = 400.f;
+	//float rotationAngle = 0;
 
 	int stageNum = 1;
 
 	std::map<int, std::string> stageInfos;
 	std::vector<Cat*> cats;
 
+	AniSpriteGo* transCat = nullptr;
 	Board* board = nullptr;
 
 public:

@@ -30,7 +30,6 @@ void AnimationController::Update(float dt)
 			std::string id = queue.front();
 			queue.pop();
 			Play(id, false);
-
 		}
 		else
 		{
@@ -38,6 +37,7 @@ void AnimationController::Update(float dt)
 			{
 			case AnimationLoopTypes::Single:
 				currentFrame = totalFrame - 1;
+				isPlaying = false;
 				return;
 			case AnimationLoopTypes::Loop:
 				currentFrame = 0;

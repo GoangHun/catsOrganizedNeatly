@@ -8,6 +8,7 @@
 #include "DataTableMgr.h"
 
 #include "Scene.h"
+#include "GameScene.h"
 #include "DeveloperScene.h"
 #include "CatTable.h"
 
@@ -77,6 +78,8 @@ void Cat::Update(float dt)
 			}
 		}
 	}
+
+
 				
 	sf::Vector2f mousePos = INPUT_MGR.GetMousePos();
 	sf::Vector2f worldMousePos = SCENE_MGR.GetCurrScene()->ScreenToWorldPos(mousePos);
@@ -85,7 +88,7 @@ void Cat::Update(float dt)
 	isHover = sprite.getGlobalBounds().contains(worldMousePos);
 
 	//isCatch
-	if (isHover && INPUT_MGR.GetMouseButtonDown(sf::Mouse::Left))
+	if (isHover && INPUT_MGR.GetMouseButtonDown(sf::Mouse::Left) && board->GetIsCatchCat() == nullptr)
 	{
 		isCatch = true;
 	}
@@ -141,17 +144,28 @@ void Cat::Update(float dt)
 		if (isSnap)
 		{
 			if (!board->SetRoomIsUse(this))
-			{
 				SetPosition(startPos);
+		}
+		else
+		{
+			GameScene* scene = dynamic_cast<GameScene*>(SCENE_MGR.GetCurrScene());
+			const std::vector<Cat*> cats = scene->GetCats();
+			for (auto& cat : cats)
+			{
+				if (cat == this)
+					continue;
+				if (sprite.getGlobalBounds().intersects(cat->sprite.getGlobalBounds()))
+					SetPosition(startPos);
 			}
 		}
 		board->SetIsCatchCat(nullptr);
+		sortLayer = 50;
 		isCatch = false;
 	}
 
 	//퍼즐판에 놓여진 상태에서 회전시 퍼즐판의 isUse 상태를 갱신해야함.
 	//Rotation
-	if (!isRotation && isHover && INPUT_MGR.GetMouseButtonUp(sf::Mouse::Right))
+	if (!isRotation && isHover && INPUT_MGR.GetMouseButtonUp(sf::Mouse::Right)&& board->GetIsCatchCat() == this)
 	{
 		isRotation = true;
 		startAngle = GetRotation();
@@ -185,6 +199,7 @@ void Cat::OnClickHold(sf::Vector2f worldMousePos)
 	if (!isSnap)
 	{
 		sprite.setTexture(*tex);
+		sortLayer = 51;
 		SetPosition(worldMousePos);
 		board->SetIsCatchCat(this);
 		return;

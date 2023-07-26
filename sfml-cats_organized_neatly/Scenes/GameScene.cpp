@@ -8,6 +8,8 @@
 #include "ObjectManager.h"
 
 #include "TextGo.h"
+#include "AniSpriteGo.h"
+#include "AnimationController.h"
 #include "GameBackground.h"
 #include "Board.h"
 #include "UIButton.h"
@@ -87,6 +89,8 @@ void GameScene::Init()	//한 번만 해주면 되는 것들 위주로
 		stageNum = stageNum == 10 ? 1 : stageNum + 1;
 		LoadScene(stageNum);
 		button->SetActive(false);
+		transCat->SetActive(true);
+		transCat->Reset();
 	};
 	button->SetActive(false);
 
@@ -94,6 +98,11 @@ void GameScene::Init()	//한 번만 해주면 되는 것들 위주로
 	TextGo* stageNumber = (TextGo*)AddGo(new TextGo("fonts/ShadowsIntoLight-Regular.ttf", "Stage Number"));
 	std::string str = "Level " + std::to_string(stageNum);
 	stageNumber->SetText(str, 100, sf::Color::Black, Origins::MC, 101, size.x * 0.5f - 110, 50.f);
+
+
+	transCat = dynamic_cast<AniSpriteGo*>(AddGo(new AniSpriteGo("sprTransCat", "animations/sprTransCat.csv", "sqr Trans Cat")));
+	SetInitValue(transCat, Origins::BC, { size.x * 0.5f, size.y }, 0, 110);
+	transCat->SetActive(false);
 
 	for (auto go : gameObjects)
 	{
@@ -148,15 +157,13 @@ void GameScene::Update(float dt)
 		ToggleIsDeveloperMode();
 	}
 
+	if (!transCat->GetAnimation().IsPlaying())
+		transCat->SetActive(false);
+
 	bool prevBoard = isComplete;
 	isComplete = board->CheckBoard();
 	if (isComplete)
-	{
-		//클리어 애니메이션 재생
-		if (!prevBoard)
-		{
-		}
-		
+	{	
 		//Next 버튼 활성화
 		FindGo("Next Button")->SetActive(true);
 	}

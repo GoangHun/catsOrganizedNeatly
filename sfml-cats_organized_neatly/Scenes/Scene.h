@@ -51,5 +51,7 @@ public:
 
 	void ToggleIsDeveloperMode() { isDeveloperMode = !isDeveloperMode; }
 	const std::string& GetResourceListPath() { return resourceListPath; }
+
+	void SetInitValue(GameObject* go, Origins origin, sf::Vector2f pos, float angle = 0, int layer = 100);
 };
 

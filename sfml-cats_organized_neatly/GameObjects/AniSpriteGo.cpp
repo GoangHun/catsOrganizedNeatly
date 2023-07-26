@@ -25,7 +25,9 @@ void AniSpriteGo::Reset()
 void AniSpriteGo::Update(float dt)
 {
 	animation.Update(dt);
-
+	sf::Vector2i size = (sf::Vector2i)sprite.getTexture()->getSize();
+	sprite.setTextureRect({ 0, 0, size.x, size.y });
+	SetOrigin(origin);
 }
 
 void AniSpriteGo::Draw(sf::RenderWindow& window)

@@ -59,9 +59,6 @@ public:
 	virtual void Update(float dt) override;
 	virtual void Draw(sf::RenderWindow& window) override;
 
-	/*void OnClick();
-	void OnEnter();
-	void OnExit();*/
 	void OnClickHold(sf::Vector2f worldMousePos);
 
 	void Makeboxs();
