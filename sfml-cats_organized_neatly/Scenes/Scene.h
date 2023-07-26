@@ -23,6 +23,7 @@ protected:
 
 public:
 	bool isDeveloperMode = false;	//юс╫ц
+	bool isChange = false;
 
 	Scene(SceneId id = SceneId::None);
 	virtual ~Scene();

@@ -8,6 +8,7 @@ class GameScene :
     public Scene
 {
 protected:
+	bool isClick = false;
 	bool isCatch = false;
 	bool isRotation = false;
 	bool isCatHover = false;

@@ -119,6 +119,8 @@ void Board::Update(float dt)
 		return;
 	}
 
+	std::cout <<"tile pool size: "<< tilePool.GetPool().size() <<"tile use pool size: "<< tilePool.GetUseList().size() << std::endl;
+		
 }
 
 void Board::Draw(sf::RenderWindow& window)

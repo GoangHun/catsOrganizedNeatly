@@ -6,6 +6,7 @@
 #include "SceneMgr.h"
 
 #include "GameScene.h"
+#include "TitleScene.h"
 
 ChapterBoard::ChapterBoard(int chapterNum, const std::string& animationId, const std::string& resourcePath, const std::string& n)
 	: AniSpriteGo(animationId, resourcePath, n)
@@ -34,7 +35,8 @@ void ChapterBoard::Reset()
 {
 	AniSpriteGo::Reset();
 
-	auto* scene = SCENE_MGR.GetCurrScene();
+	auto* scene = dynamic_cast<TitleScene*>(SCENE_MGR.GetCurrScene());
+	
 	scene->AddGo(&chapterPot);
 	scene->AddGo(&backgroundPaper);
 
@@ -50,7 +52,7 @@ void ChapterBoard::Reset()
 	{
 		if (buttonInfos[i])
 		{
-			UIButton* button = (UIButton*)SCENE_MGR.GetCurrScene()->AddGo(new UIButton("sprites/board_menu_0.png"));
+			UIButton* button = (UIButton*)scene->AddGo(new UIButton("sprites/board_menu_0.png"));
 			SetInitValue(button, Origins::TL, buttonPoss[i], 0, 101);
 			button->SetText("fonts/ShadowsIntoLight-Regular.ttf", 102, { 71, 39, 58, 255}, std::to_string(stageNum),
 				Origins::ML, { buttonPoss[i].x + 35, buttonPoss[i].y + 30});
@@ -62,8 +64,12 @@ void ChapterBoard::Reset()
 				sf::Texture* tex = RESOURCE_MGR.GetTexture(button->GetResourcePath());
 				button->sprite.setTexture(*tex);
 			};
-			button->OnClick = [button, stageNum]() {
-				SCENE_MGR.ChangeScene(SceneId::Game, stageNum);
+			button->OnClick = [button, stageNum, scene]() {
+				if (!scene->GetIsSwipe())
+				{
+					scene->isChange = true;
+					scene->selectNum = stageNum;
+				}
 			};
 			uiButtons.push_back(button);
 			stageNum++;

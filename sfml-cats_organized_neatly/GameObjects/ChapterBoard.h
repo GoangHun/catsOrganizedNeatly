@@ -17,6 +17,8 @@ protected:
 	GameScene* gameScene = nullptr;
 
 public:
+	int selectNum;
+
 	ChapterBoard(int chapterNum, const std::string& animationId, const std::string& resourcePath = "", const std::string& n = "");
 	virtual ~ChapterBoard() override { Release(); }
 

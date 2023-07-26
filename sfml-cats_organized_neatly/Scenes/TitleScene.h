@@ -11,7 +11,6 @@ class TitleScene :
 {
 protected:
 	bool isSwipe = false;
-	
 	float distance = 0.f;
 	float currentSpeed = 0.f;
 	float remainingDistance = 0.f;
@@ -21,6 +20,8 @@ protected:
 	sf::Vector2f dir = { 0, 0 };
 
 public:
+	int selectNum = 0;
+
 	TitleScene();
 	virtual ~TitleScene() override = default;
 
@@ -35,5 +36,7 @@ public:
 
 	void SetInitValue(GameObject* go, Origins origin, sf::Vector2f pos, float angle = 0, int layer = 100);
 	void SwipeAnimation(sf::Vector2f dir, float dis, float speed, float dt);
+
+	bool GetIsSwipe() { return isSwipe; }
 };
 

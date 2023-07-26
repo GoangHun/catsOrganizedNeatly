@@ -68,7 +68,7 @@ void GameScene::Init()	//한 번만 해주면 되는 것들 위주로
 		button->sprite.setTexture(*tex);
 	};
 	button->OnClick = [button, this]() {
-		SCENE_MGR.ChangeScene(SceneId::Title);
+		isChange = true;
 	};
 	//다음 버튼
 	button = (UIButton*)AddGo(new UIButton("sprites/button_next_0.png", "Next Button"));
@@ -105,12 +105,9 @@ void GameScene::Release()
 {
 	for (auto go : gameObjects)
 	{
-		//go->Release();
 		delete go;
 	}
 	gameObjects.clear();
-
-	RESOURCE_MGR.UnLoadAll();
 }
 
 void GameScene::Enter()
@@ -122,8 +119,6 @@ void GameScene::Enter()
 	uiView.setSize(size);
 	uiView.setCenter(size * 0.5f);
 
-	RESOURCE_MGR.LoadFromCSV(resourceListPath);
-
 	for (auto go : gameObjects)
 	{
 		if (go->GetName() == "Cat" || go->GetName() == "Pot")
@@ -134,7 +129,11 @@ void GameScene::Enter()
 
 void GameScene::Exit()
 {
-	Scene::Exit();
+	for (auto go : removeGameObjects)
+	{
+		gameObjects.remove(go);
+	}
+	removeGameObjects.clear();
 }
 
 void GameScene::Update(float dt)
@@ -160,6 +159,11 @@ void GameScene::Update(float dt)
 		
 		//Next 버튼 활성화
 		FindGo("Next Button")->SetActive(true);
+	}
+	if (isChange)
+	{
+		isChange = false;
+		SCENE_MGR.ChangeScene(SceneId::Title);
 	}
 }
 
@@ -200,6 +204,8 @@ void GameScene::LoadScene(int stageNum)
 	for (auto go : removeGameObjects)
 	{
 		gameObjects.remove(go);
+		if (go->GetName() == "Tile")
+			continue;
 		delete go;
 	}
 	removeGameObjects.clear();
@@ -207,7 +213,6 @@ void GameScene::LoadScene(int stageNum)
 	std::string strBoardType = std::to_string(boardType);
 	std::string boardAniId = "board_" + strBoardType + "x" + strBoardType;
 	board->SetBoardInfo((BoardType)boardType, boardAniId);
-	//board->SetBoard((BoardType)boardType);
 	board->Reset();
 
 	for (auto& info : infos)

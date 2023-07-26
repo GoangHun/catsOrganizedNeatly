@@ -109,7 +109,6 @@ void TitleScene::Release()
 {
 	for (auto go : gameObjects)
 	{
-		//go->Release();
 		delete go;
 	}
 	gameObjects.clear();
@@ -125,7 +124,6 @@ void TitleScene::Enter()
 
 	uiView.setSize(size);
 	uiView.setCenter(size * 0.5f);
-
 	Scene::Enter();	//사용할 리소스 Load + gameObjects Reset()
 }
 
@@ -141,9 +139,15 @@ void TitleScene::Update(float dt)
 	sf::Vector2f mousePos = INPUT_MGR.GetMousePos();
 	sf::Vector2f worldMousePos = SCENE_MGR.GetCurrScene()->ScreenToWorldPos(mousePos);
 
+	std::cout << uiView.getCenter().x << " " << uiView.getCenter().y << std::endl;
+
 	if (isSwipe)
 		SwipeAnimation(dir, distance, 5000.f, dt);
-	
+	if (isChange)
+	{
+		isChange = false;
+		SCENE_MGR.ChangeScene(SceneId::Game, selectNum);
+	}
 }
 
 void TitleScene::Draw(sf::RenderWindow& window)
@@ -162,6 +166,7 @@ void TitleScene::SetInitValue(GameObject* go, Origins origin, sf::Vector2f pos, 
 //함수를 호출할 때 이외에 Button을 누를 때도 값을 따로 세팅해 줘야 하기 때문에 수정 필요
 void TitleScene::SwipeAnimation(sf::Vector2f dir, float dis, float speed, float dt)
 {
+	std::cout << "Start Swaip" << std::endl;
 	currentSpeed = speed * lefp;
 	uiView.move(dir * currentSpeed * dt);
 	remainingDistance -= currentSpeed * dt;
@@ -171,6 +176,7 @@ void TitleScene::SwipeAnimation(sf::Vector2f dir, float dis, float speed, float 
 	{
 		uiView.setCenter(startCenter + dir * dis);
 		isSwipe = false;
+		std::cout << "End Swaip" << std::endl;
 	}
 }
 
