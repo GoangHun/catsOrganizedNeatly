@@ -40,7 +40,6 @@ void TitleScene::Init()
 	ChapterBoard* chapBoard = dynamic_cast<ChapterBoard*>(AddGo(new ChapterBoard(1, "board_6x6", "animations/board_6x6.csv", "Chapter Board")));
 	SetInitValue(chapBoard, Origins::MC, { size.x * 0.5f, size.y * 1.5f }, 0, 101);
 
-
 	//Play Button
 	UIButton* button = (UIButton*)AddGo(new UIButton("sprites/buttons_play_0.png"));
 	SetInitValue(button, Origins::MC, { size.x * 0.5f, size.y * 0.4f }, 0, 103);
@@ -139,8 +138,6 @@ void TitleScene::Update(float dt)
 	sf::Vector2f mousePos = INPUT_MGR.GetMousePos();
 	sf::Vector2f worldMousePos = SCENE_MGR.GetCurrScene()->ScreenToWorldPos(mousePos);
 
-	std::cout << uiView.getCenter().x << " " << uiView.getCenter().y << std::endl;
-
 	if (isSwipe)
 		SwipeAnimation(dir, distance, 5000.f, dt);
 	if (isChange)
@@ -148,6 +145,8 @@ void TitleScene::Update(float dt)
 		isChange = false;
 		SCENE_MGR.ChangeScene(SceneId::Game, selectNum);
 	}
+	if (INPUT_MGR.GetKey(sf::Keyboard::LShift) && INPUT_MGR.GetKeyDown(sf::Keyboard::P))
+		SCENE_MGR.ChangeScene(SceneId::Developer);
 }
 
 void TitleScene::Draw(sf::RenderWindow& window)

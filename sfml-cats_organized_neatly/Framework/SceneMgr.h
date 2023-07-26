@@ -15,6 +15,8 @@ protected:
 	Scene* currentScene = nullptr;
 	SceneId startSceneId = SceneId::Title;
 
+	sf::Music titleBgm;
+	sf::Music gameBgm;
 public:
 	void Init();
 	void Release();

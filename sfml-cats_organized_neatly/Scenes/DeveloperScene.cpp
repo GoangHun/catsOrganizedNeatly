@@ -297,11 +297,19 @@ void DeveloperScene::Update(float dt)
 		}
 	}
 
+	if (INPUT_MGR.GetKey(sf::Keyboard::LShift) && INPUT_MGR.GetKeyDown(sf::Keyboard::D))
+	{
+		ToggleIsDeveloperMode();
+	}
+
 	if (isLoad)
 	{
 		isLoad = false;
 		LoadScene();
 	}
+
+	if (INPUT_MGR.GetKey(sf::Keyboard::LShift) && INPUT_MGR.GetKeyDown(sf::Keyboard::P))
+		SCENE_MGR.ChangeScene(SceneId::Title);
 }
 
 void DeveloperScene::Draw(sf::RenderWindow& window)
@@ -311,16 +319,18 @@ void DeveloperScene::Draw(sf::RenderWindow& window)
 
 void DeveloperScene::LoadScene()
 {
-	//OBJECT_MGR.LoadObjects()에서 pool에 Get()을 한 뒤 저장한 값을 세팅해 주기 때문에 그 전에 한 번 tilePool을 비워줌
-	board->ClearRooms();
+	this->stageNum = stageNum;
 
+	//OBJECT_MGR.LoadObjects()에서 pool에 Get()을 한 뒤 저장한 값을 세팅해 주기 때문에 그 전에 한 번 tilePool을 비워줌
+	if (board == nullptr)
+		board = dynamic_cast<Board*>(FindGo("Board"));
+	board->ClearRooms();
 
 	std::tuple<int, std::vector<std::tuple<std::string, std::string, float, float, float>>> sceneData =
 		OBJECT_MGR.LoadObjects(stageInfos.find(stageNum)->second);
 	int boardType = std::get<0>(sceneData);
 	std::vector<std::tuple<std::string, std::string, float, float, float>> infos = std::get<1>(sceneData);
 
-	this->stageNum = stageNum;
 	std::string str = "Level " + std::to_string(stageNum);
 	TextGo* textGo = (TextGo*)FindGo("Stage Number");
 	textGo->SetTextString(str);
@@ -328,20 +338,25 @@ void DeveloperScene::LoadScene()
 	for (auto go : gameObjects)
 	{
 		std::string name = go->GetName();
-		if (name == "Cat" || name == "Pot" || name == "Tile")
+		if (name == "Cat" || name == "Pot")
 		{
 			RemoveGo(go);
-			delete go;
 		}
 	}
 	cats.clear();
 
-	Exit();
+	for (auto go : removeGameObjects)
+	{
+		gameObjects.remove(go);
+		if (go->GetName() == "Tile")
+			continue;
+		delete go;
+	}
+	removeGameObjects.clear();
 
 	std::string strBoardType = std::to_string(boardType);
 	std::string boardAniId = "board_" + strBoardType + "x" + strBoardType;
 	board->SetBoardInfo((BoardType)boardType, boardAniId);
-	board->SetBoard((BoardType)boardType);
 	board->Reset();
 
 	for (auto& info : infos)

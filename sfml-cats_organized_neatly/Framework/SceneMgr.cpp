@@ -12,6 +12,16 @@ void SceneMgr::Init()
 		Release();
 	}
 
+	if (!titleBgm.openFromFile("Exported_Sounds/music/Menu_loop.wav"))
+	{
+		std::cout << "Open sound error" << std::endl;
+	}
+	if (!gameBgm.openFromFile("Exported_Sounds/music/Gameplay_loop.wav"))
+	{
+		std::cout << "Open sound error" << std::endl;
+	}
+
+
 	scenes.push_back(new TitleScene());
 	scenes.push_back(new GameScene());
 	scenes.push_back(new DeveloperScene());
@@ -47,6 +57,17 @@ void SceneMgr::Release()
 void SceneMgr::UpdateEvent(float dt)
 {
 	currentScene->Update(dt);
+
+	if (titleBgm.getStatus() != sf::SoundSource::Status::Playing && currentSceneId == SceneId::Title)
+	{
+		gameBgm.stop();
+		titleBgm.play();
+	}
+	else if (gameBgm.getStatus() != sf::SoundSource::Status::Playing && currentSceneId == SceneId::Game)
+	{
+		titleBgm.stop();
+		gameBgm.play();
+	}
 }
 
 void SceneMgr::Draw(sf::RenderWindow& window)

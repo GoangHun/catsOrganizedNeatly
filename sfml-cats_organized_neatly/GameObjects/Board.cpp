@@ -52,76 +52,57 @@ void Board::Update(float dt)
 	auto* scene = SCENE_MGR.GetCurrScene();
 
 	//test code
-	//{
-	//	for (auto& sRoom : rooms)
-	//	{
-	//		if (sRoom.isUse)
-	//		{
-	//			sRoom.shape.setOutlineThickness(3.f);
-	//			sRoom.shape.setOutlineColor(sf::Color::Red);
-	//		}
-	//		else
-	//		{
-	//			sRoom.shape.setOutlineThickness(0.f);
-	//		}
-	//	}
-	//	if (scene->isDeveloperMode)
-	//	{
-	//		sf::Vector2f mousePos = INPUT_MGR.GetMousePos();
-	//		sf::Vector2f worldMousePos = scene->ScreenToWorldPos(mousePos);
+	if (scene->isDeveloperMode)
+	{
+		sf::Vector2f mousePos = INPUT_MGR.GetMousePos();
+		sf::Vector2f worldMousePos = scene->ScreenToWorldPos(mousePos);
 
-	//		for (auto& sRoom : rooms)
-	//		{
-	//			if (sRoom.tile == nullptr)
-	//				continue;
+		for (auto& sRoom : rooms)
+		{
+			if (sRoom.tile == nullptr)
+				continue;
 
-	//			sRoom.prevHover = sRoom.isHover;
-	//			sRoom.isHover = sRoom.shape.getGlobalBounds().contains(worldMousePos);
+			sRoom.prevHover = sRoom.isHover;
+			sRoom.isHover = sRoom.shape.getGlobalBounds().contains(worldMousePos);
 
-	//			if (!sRoom.prevHover && sRoom.isHover)
-	//			{
-	//				OnEnter(sRoom);
-	//			}
-	//			if (sRoom.prevHover && !sRoom.isHover)
-	//			{
-	//				OnExit(sRoom);
-	//			}
-	//			if (sRoom.isHover && INPUT_MGR.GetMouseButtonUp(sf::Mouse::Left))
-	//			{
-	//				OnClick(sRoom);
-	//			}
+			if (!sRoom.prevHover && sRoom.isHover)
+			{
+				OnEnter(sRoom);
+			}
+			if (sRoom.prevHover && !sRoom.isHover)
+			{
+				OnExit(sRoom);
+			}
+			if (sRoom.isHover && INPUT_MGR.GetMouseButtonUp(sf::Mouse::Left))
+			{
+				OnClick(sRoom);
+			}
 
-	//			//퍼즐 충돌 체크 + isCatch 상태인 Cat과 체크
-	//			if (isCatchCat != nullptr)
-	//			{
-	//				std::vector<Box>* boxs = isCatchCat->GetBoxs();
-	//				for (auto& box : *boxs)
-	//				{
-	//					if (!box.isActive)
-	//						continue;
+			//퍼즐 충돌 체크 + isCatch 상태인 Cat과 체크
+			if (isCatchCat != nullptr)
+			{
+				std::vector<Box>* boxs = isCatchCat->GetBoxs();
+				for (auto& box : *boxs)
+				{
+					if (!box.isActive)
+						continue;
 
-	//					sf::Vector2f center = { box.shape.getGlobalBounds().left + 31, box.shape.getGlobalBounds().top + 31 };
+					sf::Vector2f center = { box.shape.getGlobalBounds().left + 31, box.shape.getGlobalBounds().top + 31 };
 
-	//					if (sRoom.shape.getGlobalBounds().contains(center))
-	//					{
-	//						sRoom.shape.setOutlineThickness(2.f);
-	//						sRoom.shape.setOutlineColor(sf::Color::Red);
-	//						break;
-	//					}
-	//					else
-	//					{
-	//						sRoom.shape.setOutlineThickness(0.f);
-	//					}
-	//				}
-	//			}
-	//		}
-	//		return;
-	//	}
-	//}
-	
-
-	std::cout <<"tile pool size: "<< tilePool.GetPool().size() <<"tile use pool size: "<< tilePool.GetUseList().size() << std::endl;
-		
+					if (sRoom.shape.getGlobalBounds().contains(center))
+					{
+						sRoom.shape.setOutlineThickness(2.f);
+						sRoom.shape.setOutlineColor(sf::Color::Red);
+						break;
+					}
+					else
+					{
+						sRoom.shape.setOutlineThickness(0.f);
+					}
+				}
+			}
+		}
+	}		
 }
 
 void Board::Draw(sf::RenderWindow& window)
@@ -322,6 +303,7 @@ void Board::OnClick(Room& sRoom)
 
 void Board::OnEnter(Room& sRoom)
 {
+	std::cout << "OnEnter" << std::endl;
 	sRoom.shape.setOutlineThickness(2.f);
 	sRoom.shape.setOutlineColor(sf::Color::White);
 }
