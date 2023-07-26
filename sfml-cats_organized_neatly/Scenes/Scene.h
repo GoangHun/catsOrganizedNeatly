@@ -49,5 +49,6 @@ public:
 	virtual void Draw(sf::RenderWindow& window);
 
 	void ToggleIsDeveloperMode() { isDeveloperMode = !isDeveloperMode; }
+	const std::string& GetResourceListPath() { return resourceListPath; }
 };
 

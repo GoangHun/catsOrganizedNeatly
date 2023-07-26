@@ -71,7 +71,6 @@ inline void ObjectPool<T>::Clear()
 {
 	for (auto obj : useList)
 	{
-		std::cout << "Clear(): "<< obj->GetName() << std::endl;
 		obj->SetActive(false);
 		pool.push_back(obj);
 	}

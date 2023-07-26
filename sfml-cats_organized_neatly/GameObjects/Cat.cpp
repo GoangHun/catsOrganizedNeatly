@@ -5,9 +5,11 @@
 #include "ResourceMgr.h"
 #include "InputMgr.h"
 #include "SceneMgr.h"
+#include "DataTableMgr.h"
 
 #include "Scene.h"
 #include "DeveloperScene.h"
+#include "CatTable.h"
 
 #include "Board.h"
 
@@ -20,23 +22,14 @@ void Cat::Init()
 {
 	SpriteGo::Init();
 
-	rapidcsv::Document doc("scripts/cat_info.csv");
-	std::vector<int> types = doc.GetColumn<int>(0);
-	std::vector<std::string> aniPaths = doc.GetColumn<std::string>(1);
-	std::vector<std::string> spritePaths = doc.GetColumn<std::string>(2);
-	std::vector<std::string> boxInfos = doc.GetColumn<std::string>(3);
+	std::tuple<std::string, std::string, std::string> info = DATATABLE_MGR.Get<CatTable>(DataTable::Ids::Cat)->Get((int)type);
 
-	auto it = std::find(types.begin(), types.end(), (int)type);
-
-	if (it != types.end())
-	{
-		animationId = aniPaths[*it - 1];
-		animation.AddClip(*RESOURCE_MGR.GetAnimationClip(aniPaths[*it - 1]));
-		animation.SetTarget(&sprite);
-		sortLayer = 50;
-		tex = RESOURCE_MGR.GetTexture(spritePaths[*it - 1]);
-		boxInfo = boxInfos[*it - 1];
-	}
+	animationId = std::get<0>(info);
+	animation.AddClip(*RESOURCE_MGR.GetAnimationClip(animationId));
+	animation.SetTarget(&sprite);
+	sortLayer = 50;
+	tex = RESOURCE_MGR.GetTexture(std::get<1>(info));
+	boxInfo = std::get<2>(info);
 }
 
 void Cat::Reset()

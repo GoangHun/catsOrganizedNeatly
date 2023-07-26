@@ -105,6 +105,9 @@
     <ClCompile Include="GameObjects\ChapterBoard.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="DataTables\CatTable.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Global\Singleton.h">
@@ -207,6 +210,9 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="GameObjects\ChapterBoard.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="DataTables\CatTable.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>

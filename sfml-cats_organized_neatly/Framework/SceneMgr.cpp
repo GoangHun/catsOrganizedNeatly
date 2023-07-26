@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "SceneMgr.h"
+#include "ResourceMgr.h"
 #include "DeveloperScene.h"
 #include "TitleScene.h"
 #include "GameScene.h"
@@ -59,12 +60,14 @@ void SceneMgr::ChangeScene(SceneId id, int stageNum)
 	currentSceneId = id;
 	currentScene = scenes[(int)currentSceneId];
 	currentScene->Enter();
-	
+
 	GameScene* scene = dynamic_cast<GameScene*>(currentScene);
 	if (scene != nullptr)
 	{
 		scene->LoadScene(stageNum);
+		return;
 	}
+		
 }
 
 Scene* SceneMgr::GetCurrScene() const

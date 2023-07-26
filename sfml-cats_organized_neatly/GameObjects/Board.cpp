@@ -174,7 +174,6 @@ void Board::ClearRooms()
 		if (room.tile != nullptr)
 		{
 			SCENE_MGR.GetCurrScene()->RemoveGo(room.tile);
-			//tilePool.Return(room.tile);
 			room.tile = nullptr;
 		}
 	}

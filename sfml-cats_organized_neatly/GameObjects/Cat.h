@@ -7,22 +7,6 @@
 class Board;
 struct Room;
 
-enum class CatTypes
-{
-	c1 = 1,
-	c2,
-	c3,
-	c4,
-	c5,
-	c6,
-	c7,
-	c8,
-	c9,
-	c10,
-	c11,
-	c12,
-};
-
 //box에 올라가 있는 room의 정보를 담아서 이중 for문을 줄일 수 있음(작업중)
 struct Box
 {
@@ -75,9 +59,9 @@ public:
 	virtual void Update(float dt) override;
 	virtual void Draw(sf::RenderWindow& window) override;
 
-	void OnClick();
+	/*void OnClick();
 	void OnEnter();
-	void OnExit();
+	void OnExit();*/
 	void OnClickHold(sf::Vector2f worldMousePos);
 
 	void Makeboxs();

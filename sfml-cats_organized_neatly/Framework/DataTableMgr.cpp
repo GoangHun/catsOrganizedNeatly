@@ -1,10 +1,11 @@
 #include "stdafx.h"
 #include "DataTableMgr.h"
 #include "StringTable.h"
+#include "CatTable.h"
 
 void DataTableMgr::LoadAll()
 {
-
+	tables.insert({ DataTable::Ids::Cat, new CatTable()});
 	for (auto pair : tables)
 	{
 		if (!pair.second->Load())

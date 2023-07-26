@@ -122,13 +122,19 @@ void GameScene::Enter()
 	uiView.setSize(size);
 	uiView.setCenter(size * 0.5f);
 
-	Scene::Enter();
+	RESOURCE_MGR.LoadFromCSV(resourceListPath);
+
+	for (auto go : gameObjects)
+	{
+		if (go->GetName() == "Cat" || go->GetName() == "Pot")
+			continue;
+		go->Reset();
+	}
 }
 
 void GameScene::Exit()
 {
 	Scene::Exit();
-
 }
 
 void GameScene::Update(float dt)
@@ -187,7 +193,6 @@ void GameScene::LoadScene(int stageNum)
 		if (name == "Cat" || name == "Pot")
 		{
 			RemoveGo(go);
-			delete go;
 		}
 	}
 	cats.clear();
@@ -195,13 +200,14 @@ void GameScene::LoadScene(int stageNum)
 	for (auto go : removeGameObjects)
 	{
 		gameObjects.remove(go);
+		delete go;
 	}
 	removeGameObjects.clear();
 
 	std::string strBoardType = std::to_string(boardType);
 	std::string boardAniId = "board_" + strBoardType + "x" + strBoardType;
 	board->SetBoardInfo((BoardType)boardType, boardAniId);
-	board->SetBoard((BoardType)boardType);
+	//board->SetBoard((BoardType)boardType);
 	board->Reset();
 
 	for (auto& info : infos)
@@ -237,7 +243,6 @@ void GameScene::LoadScene(int stageNum)
 			cat->SetBoard(board);
 			cats.push_back(cat);
 		    AddGo(cat);
-			std::cout << "new Cat(), Position: " <<cat->GetPosition().x<<","<<cat->GetPosition().y<< " "<<cat->GetActive() << std::endl;
 		}
 		else if (std::get<0>(info) == "Pot")
 		{

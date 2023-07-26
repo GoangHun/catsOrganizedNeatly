@@ -6,8 +6,8 @@ public:
 	enum class Ids
 	{
 		None = -1,
-		String,
-		Zombie,
+		Cat,
+		String
 	};
 
 	DataTable(const DataTable& other) = delete;
