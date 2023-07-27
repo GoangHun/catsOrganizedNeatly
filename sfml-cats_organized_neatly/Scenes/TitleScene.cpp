@@ -165,7 +165,6 @@ void TitleScene::SetInitValue(GameObject* go, Origins origin, sf::Vector2f pos, 
 //함수를 호출할 때 이외에 Button을 누를 때도 값을 따로 세팅해 줘야 하기 때문에 수정 필요
 void TitleScene::SwipeAnimation(sf::Vector2f dir, float dis, float speed, float dt)
 {
-	std::cout << "Start Swaip" << std::endl;
 	currentSpeed = speed * lefp;
 	uiView.move(dir * currentSpeed * dt);
 	remainingDistance -= currentSpeed * dt;
@@ -175,7 +174,6 @@ void TitleScene::SwipeAnimation(sf::Vector2f dir, float dis, float speed, float 
 	{
 		uiView.setCenter(startCenter + dir * dis);
 		isSwipe = false;
-		std::cout << "End Swaip" << std::endl;
 	}
 }
 
