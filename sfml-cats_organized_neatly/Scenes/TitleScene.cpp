@@ -61,9 +61,27 @@ void TitleScene::Init()
 		isSwipe = true;
 	};
 
+	//Map Edit Button
+	button = (UIButton*)AddGo(new UIButton("sprites/free_button1.png"));
+	SetInitValue(button, Origins::MC, { size.x * 0.5f, size.y * 0.5f }, 0, 103);
+	sf::Vector2f textPos = button->GetPosition();
+	button->SetText("fonts/ShadowsIntoLight-Regular.ttf", 60, _TEXT_COLOR, "Map Edit", Origins::MC, textPos);
+	button->OnEnter = [button]() {
+		sf::Texture* tex = RESOURCE_MGR.GetTexture("sprites/free_button2.png");
+		button->sprite.setTexture(*tex);
+	};
+	button->OnExit = [button]() {
+		sf::Texture* tex = RESOURCE_MGR.GetTexture(button->GetResourcePath());
+		button->sprite.setTexture(*tex);
+	};
+	button->OnClick = [button, this]() {
+		isChange = true;
+		changeId = SceneId::Developer;
+	};
+
 	//Exit Button
 	button = (UIButton*)AddGo(new UIButton("sprites/buttons_exit2_0.png"));
-	SetInitValue(button, Origins::MC, { size.x * 0.5f, size.y * 0.5f }, 0, 103);
+	SetInitValue(button, Origins::MC, { size.x * 0.5f, size.y * 0.6f }, 0, 103);
 	button->OnEnter = [button]() {
 		sf::Texture* tex = RESOURCE_MGR.GetTexture("sprites/buttons_exit2_1.png");
 		button->sprite.setTexture(*tex);
@@ -140,13 +158,12 @@ void TitleScene::Update(float dt)
 
 	if (isSwipe)
 		SwipeAnimation(dir, distance, 5000.f, dt);
+
 	if (isChange)
 	{
 		isChange = false;
-		SCENE_MGR.ChangeScene(SceneId::Game, selectNum);
+		SCENE_MGR.ChangeScene(changeId, selectNum);
 	}
-	if (INPUT_MGR.GetKey(sf::Keyboard::LShift) && INPUT_MGR.GetKeyDown(sf::Keyboard::P))
-		SCENE_MGR.ChangeScene(SceneId::Developer);
 }
 
 void TitleScene::Draw(sf::RenderWindow& window)

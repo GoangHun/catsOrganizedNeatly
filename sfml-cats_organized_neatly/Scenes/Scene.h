@@ -21,6 +21,8 @@ protected:
 
 	sf::RenderWindow& window;
 
+	SceneId changeId = SceneId::None;
+
 public:
 	bool isDeveloperMode = false;	//юс╫ц
 	bool isChange = false;
@@ -53,5 +55,6 @@ public:
 	const std::string& GetResourceListPath() { return resourceListPath; }
 
 	void SetInitValue(GameObject* go, Origins origin, sf::Vector2f pos, float angle = 0, int layer = 100);
+	void SetChangeId(SceneId id) { changeId = id; }
 };
 

@@ -21,6 +21,8 @@ void SceneMgr::Init()
 		std::cout << "Open sound error" << std::endl;
 	}
 
+	titleBgm.setLoop(true);
+	gameBgm.setLoop(true);
 
 	scenes.push_back(new TitleScene());
 	scenes.push_back(new GameScene());

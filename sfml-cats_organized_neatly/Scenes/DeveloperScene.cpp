@@ -41,13 +41,10 @@ void DeveloperScene::Init()
 
 	//Save Button
 	UIButton* button = (UIButton*)AddGo(new UIButton("sprites/language_speachbubble_1_0.png"));
-	button->SetOrigin(Origins::TR);
-	button->sortLayer = 100;
-	button->SetPosition(size.x - 100, 100);
+	SetInitValue(button, Origins::TR, { size.x - 100, 100 }, 0, 100);
 	sf::Vector2f textPos = button->GetPosition();
 	textPos.x -= 100;
-	button->SetText("fonts/ShadowsIntoLight-Regular.ttf", 100, sf::Color::Black, "SAVE", Origins::TR, textPos);
-
+	button->SetText("fonts/ShadowsIntoLight-Regular.ttf", 100, _TEXT_COLOR, "SAVE", Origins::TR, textPos);
 	button->OnEnter = [button]() {
 		sf::Texture* tex = RESOURCE_MGR.GetTexture("sprites/language_speachbubble_1_1.png");
 		button->sprite.setTexture(*tex);
@@ -63,13 +60,10 @@ void DeveloperScene::Init()
 
 	//Load Button
 	button = (UIButton*)AddGo(new UIButton("sprites/language_speachbubble_1_0.png"));
-	button->SetOrigin(Origins::TR);
-	button->sortLayer = 100;
-	button->SetPosition(size.x - 100, 300);
+	SetInitValue(button, Origins::TR, { size.x - 100, 300 }, 0, 100);
 	textPos = button->GetPosition();
 	textPos.x -= 100;
-	button->SetText("fonts/ShadowsIntoLight-Regular.ttf", 100, sf::Color::Black, "LOAD", Origins::TR, textPos);
-
+	button->SetText("fonts/ShadowsIntoLight-Regular.ttf", 100, _TEXT_COLOR, "LOAD", Origins::TR, textPos);
 	button->OnEnter = [button]() {
 		sf::Texture* tex = RESOURCE_MGR.GetTexture("sprites/language_speachbubble_1_1.png");
 		button->sprite.setTexture(*tex);
@@ -84,10 +78,7 @@ void DeveloperScene::Init()
 
 	//Next Button
 	button = (UIButton*)AddGo(new UIButton("sprites/button_next_0.png"));
-	button->SetOrigin(Origins::BC);
-	button->sortLayer = 100;
-	button->SetPosition(size.x / 2 + 200, size.y - 50);
-
+	SetInitValue(button, Origins::BC, { size.x / 2 + 200, size.y - 50 }, 0, 100);
 	button->OnEnter = [button]() {
 		sf::Texture* tex = RESOURCE_MGR.GetTexture("sprites/button_next_1.png");
 		button->sprite.setTexture(*tex);
@@ -109,10 +100,7 @@ void DeveloperScene::Init()
 
 	//Previous Button
 	button = (UIButton*)AddGo(new UIButton("sprites/button_back_0.png"));
-	button->SetOrigin(Origins::BC);
-	button->sortLayer = 100;
-	button->SetPosition(size.x / 2 - 200, size.y - 50);
-
+	SetInitValue(button, Origins::BC, { size.x / 2 - 200, size.y - 50 }, 0, 100);
 	button->OnEnter = [button]() {
 		sf::Texture* tex = RESOURCE_MGR.GetTexture("sprites/button_back_1.png");
 		button->sprite.setTexture(*tex);
@@ -133,19 +121,14 @@ void DeveloperScene::Init()
 	};
 
 	SpriteGo* sgo = (SpriteGo*)AddGo(new SpriteGo("sprites/soundleiste_0004_Abgerundetes_Rechteck_1_Kopie_4_0.png"));
-	sgo->SetOrigin(Origins::TC);
-	sgo->SetPosition(size.x / 2, 50);
-	sgo->sortLayer = 100;
+	SetInitValue(sgo, Origins::TC, { size.x / 2, 50 }, 0, 100);
 
 	TextGo* tgo = (TextGo*)AddGo(new TextGo("fonts/ShadowsIntoLight-Regular.ttf", "Stage Number"));
 	tgo->SetText(std::to_string(stageNum), 50, sf::Color::Black, Origins::TC, 101, sgo->GetPosition().x - 10, sgo->GetPosition().y + 5);
 
 	//Stage Up
 	button = (UIButton*)AddGo(new UIButton("sprites/soundleiste_0001___0.png"));
-	button->SetOrigin(Origins::TC);
-	button->sortLayer = 100;
-	button->SetPosition(size.x / 2 + 80, 50);
-
+	SetInitValue(button, Origins::TC, { size.x / 2 + 80, 50 }, 0, 100);
 	button->OnEnter = [button]() {
 		sf::Texture* tex = RESOURCE_MGR.GetTexture("sprites/soundleiste_0001___1.png");
 		button->sprite.setTexture(*tex);
@@ -161,10 +144,7 @@ void DeveloperScene::Init()
 
 	//Stage Down
 	button = (UIButton*)AddGo(new UIButton("sprites/soundleiste_0000___0.png"));
-	button->SetOrigin(Origins::TC);
-	button->sortLayer = 100;
-	button->SetPosition(size.x / 2 - 80, 50);
-
+	SetInitValue(button, Origins::TC, { size.x / 2 - 80, 50 }, 0, 100);
 	button->OnEnter = [button]() {
 		sf::Texture* tex = RESOURCE_MGR.GetTexture("sprites/soundleiste_0000___1.png");
 		button->sprite.setTexture(*tex);
@@ -178,8 +158,20 @@ void DeveloperScene::Init()
 		tgo->SetTextString(std::to_string(stageNum));
 	};
 
-
-
+	//Home Button
+	button = (UIButton*)AddGo(new UIButton("sprites/button_social_homepage_0.png"));
+	SetInitValue(button, Origins::TL, { 100, 50 }, 0, 100);
+	button->OnEnter = [button]() {
+		sf::Texture* tex = RESOURCE_MGR.GetTexture("sprites/button_social_homepage_1.png");
+		button->sprite.setTexture(*tex);
+	};
+	button->OnExit = [button]() {
+		sf::Texture* tex = RESOURCE_MGR.GetTexture(button->GetResourcePath());
+		button->sprite.setTexture(*tex);
+	};
+	button->OnClick = [this, tgo]() {
+		isChange = true;
+	};
 
 	for (auto go : gameObjects)
 	{
@@ -308,8 +300,11 @@ void DeveloperScene::Update(float dt)
 		LoadScene();
 	}
 
-	if (INPUT_MGR.GetKey(sf::Keyboard::LShift) && INPUT_MGR.GetKeyDown(sf::Keyboard::P))
+	if (isChange)
+	{
+		isChange = false;
 		SCENE_MGR.ChangeScene(SceneId::Title);
+	}
 }
 
 void DeveloperScene::Draw(sf::RenderWindow& window)

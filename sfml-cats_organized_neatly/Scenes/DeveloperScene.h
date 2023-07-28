@@ -49,5 +49,7 @@ public:
 	void LoadScene();
 	
 	bool GetIsCatch() { return isCatch; }
+	const std::vector<Cat*>& GetCats() { return cats; }
+
 };
 

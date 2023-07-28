@@ -27,6 +27,7 @@ public:
 	void ChangeScene(SceneId id, int stageNum = 1);
 	Scene* GetCurrScene() const;
 	const std::vector<Scene*>* GetScenes() const;
+	const SceneId& GetCurrentSceneId() { return currentSceneId; }
 
 };
 

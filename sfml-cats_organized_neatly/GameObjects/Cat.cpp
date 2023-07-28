@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "Cat.h"
 
+#include <typeinfo>
+
 #include "rapidcsv.h"
 #include "ResourceMgr.h"
 #include "InputMgr.h"
@@ -57,6 +59,8 @@ void Cat::Update(float dt)
 		animation.Update(dt);
 	}
 
+	Scene* scene = SCENE_MGR.GetCurrScene();
+
 	//RectangleShape Position & Rotation Update
 	for (int i = 0; i < boxNumber.x; i++)
 	{
@@ -67,7 +71,7 @@ void Cat::Update(float dt)
 			boxs[index].shape.setRotation(sprite.getRotation());
 
 			//test code
-			if (SCENE_MGR.GetCurrScene()->isDeveloperMode)
+			if (scene->isDeveloperMode)
 			{
 				boxs[index].shape.setOutlineThickness(1.f);
 				boxs[index].shape.setOutlineColor(sf::Color::Green);
@@ -82,7 +86,7 @@ void Cat::Update(float dt)
 
 				
 	sf::Vector2f mousePos = INPUT_MGR.GetMousePos();
-	sf::Vector2f worldMousePos = SCENE_MGR.GetCurrScene()->ScreenToWorldPos(mousePos);
+	sf::Vector2f worldMousePos = scene->ScreenToWorldPos(mousePos);
 
 	bool prevHover = isHover;
 	isHover = sprite.getGlobalBounds().contains(worldMousePos);
@@ -148,8 +152,13 @@ void Cat::Update(float dt)
 		}
 		else
 		{
-			GameScene* scene = dynamic_cast<GameScene*>(SCENE_MGR.GetCurrScene());
-			const std::vector<Cat*> cats = scene->GetCats();
+			std::vector<Cat*> cats;
+			auto* sc = dynamic_cast<GameScene*>(scene);
+			if (sc != nullptr)
+				cats = sc->GetCats();
+			else
+				cats = dynamic_cast<DeveloperScene*>(scene)->GetCats();
+
 			for (auto& cat : cats)
 			{
 				if (cat == this)

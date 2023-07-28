@@ -2,6 +2,7 @@
 #include "AnimationClip.h"
 
 #define _USE_MATH_DEFINES
+#define _TEXT_COLOR { 71, 39, 58, 255 }
 
 enum class CatTypes
 {

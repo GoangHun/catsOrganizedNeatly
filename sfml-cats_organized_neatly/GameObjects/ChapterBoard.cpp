@@ -54,7 +54,7 @@ void ChapterBoard::Reset()
 		{
 			UIButton* button = (UIButton*)scene->AddGo(new UIButton("sprites/board_menu_0.png"));
 			SetInitValue(button, Origins::TL, buttonPoss[i], 0, 101);
-			button->SetText("fonts/ShadowsIntoLight-Regular.ttf", 102, { 71, 39, 58, 255}, std::to_string(stageNum),
+			button->SetText("fonts/ShadowsIntoLight-Regular.ttf", 102, _TEXT_COLOR, std::to_string(stageNum),
 				Origins::ML, { buttonPoss[i].x + 35, buttonPoss[i].y + 30});
 			button->OnEnter = [button]() {
 				sf::Texture* tex = RESOURCE_MGR.GetTexture("sprites/board_menu_1.png");
@@ -68,6 +68,7 @@ void ChapterBoard::Reset()
 				if (!scene->GetIsSwipe())
 				{
 					scene->isChange = true;
+					scene->SetChangeId(SceneId::Game);
 					scene->selectNum = stageNum;
 				}
 			};
