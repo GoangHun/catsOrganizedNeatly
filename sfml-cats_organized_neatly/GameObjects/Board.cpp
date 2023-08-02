@@ -17,8 +17,6 @@ void Board::Init()
 	SetOrigin(Origins::MC);
 	SetPosition(0, 0);
 	sortLayer = 0;
-
-	//SetBoard(boardInfo.type);	//빼고 다른 곳에서 따로 해주는 게 좋을 거 같기도... 
 	
 	ObjectPool<Tile>* ptr = &tilePool;
 	tilePool.OnCreate = [ptr](Tile* tile)
@@ -51,7 +49,7 @@ void Board::Update(float dt)
 
 	auto* scene = SCENE_MGR.GetCurrScene();
 
-	//test code
+	//Map Editor
 	if (scene->isDeveloperMode)
 	{
 		sf::Vector2f mousePos = INPUT_MGR.GetMousePos();
@@ -59,9 +57,6 @@ void Board::Update(float dt)
 
 		for (auto& sRoom : rooms)
 		{
-			if (sRoom.tile == nullptr)
-				continue;
-
 			sRoom.prevHover = sRoom.isHover;
 			sRoom.isHover = sRoom.shape.getGlobalBounds().contains(worldMousePos);
 
@@ -200,7 +195,7 @@ bool Board::SetRoomIsUse(Cat* cat)
 		}
 		if (box.room == nullptr)
 		{
-			cat->ClearBoxs();
+			cat->ClearRooms();
 			return false;
 		}		
 	}
@@ -209,6 +204,7 @@ bool Board::SetRoomIsUse(Cat* cat)
 
 void Board::SetBoard(BoardType type)
 {	
+	std::cout << "SetBoard(" << (int)type << ")" << std::endl;
 	switch(type)
 	{
 	case BoardType::_3X3:
@@ -303,7 +299,6 @@ void Board::OnClick(Room& sRoom)
 
 void Board::OnEnter(Room& sRoom)
 {
-	std::cout << "OnEnter" << std::endl;
 	sRoom.shape.setOutlineThickness(2.f);
 	sRoom.shape.setOutlineColor(sf::Color::White);
 }

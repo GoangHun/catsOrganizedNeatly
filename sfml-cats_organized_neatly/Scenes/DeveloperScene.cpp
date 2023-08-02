@@ -26,11 +26,6 @@ void DeveloperScene::Init()
 
 	auto size = FRAMEWORK.GetWindowSize();
 
-	/*stageInfos.insert({ 1, "scene_datas/stage_1.txt" });
-	stageInfos.insert({ 2, "scene_datas/stage_2.txt" });
-	stageInfos.insert({ 3, "scene_datas/stage_3.txt" });*/
-
-
 	for (int i = 1; i < 11; i++)
 	{
 		stageInfos.insert({ i, "scene_datas/stage_" + std::to_string(i) + ".txt" });

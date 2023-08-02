@@ -3,6 +3,10 @@
 
 #define _USE_MATH_DEFINES
 #define _TEXT_COLOR { 71, 39, 58, 255 }
+#define _UP {0.0f, -1.0f}
+#define _DOWN {0.0f, 1.0f}
+#define _RIGHT {1.0f, 0.0f}
+#define _LEFT {-1.0f, 0.0f}
 
 enum class CatTypes
 {

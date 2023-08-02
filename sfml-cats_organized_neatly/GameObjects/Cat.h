@@ -64,7 +64,7 @@ public:
 	void Makeboxs();
 	void SetBoxState();
 
-	void ClearBoxs();
+	void ClearRooms();
 
 	void SetPool(ObjectPool<Tile>* pool) { tilePool = pool; }
 	void SetType(CatTypes type) { this->type = type; }

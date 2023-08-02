@@ -82,8 +82,6 @@ void Cat::Update(float dt)
 			}
 		}
 	}
-
-
 				
 	sf::Vector2f mousePos = INPUT_MGR.GetMousePos();
 	sf::Vector2f worldMousePos = scene->ScreenToWorldPos(mousePos);
@@ -95,14 +93,12 @@ void Cat::Update(float dt)
 	if (isHover && INPUT_MGR.GetMouseButtonDown(sf::Mouse::Left) && board->GetIsCatchCat() == nullptr)
 	{
 		isCatch = true;
+		board->SetIsCatchCat(this);
 	}
-
 	if (isCatch)
 	{
-		//board->SetAllRoomIsUse();
-		ClearBoxs();
+		ClearRooms();
 		OnClickHold(worldMousePos);		//마우스 포인터가 빨리 움직여서 퍼즐 밖으로 빠져나가도 isCatch 상태를 유지
-
 		int collisionCount = 0;
 		for (auto& box : boxs)
 		{	
@@ -122,17 +118,16 @@ void Cat::Update(float dt)
 				}
 			}
 		}
-
 		if (collisionCount == activeBoxNum)
 		{
-			sf::Vector2f startPos = { sprite.getGlobalBounds().left, sprite.getGlobalBounds().top };
+			sf::Vector2f catPos = { sprite.getGlobalBounds().left, sprite.getGlobalBounds().top };
 			for (auto& room : *rooms)
 			{
-				sf::Vector2f arrivalPos = { room.shape.getGlobalBounds().left, room.shape.getGlobalBounds().top };
-				float distance = Utils::Distance(startPos, arrivalPos);
+				sf::Vector2f roomPos = { room.shape.getGlobalBounds().left, room.shape.getGlobalBounds().top };
+				float distance = Utils::Distance(catPos, roomPos);
 				if (distance < 28)	//room 길이의 절반에 조금 못 미치는 값
 				{
-					SetPosition(position + (arrivalPos - startPos));
+					SetPosition(position + (roomPos - catPos));
 					isSnap = true;
 					break;
 				}
@@ -210,12 +205,30 @@ void Cat::OnClickHold(sf::Vector2f worldMousePos)
 		sprite.setTexture(*tex);
 		sortLayer = 51;
 		SetPosition(worldMousePos);
-		board->SetIsCatchCat(this);
 		return;
 	}
-
-	if (Utils::Distance(GetPosition(), worldMousePos) > 62)
-		SetPosition(worldMousePos);
+	else
+	{
+		if (Utils::Distance(GetPosition(), worldMousePos) > 62)
+		{
+			sf::Vector2f direction = Utils::Normalize(worldMousePos - GetPosition());
+			if (abs(direction.x) > abs(direction.y))
+			{
+				if (direction.x > 0)
+					direction = _RIGHT;
+				else
+					direction = _LEFT;
+			}
+			else
+			{
+				if (direction.y > 0)
+					direction = _DOWN;
+				else
+					direction = _UP;
+			}
+			SetPosition(GetPosition() + direction * 62.f);
+		}
+	}
 }
 
 void Cat::Makeboxs()
@@ -261,7 +274,7 @@ void Cat::SetBoxState()
 	}
 }
 
-void Cat::ClearBoxs()
+void Cat::ClearRooms()	//Cat의 Box가 고정되어 있는 Board의 Room을 비워줌
 {
 	for (auto& box : boxs)
 	{
