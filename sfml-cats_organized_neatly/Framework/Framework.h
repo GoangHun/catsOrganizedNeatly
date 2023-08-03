@@ -15,7 +15,7 @@ protected:
 
 	int screenWidth = 1920;
 	int screenHeight = 1080;
-	std::string title = "SFML Works!";
+	std::string title = "SFML-Cats organized neatly";
 
 public:
 	virtual void Init(int width, int height, const std::string& title);
