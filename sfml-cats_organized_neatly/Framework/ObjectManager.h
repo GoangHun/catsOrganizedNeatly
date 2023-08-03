@@ -1,10 +1,5 @@
 #pragma once
-#include "stdafx.h"
-#include <fstream>
-#include <sstream>
-#include <stdexcept>
 #include "Singleton.h"
-#include "GameObject.h"
 
 enum class BoardType;
 

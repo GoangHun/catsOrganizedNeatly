@@ -1,4 +1,8 @@
 #include "stdafx.h"
+#include <fstream>
+#include <sstream>
+#include <stdexcept>
+#include "GameObject.h"
 #include "ObjectManager.h"
 #include "ResourceMgr.h"
 #include "SceneMgr.h"
@@ -6,7 +10,6 @@
 #include "Tile.h"
 #include "Cat.h"
 #include "SpriteGo.h"
-#include <fstream>
 
 
 void ObjectManager::SaveObjects(std::string fPath, BoardType type,const std::list<GameObject*>& objects)
